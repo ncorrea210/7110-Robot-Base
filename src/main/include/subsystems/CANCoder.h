@@ -2,6 +2,7 @@
 
 #include <ctre/phoenix.h>
 #include <numbers>
+#include <units/angle.h>
 
 namespace hb{
   class CANcode : CANCoder{

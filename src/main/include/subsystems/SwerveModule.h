@@ -33,11 +33,11 @@ class SwerveModule {
 
   frc::SwerveModuleState GetState();
 
+  frc::SwerveModulePosition GetPosition();
+
   void SetDesiredState(const frc::SwerveModuleState& state);
 
   void ResetEncoders();
-
-  frc::SwerveModulePosition GetPosition();
 
  private:
   // We have to use meters here instead of radians due to the fact that
@@ -57,6 +57,8 @@ class SwerveModule {
   
   int m_id;
 
+  const double m_kOffset;
+
   frc2::PIDController m_drivePIDController{
       ModuleConstants::kPModuleDriveController, 0.01, 0.005};
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
@@ -64,5 +66,5 @@ class SwerveModule {
       0.0,
       0.0,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
-    frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0.1_V, 2.67_V / 1_mps};
+    frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0.05_V, 2.67_V / 1_mps};
 };

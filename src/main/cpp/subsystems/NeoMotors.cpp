@@ -19,7 +19,7 @@ void NeoMotor::SetRPMpid(double& RPM) {
   Set(m_PID.Calculate(GetVelocity(), RPM));
 }
 
-units::meter_t NeoMotor::GetDistance() {
+double NeoMotor::GetDistance() {
   double dist = GetPosition() * m_Ratio;
-  return units::meter_t(dist);
+  return dist;
 }

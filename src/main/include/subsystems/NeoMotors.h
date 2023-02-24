@@ -34,7 +34,7 @@ namespace hb {
        */
       void SetRPMpid(double&);
 
-      units::meter_t GetDistance();
+      double GetDistance();
 
     private:
       double m_Ratio = 1;
