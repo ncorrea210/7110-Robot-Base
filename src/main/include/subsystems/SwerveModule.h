@@ -19,8 +19,8 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 
 #include "Constants.h"
-#include "NeoMotors.h"
-#include "CANCoder.h"
+#include "utils/NeoMotors.h"
+#include "utils/CANCoder.h"
 
 class SwerveModule {
   using radians_per_second_squared_t =

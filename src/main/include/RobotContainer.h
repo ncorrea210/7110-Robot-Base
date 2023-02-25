@@ -15,9 +15,13 @@
 #include <frc2/command/RunCommand.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/filter/SlewRateLimiter.h>
+#include <frc/DutyCycleEncoder.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/ExtensionSubsystem.h"
+#include "subsystems/WinchSubsystem.h"
+#include "commands/DefaultExtendCMD.h"
 #include "commands/AutoRoutines.h"
 #include "commands/DefaultDriveCMD.h"
 
@@ -46,14 +50,12 @@ class RobotContainer {
   frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
   frc::SlewRateLimiter<units::scalar> m_speedLimitz{3 / 1_s};
 
-  double xSpeed = -m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.05));
-  double ySpeed = m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX(), 0.05));
-  double rot = m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.05));
-
-  bool m_FieldRelative = true;
-
   // The robot's subsystems
   DriveSubsystem m_drive;
+  WinchSubsystem m_Winch{m_MainEncoder};
+  ExtensionSubsystem m_Extension{m_MainEncoder};
+
+  frc::DutyCycleEncoder* m_MainEncoder;
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

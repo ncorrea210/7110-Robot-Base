@@ -9,7 +9,7 @@ namespace hb {
   class NeoMotor : public rev::CANSparkMax, public rev::SparkMaxRelativeEncoder{
     public:
     
-      explicit NeoMotor(const int& Id, rev::CANSparkMax::MotorType type);
+      explicit NeoMotor(const int& Id, rev::CANSparkMax::MotorType type, rev::CANSparkMax::IdleMode mode);
 
       /**
        * @brief this method is used to set the conversion from RPM to MPS

@@ -81,7 +81,6 @@ constexpr double kPYController = 0.5;
 constexpr double kPThetaController = 0.5;
 
 
-
 extern const frc::TrapezoidProfile<units::radians>::Constraints
     kThetaControllerConstraints;
 

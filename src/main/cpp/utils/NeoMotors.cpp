@@ -1,10 +1,11 @@
-#include "subsystems/NeoMotors.h"
+#include "utils/NeoMotors.h"
 
 using namespace hb;
 
-NeoMotor::NeoMotor(const int& Id, rev::CANSparkMax::MotorType type) : 
+NeoMotor::NeoMotor(const int& Id, rev::CANSparkMax::MotorType type, rev::CANSparkMax::IdleMode mode) : 
 rev::CANSparkMax(Id, type), rev::SparkMaxRelativeEncoder(GetEncoder()){
-  rev::CANSparkMax::SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+  rev::CANSparkMax::SetIdleMode(mode);
+  BurnFlash();
 }
 
 void NeoMotor::SetRPM2MPS(const double& Ratio) {

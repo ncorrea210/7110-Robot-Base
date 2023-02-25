@@ -1,4 +1,4 @@
-#include "subsystems/PigeonGyro.h"
+#include "utils/PigeonGyro.h"
 
 using namespace ctre::phoenix::sensors;
 using namespace hb;

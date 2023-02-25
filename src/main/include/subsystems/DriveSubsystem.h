@@ -21,7 +21,7 @@
 #include "Constants.h"
 #include "SwerveModule.h"
 
-#include "PigeonGyro.h"
+#include "utils/PigeonGyro.h"
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:

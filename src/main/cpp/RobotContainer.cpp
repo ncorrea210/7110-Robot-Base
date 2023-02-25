@@ -29,10 +29,7 @@ using namespace DriveConstants;
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
-  frc::SmartDashboard::PutNumber("Auto", 1);
-  frc::SmartDashboard::PutNumber("Turn Rate", m_drive.GetTurnRate());
-  frc::SmartDashboard::PutNumber("Heading", m_drive.GetHeading().value());
-  frc::SmartDashboard::PutBoolean("Field Relative", m_FieldRelative);
+
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -43,15 +40,24 @@ RobotContainer::RobotContainer() {
           [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1)) * (double)AutoConstants::kMaxSpeed);}, 
           [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1)) * (double)AutoConstants::kMaxSpeed);},
           [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)AutoConstants::kMaxAngularSpeed);}, 
-          [this] {return m_FieldRelative;}));
+          [this] {return true;}));
+
+  m_Extension.SetDefaultCommand(DefaultExtendCMD(&m_Extension, 
+          [this] {return m_driverController.GetRightBumper();},
+          [this] {return m_driverController.GetLeftBumper();}));
 
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(
-  //   frc2::RunCommand([this] {m_drive.ZeroHeading();}, {&m_drive}));
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(
-  //   [&] {m_FieldRelative = m_FieldRelative ? false : true;});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(
+    frc2::RunCommand([this] {m_drive.ZeroHeading();}, {&m_drive}));
+  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenHeld(
+    frc2::RunCommand([this] {m_Winch.RunWinch(1.0);}, {&m_Winch}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenHeld(
+    frc2::RunCommand([this] {m_Winch.RunWinch(-0.5);}, {&m_Winch}));
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {

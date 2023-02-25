@@ -12,8 +12,8 @@
 SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
                            const int turningEncoderPorts,
                            const double offset)
-    : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
-      m_turningMotor(turningMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
+    : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kCoast),
+      m_turningMotor(turningMotorChannel, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake),
       m_turningEncoder(turningEncoderPorts, offset),
       m_id(turningEncoderPorts), m_kOffset(m_turningEncoder.Get()) {
   // Set the distance per pulse for the drive encoder. We can simply use the
