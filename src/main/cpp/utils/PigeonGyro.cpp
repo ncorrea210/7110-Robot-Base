@@ -32,3 +32,7 @@ void pigeonGyro::Reset() {
 }
 
 void pigeonGyro::Calibrate() {} // Gyro::Calibrate() is pure virtual
+
+frc::Rotation2d pigeonGyro::GetRot2d() {
+  return frc::Rotation2d(units::degree_t(-m_angle));
+}

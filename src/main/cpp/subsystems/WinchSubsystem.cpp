@@ -4,10 +4,15 @@
 
 #include "subsystems/WinchSubsystem.h"
 
-WinchSubsystem::WinchSubsystem(frc::DutyCycleEncoder* encoder) : m_Encoder(encoder) {}
+WinchSubsystem::WinchSubsystem(frc::DutyCycleEncoder* encoder) : m_Encoder(encoder) {
+  m_Winch.SetSmartCurrentLimit(60);
+  m_Winch.BurnFlash();
+}
 
 // This method will be called once per scheduler run
-void WinchSubsystem::Periodic() {}
+void WinchSubsystem::Periodic() {
+
+}
 
 void WinchSubsystem::SetPosition(double sp) {
   if(m_Encoder->GetDistance() > sp)
@@ -22,7 +27,6 @@ double WinchSubsystem::GetPosition() {
 }
 
 void WinchSubsystem::RunWinch(double speed) {
-  if(m_Encoder->GetDistance() < WINCH_MAX && m_Encoder->GetDistance() > WINCH_MIN) 
-    m_Winch.Set(speed);
-  else return;
+  m_Winch.Set(speed);
+  // printf("Encoder: %5.2f\n", m_Encoder->GetDistance());
 }

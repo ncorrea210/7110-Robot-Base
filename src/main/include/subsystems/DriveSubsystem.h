@@ -103,6 +103,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
       frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2)};
 
+    void ResetGyro() {
+        m_gyro.Reset();
+    }
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

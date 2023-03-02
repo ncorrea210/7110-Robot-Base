@@ -24,6 +24,7 @@
 #include "commands/DefaultExtendCMD.h"
 #include "commands/AutoRoutines.h"
 #include "commands/DefaultDriveCMD.h"
+#include "subsystems/ClampSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -52,10 +53,11 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  WinchSubsystem m_Winch{m_MainEncoder};
-  ExtensionSubsystem m_Extension{m_MainEncoder};
+  WinchSubsystem m_Winch{&m_MainEncoder};
+  ExtensionSubsystem m_Extension{&m_MainEncoder};
+  ClampSubsystem m_clamp;
 
-  frc::DutyCycleEncoder* m_MainEncoder;
+  frc::DutyCycleEncoder m_MainEncoder{0};
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

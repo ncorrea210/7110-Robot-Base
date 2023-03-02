@@ -45,11 +45,11 @@ class SwerveModule {
   // meters per second squared.
 
   static constexpr units::radians_per_second_t kModuleMaxAngularVelocity =
-      units::radians_per_second_t(std::numbers::pi);  // radians per second
+      units::radians_per_second_t(std::numbers::pi * 10.0);  // radians per second
   static constexpr units::unit_t<radians_per_second_squared_t>
       kModuleMaxAngularAcceleration =
           units::unit_t<radians_per_second_squared_t>(
-              std::numbers::pi * 2.0);  // radians per second squared
+              std::numbers::pi * 10.0);  // radians per second squared
 
   hb::NeoMotor m_driveMotor;
   hb::NeoMotor m_turningMotor;
@@ -57,14 +57,16 @@ class SwerveModule {
   
   int m_id;
 
+  double i = 0;
+
   const double m_kOffset;
 
   frc2::PIDController m_drivePIDController{
-      ModuleConstants::kPModuleDriveController, 0.01, 0.005};
+      ModuleConstants::kPModuleDriveController, 0.01, 0.02};
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
       ModuleConstants::kPModuleTurningController,
       0.0,
-      0.0,
+      0.00,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
     frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0.05_V, 2.67_V / 1_mps};
 };

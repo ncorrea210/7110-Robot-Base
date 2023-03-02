@@ -8,6 +8,7 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
+#include <math.h>
 
 #include "Constants.h"
 
@@ -32,15 +33,16 @@ DriveSubsystem::DriveSubsystem()
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightTurningEncoderPorts,  kRearRightOffset},
 
-      m_odometry(kDriveKinematics, m_gyro.GetRotation2d(), {m_frontLeft.GetPosition(),
+      m_odometry(kDriveKinematics, m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()}, frc::Pose2d()) {}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  m_odometry.Update(m_gyro.GetRotation2d(), {m_frontLeft.GetPosition(),
+  m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
+  // printf("Gyro Heading: %5.2f\n", m_gyro.GetRot2d());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -79,7 +81,7 @@ void DriveSubsystem::SetModuleStates(
 }
 
 units::degree_t DriveSubsystem::GetHeading() const {
-  return m_gyro.GetRotation2d().Degrees();
+  return units::degree_t(std::lround(m_gyro.GetAngle()) % 360);
 }
 
 void DriveSubsystem::ZeroHeading() {

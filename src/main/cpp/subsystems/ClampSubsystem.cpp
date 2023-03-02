@@ -8,3 +8,7 @@ ClampSubsystem::ClampSubsystem() = default;
 
 // This method will be called once per scheduler run
 void ClampSubsystem::Periodic() {}
+
+void ClampSubsystem::RunClaw(double set) {
+  m_motor.Set(set);
+}

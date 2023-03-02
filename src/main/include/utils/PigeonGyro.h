@@ -40,6 +40,11 @@ namespace hb {
      */
     void Calibrate() override;
 
+    /**
+     * Working version of GetRotation2d
+    */
+    frc::Rotation2d GetRot2d();
+
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;

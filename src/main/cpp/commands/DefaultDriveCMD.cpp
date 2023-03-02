@@ -26,7 +26,7 @@ void DefaultDriveCMD::Execute() {
   meters_per_second_t(m_x()),
   meters_per_second_t(m_y()), 
   radians_per_second_t(m_rot()),
-  m_field()
+  true
   );
 }
 
