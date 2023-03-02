@@ -42,7 +42,7 @@ void DriveSubsystem::Periodic() {
   m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
-  // printf("Gyro Heading: %5.2f\n", m_gyro.GetRot2d());
+  printf("Gyro Heading: %5.2f\n", m_gyro.GetRot2d());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
