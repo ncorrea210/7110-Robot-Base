@@ -94,9 +94,9 @@ void SwerveModule::SetDesiredState(
       m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
 
 
-      if (m_id == 2 || m_id == 3 || m_id == 1 || m_id == 4) {
-        printf("ID: %d, Rate: %5.2f, dOut %5.2f\n", m_id, m_driveMotor.GetRate(), (double)driveFF + driveOutput);
-      }
+      // if (m_id == 2 || m_id == 3 || m_id == 1 || m_id == 4) {
+      //   printf("ID: %d, Rate: %5.2f, dOut %5.2f\n", m_id, m_driveMotor.GetRate(), (double)driveFF + driveOutput);
+      // }
 
     // if (m_id == 1 && i > 50) {
     //   // printf("Encoder: %5.2f - Drive Output %5.2f - turnOutput %5.2f\n", m_turningEncoder.Get(), driveOutput, turnOutput);

@@ -49,8 +49,8 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(
-  //   frc2::RunCommand([this] {m_drive.ZeroHeading();}, {&m_drive}));
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(
+    frc2::RunCommand([this] {m_drive.ZeroHeading();}, {&m_drive}));
   
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenHeld(
     frc2::RunCommand([this] {m_Winch.RunWinch(1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
@@ -65,11 +65,11 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::RunCommand([this] {m_Extension.RunExtension(-0.5);}, {&m_Extension})).WhenReleased(frc2::RunCommand([this] {m_Extension.RunExtension(0);}, {&m_Extension}));
 
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(
-    frc2::RunCommand([this] {m_clamp.RunClaw(0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
+//   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(
+//     frc2::RunCommand([this] {m_clamp.RunClaw(0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
 
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenHeld(
-    frc2::RunCommand([this] {m_clamp.RunClaw(-0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
+//  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenHeld(
+//     frc2::RunCommand([this] {m_clamp.RunClaw(-0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
 
  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(
     frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive}));

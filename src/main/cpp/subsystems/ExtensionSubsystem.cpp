@@ -20,8 +20,9 @@ double ExtensionSubsystem::GetPosition() {
 }
 
 void ExtensionSubsystem::RunExtension(double set){
-  if (E_MIN < m_Extension.GetDistance() < E_MAX) 
-    m_Extension.Set(set);
+  if (E_MIN < m_Extension.GetDistance() < E_MAX) {
+    printf("ExtensionDist %5.2f\n", m_Extension.GetDistance());
+    m_Extension.Set(set);}
   else m_Extension.Set(0.0);
 }
 
