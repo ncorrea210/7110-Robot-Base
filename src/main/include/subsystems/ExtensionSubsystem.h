@@ -11,6 +11,7 @@
 #include <frc/controller/PIDController.h>
 #include <frc/DutyCycleEncoder.h>
 #include <utility>
+#include <frc/PowerDistribution.h>
 
 #include "utils/NeoMotors.h"
 
@@ -33,9 +34,10 @@ class ExtensionSubsystem : public frc2::SubsystemBase {
 
  private:
   hb::NeoMotor m_Extension{10, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
-  frc::PIDController m_Controller{0.5, 0, 0};
+  frc::PIDController m_Controller{0.2125, 0, 0.004125};
   frc::DutyCycleEncoder* m_Encoder;
   const double m_Ratio = 1;
+  frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

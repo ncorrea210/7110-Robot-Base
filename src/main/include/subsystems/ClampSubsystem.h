@@ -5,7 +5,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
-#include <frc/motorcontrol/VictorSP.h>
+#include "utils/NeoMotors.h"
 
 class ClampSubsystem : public frc2::SubsystemBase {
  public:
@@ -19,7 +19,7 @@ class ClampSubsystem : public frc2::SubsystemBase {
   void RunClaw(double set);
 
  private:
-  frc::VictorSP m_motor{0};
+   hb::NeoMotor m_motor{11, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };

@@ -4,7 +4,9 @@
 
 #include "subsystems/ClampSubsystem.h"
 
-ClampSubsystem::ClampSubsystem() = default;
+ClampSubsystem::ClampSubsystem() {
+  m_motor.SetSmartCurrentLimit(15);
+}
 
 // This method will be called once per scheduler run
 void ClampSubsystem::Periodic() {}
@@ -12,3 +14,4 @@ void ClampSubsystem::Periodic() {}
 void ClampSubsystem::RunClaw(double set) {
   m_motor.Set(set);
 }
+
