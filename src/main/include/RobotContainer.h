@@ -23,7 +23,6 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ExtensionSubsystem.h"
 #include "subsystems/WinchSubsystem.h"
-#include "commands/DefaultExtendCMD.h"
 #include "commands/AutoRoutines.h"
 #include "commands/DefaultDriveCMD.h"
 #include "subsystems/ClampSubsystem.h"
@@ -32,6 +31,8 @@
 #include "commands/OpenClawCMD.h"
 #include "commands/InFrameCMD.h"
 #include "commands/CloseCubeCMD.h"
+#include "commands/DefaultPositionCMD.h"
+#include "commands/MidScoreCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -49,6 +50,7 @@ class RobotContainer {
  private:
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+  frc::XboxController m_operatorController{1};
 
   // The robot's subsystems and commands are defined here...
 
@@ -69,6 +71,8 @@ class RobotContainer {
   OpenClawCMD OpenClaw{&m_clamp};
   InFrameCMD InFrame{&m_Winch, &m_Extension};
   CloseCubeCMD CloseCube{&m_clamp};
+  DefaultPositionCMD DefaultPosition{&m_Extension, &m_Winch};
+  MidScoreCMD MidScore{&m_Extension, &m_Winch};
 
   frc::DutyCycleEncoder m_MainEncoder{0};
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};

@@ -39,8 +39,20 @@ double ExtensionSubsystem::GetPosition() {
 }
 
 void ExtensionSubsystem::RunExtension(double set){
-
-  m_Extension.Set(set);
+  if (m_Extension.GetDistance() < 50 && !m_LimitSwitch.Get()) {
+    if (set > 0) {
+      m_Extension.Set(set);
+    } else {
+      m_Extension.Set(0);
+    }
+  }
+  if (m_Extension.GetDistance() > 150 && !m_LimitSwitch.Get()) {
+    if (set < 0) {
+      m_Extension.Set(set);
+    } else {
+      m_Extension.Set(0);
+    }
+  }
 
   // printf("Current: %5.2f\n", m_PDP.GetCurrent(7));
 }

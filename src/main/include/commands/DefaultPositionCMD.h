@@ -6,12 +6,9 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include <functional>
-#include <utility>
-#include <numbers>
-#include <cmath>
 
 #include "subsystems/ExtensionSubsystem.h"
+#include "subsystems/WinchSUbsystem.h"
 
 /**
  * An example command.
@@ -20,10 +17,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DefaultExtendCMD
-    : public frc2::CommandHelper<frc2::CommandBase, DefaultExtendCMD> {
+class DefaultPositionCMD
+    : public frc2::CommandHelper<frc2::CommandBase, DefaultPositionCMD> {
  public:
-  DefaultExtendCMD(ExtensionSubsystem* Extension, std::function<bool()> f, std::function<bool()> r);
+  DefaultPositionCMD(ExtensionSubsystem* Extension, WinchSubsystem* Winch);
 
   void Initialize() override;
 
@@ -35,6 +32,5 @@ class DefaultExtendCMD
  
  private:
   ExtensionSubsystem* m_Extension;
-  std::function<bool()> m_f;
-  std::function<bool()> m_r;
+  WinchSubsystem* m_Winch;
 };

@@ -85,13 +85,17 @@ void SwerveModule::SetDesiredState(
 
   
 
-      m_turningMotor.Set(turnOutput);
       // if (state.speed.value() > 0.125)
         // m_driveMotor.Set((-driveOutput - driveFF.value()) / 12);
+      if (state.speed.value() < 0.05)
+      m_driveMotor.Set(0);
+      else {
       if (m_id == 2)
       m_driveMotor.SetVoltage(units::volt_t(driveOutput) + driveFF);
       else 
       m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
+      }
+      m_turningMotor.Set(turnOutput);
 
 
       // if (m_id == 2 || m_id == 3 || m_id == 1 || m_id == 4) {

@@ -43,53 +43,47 @@ RobotContainer::RobotContainer() {
           [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX(), 0.04)) * (double)AutoConstants::kMaxSpeed);},
           [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.04)) * (double)AutoConstants::kMaxAngularSpeed);}, 
           [this] {return true;}));
-
-  // m_Extension.SetDefaultCommand(DefaultExtendCMD(&m_Extension, 
-  //         [this] {return m_driverController.GetRightBumper();},
-  //         [this] {return m_driverController.GetLeftBumper();}));
-
+          
+  m_Extension.SetDefaultCommand(frc2::RunCommand(
+    [this] {m_Extension.RunExtension(frc::ApplyDeadband(m_operatorController.GetLeftY(), 0.05));}, {&m_Extension}));
+  m_Winch.SetDefaultCommand(frc2::RunCommand(
+    [this] {m_Winch.RunWinch(frc::ApplyDeadband(m_operatorController.GetRightY(), 0.05));}, {&m_Winch}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(
-  //   frc2::RunCommand([this] {m_drive.ZeroHeading();}, {&m_drive}));
+
+  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenHeld(
+  //   frc2::RunCommand([this] {m_Winch.RunWinch(-1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
+
+  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenHeld(
+  //   frc2::RunCommand([this] {m_Winch.RunWinch(1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
+
+  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(
+  //   frc2::RunCommand([this] {m_Extension.SetMax();}, {&m_Extension}));
+
+  //     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(
+  //   frc2::RunCommand([this] {m_Extension.ZeroExtension();}, {&m_Extension}));
   
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenHeld(
-    frc2::RunCommand([this] {m_Winch.RunWinch(-1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
+  // Claw Control
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kBack).WhenPressed(CloseCube); //TODO: Make cube grab better
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kRightBumper).WhenPressed(CloseClaw);
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(OpenClaw);
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenHeld(
-    frc2::RunCommand([this] {m_Winch.RunWinch(1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
+  // Arm Control
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(SetFar); 
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(InFrame);
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(MidScore); //TODO: make work
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed(
-    frc2::RunCommand([this] {m_Extension.SetMax();}, {&m_Extension}));
+  // Drive controls
 
-      frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(
-    frc2::RunCommand([this] {m_Extension.ZeroExtension();}, {&m_Extension}));
-
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kStart).WhenPressed(SetFar);
-
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenHeld(
-  //   frc2::RunCommand([this] {m_Extension.SetExtension(0);}, {&m_Extension})).WhenReleased(frc2::RunCommand([this] {m_Extension.RunExtension(0);}, {&m_Extension}));
-
-
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(
-  //   frc2::RunCommand([this] {m_clamp.RunClaw(0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
-
-//  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenHeld(
-//    frc2::RunCommand([this] {m_clamp.RunClaw(-0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0.0);}, {&m_clamp}));
-
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(CloseClaw);
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(OpenClaw);
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kBack).WhenPressed(CloseCube);
-
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(
     frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
           [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.04)) * (double)AutoConstants::kMaxSpeed);}, 
           [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX(), 0.04)) * (double)AutoConstants::kMaxSpeed);},
           [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.04)) * (double)AutoConstants::kMaxAngularSpeed);}, 
           [this] {return true;}));
 
- frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(InFrame);
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(DefaultPosition);
 
 }
 
