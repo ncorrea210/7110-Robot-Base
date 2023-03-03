@@ -5,7 +5,7 @@ using namespace hb;
 NeoMotor::NeoMotor(const int& Id, rev::CANSparkMax::MotorType type, rev::CANSparkMax::IdleMode mode) : 
 rev::CANSparkMax(Id, type), rev::SparkMaxRelativeEncoder(GetEncoder()){
   rev::CANSparkMax::SetIdleMode(mode);
-  BurnFlash();
+  // BurnFlash();
 }
 
 void NeoMotor::SetRPM2MPS(const double& Ratio) {

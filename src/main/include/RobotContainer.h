@@ -16,6 +16,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/DutyCycleEncoder.h>
+#include <frc/PowerDistribution.h>
+
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -25,6 +27,11 @@
 #include "commands/AutoRoutines.h"
 #include "commands/DefaultDriveCMD.h"
 #include "subsystems/ClampSubsystem.h"
+#include "commands/SetFarPositionCMD.h"
+#include "commands/CloseClawCMD.h"
+#include "commands/OpenClawCMD.h"
+#include "commands/InFrameCMD.h"
+#include "commands/CloseCubeCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -47,17 +54,24 @@ class RobotContainer {
 
   Auto m_auto;
 
-  frc::SlewRateLimiter<units::scalar> m_speedLimitx{3 / 1_s};
-  frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
-  frc::SlewRateLimiter<units::scalar> m_speedLimitz{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimitx{1.5 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimity{1.5 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimitz{1.5 / 1_s};
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  WinchSubsystem m_Winch{&m_MainEncoder};
-  ExtensionSubsystem m_Extension{&m_MainEncoder};
-  ClampSubsystem m_clamp;
+  WinchSubsystem m_Winch{&m_MainEncoder, &m_PDP};
+  ExtensionSubsystem m_Extension{&m_MainEncoder, &m_PDP};
+  ClampSubsystem m_clamp{&m_PDP};
+
+  SetFarPositionCMD SetFar{&m_Extension, &m_Winch};
+  CloseClawCMD CloseClaw{&m_clamp};
+  OpenClawCMD OpenClaw{&m_clamp};
+  InFrameCMD InFrame{&m_Winch, &m_Extension};
+  CloseCubeCMD CloseCube{&m_clamp};
 
   frc::DutyCycleEncoder m_MainEncoder{0};
+  frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

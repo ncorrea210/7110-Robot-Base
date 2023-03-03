@@ -12,32 +12,38 @@
 #include <frc/DutyCycleEncoder.h>
 #include <utility>
 #include <frc/PowerDistribution.h>
+#include <frc/DigitalInput.h>
 
 #include "utils/NeoMotors.h"
 
 class ExtensionSubsystem : public frc2::SubsystemBase {
  public:
-  ExtensionSubsystem(frc::DutyCycleEncoder* encoder);
+  ExtensionSubsystem(frc::DutyCycleEncoder* encoder, frc::PowerDistribution* pdp);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
-  void SetPosition(double sp);
+  void SetPos(double sp);
 
   double GetPosition();
+
+  void SetMax();
 
   void RunExtension(double speed);
 
   double GetAngle();
+
+  void ZeroExtension();
 
  private:
   hb::NeoMotor m_Extension{10, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
   frc::PIDController m_Controller{0.2125, 0, 0.004125};
   frc::DutyCycleEncoder* m_Encoder;
   const double m_Ratio = 1;
-  frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
+  frc::PowerDistribution* m_PDP;
+  frc::DigitalInput m_LimitSwitch{1};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

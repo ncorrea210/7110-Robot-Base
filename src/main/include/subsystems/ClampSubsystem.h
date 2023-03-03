@@ -6,10 +6,12 @@
 
 #include <frc2/command/SubsystemBase.h>
 #include "utils/NeoMotors.h"
+#include <frc/motorcontrol/VictorSP.h>
+#include <frc/PowerDistribution.h>
 
 class ClampSubsystem : public frc2::SubsystemBase {
  public:
-  ClampSubsystem();
+  ClampSubsystem(frc::PowerDistribution* pdp);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -18,8 +20,16 @@ class ClampSubsystem : public frc2::SubsystemBase {
 
   void RunClaw(double set);
 
+  void CloseClaw();
+
+  void OpenClaw();
+
+  double GetCurrent();
+
  private:
-   hb::NeoMotor m_motor{11, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
+  //  hb::NeoMotor m_motor{11, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
+  frc::VictorSP m_motor{0};
+  frc::PowerDistribution* m_PDP;
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };

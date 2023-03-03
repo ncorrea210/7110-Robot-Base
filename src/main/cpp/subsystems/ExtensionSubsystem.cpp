@@ -6,19 +6,32 @@
 
 #include <cmath>
 
-ExtensionSubsystem::ExtensionSubsystem(frc::DutyCycleEncoder* encoder) : m_Encoder(encoder) {}
+ExtensionSubsystem::ExtensionSubsystem(frc::DutyCycleEncoder* encoder, frc::PowerDistribution* pdp) : m_Encoder(encoder), m_PDP(pdp) {}
 
 // This method will be called once per scheduler run
 void ExtensionSubsystem::Periodic() {
   // printf("Distance: %5.2f\n", m_Extension.GetDistance());
-  printf("ABS Encoder: %5.2f\n", m_Encoder->Get());
+  printf("ABS Encoder: %5.2f, Extension Position: %5.2f\n", m_Encoder->Get(), m_Extension.GetDistance());
+  // printf("Switch: %d\n", (int)m_LimitSwitch.Get());
 
 }
 
-void ExtensionSubsystem::SetPosition(double sp) {
+void ExtensionSubsystem::SetPos(double sp) {
+  if ((double)m_Encoder->Get() > 0.19) 
+  return;
+  else if (m_LimitSwitch.Get() && m_Extension.GetDistance() > 50) {
+  m_Extension.Set(0);
+  return;
+  }
+  else if (m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
+  m_Extension.Set(0);
+  return;
+  }
+  else {
   double calc = m_Controller.Calculate(std::lround(m_Extension.GetDistance()), sp);
   calc = std::clamp(calc, -0.5, 0.5);
   m_Extension.Set(calc);
+  }
 }
 
 double ExtensionSubsystem::GetPosition() {
@@ -26,21 +39,30 @@ double ExtensionSubsystem::GetPosition() {
 }
 
 void ExtensionSubsystem::RunExtension(double set){
-  if (m_PDP.GetCurrent(7) < 8) {
-    if (m_Extension.GetDistance() < 150.0 || set < 0.0) {
-    m_Extension.Set(set);
 
-    return;
-    } else if (m_Extension.GetDistance() < 10 || set > 0.0) {
-    m_Extension.Set(set);
-
-    return;
-    }
-  } else m_Extension.Set(0);
+  m_Extension.Set(set);
 
   // printf("Current: %5.2f\n", m_PDP.GetCurrent(7));
 }
 
 double ExtensionSubsystem::GetAngle() {
   return m_Encoder->GetDistance();
+}
+
+void ExtensionSubsystem::ZeroExtension() {
+  if (m_LimitSwitch.Get() || m_Extension.GetDistance() > 50)
+  m_Extension.Set(-0.5);
+  else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
+  m_Extension.Set(0);
+  m_Extension.SetPosition(0);
+  }
+}
+
+void ExtensionSubsystem::SetMax() {;
+  if(m_LimitSwitch.Get() || m_Extension.GetDistance() < 50) {
+    m_Extension.Set(0.7);
+  } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 50) {
+    m_Extension.Set(0);
+    m_Extension.SetPosition(200);
+  }
 }
