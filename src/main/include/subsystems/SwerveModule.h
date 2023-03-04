@@ -57,8 +57,6 @@ class SwerveModule {
   
   int m_id;
 
-  double i = 0;
-
   const double m_kOffset;
 
   frc2::PIDController m_drivePIDController{

@@ -4,9 +4,6 @@
 
 #pragma once
 
-#define WINCH_MAX 70.0
-#define WINCH_MIN 0.0
-
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include <frc/DutyCycleEncoder.h>

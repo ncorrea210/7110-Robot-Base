@@ -37,19 +37,17 @@ class ExtensionSubsystem : public frc2::SubsystemBase {
 
   void ZeroExtension();
 
-  bool SwitchLow()
+  inline bool SwitchLow()
   {
     if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
       return true;
     } else return false;
   }
 
-  bool SwitchHigh() {
+  inline bool SwitchHigh() {
     if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
       return true;
     } else return false;
-    
-    
   }
 
  private:

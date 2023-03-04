@@ -45,39 +45,24 @@ RobotContainer::RobotContainer() {
           [this] {return true;}));
 
   m_Extension.SetDefaultCommand(frc2::RunCommand(
-    [this] {m_Extension.RunExtension(frc::ApplyDeadband(m_operatorController.GetLeftY(), 0.05));}, {&m_Extension}));
+    [this] {m_Extension.RunExtension(frc::ApplyDeadband(-m_operatorController.GetLeftY(), 0.05));}, {&m_Extension}));
   m_Winch.SetDefaultCommand(frc2::RunCommand(
     [this] {m_Winch.RunWinch(frc::ApplyDeadband(m_operatorController.GetRightY(), 0.05));}, {&m_Winch}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
 
-  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenHeld(
-  //   frc2::RunCommand([this] {m_Winch.RunWinch(-1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
-
-  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenHeld(
-  //   frc2::RunCommand([this] {m_Winch.RunWinch(1.0);}, {&m_Winch})).WhenReleased(frc2::RunCommand([this] {m_Winch.RunWinch(0);}, {&m_Winch}));
-
-  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(
-  //   frc2::RunCommand([this] {m_Extension.RunExtension(0.25);}, {&m_Extension})).WhenReleased(frc2::RunCommand([this] {m_Extension.RunExtension(0);}, {&m_Extension}));
-
-  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(
-  //   frc2::RunCommand([this] {m_Extension.RunExtension(-0.25);}, {&m_Extension})).WhenReleased(frc2::RunCommand([this] {m_Extension.RunExtension(0);}, {&m_Extension}));
-
-
-
-    //   frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(
-    // frc2::RunCommand([this] {m_Extension.ZeroExtension();}, {&m_Extension}));
-  
   // Claw Control
-  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kBack).WhenPressed(CloseCube); //TODO: Make cube grab better
+  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kBack).WhenPressed(CloseCube); //TODO: Make cube grab better
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kBack).WhenPressed(
+    frc2::RunCommand([this]  {m_clamp.RunClaw(0.5);}, {&m_clamp})).WhenReleased(frc2::RunCommand([this] {m_clamp.RunClaw(0);}, {&m_clamp}));
   frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kRightBumper).WhenPressed(CloseClaw);
   frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(OpenClaw);
 
   // Arm Control
   frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(SetFar); 
   frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(InFrame);
-  // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(MidScore); //TODO: make work
+  frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(MidScore);
 
   // Drive controls
 
@@ -104,11 +89,20 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
       // Start at the origin facing the +X direction
       frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
       // Pass through these two interior waypoints, making an 's' curve path
-      {frc::Translation2d(1_m, 1_m), frc::Translation2d(2_m, -1_m)},
+      {frc::Translation2d(0.25_m, 0_m), frc::Translation2d(0.75_m, 0_m)},
       // End 3 meters straight ahead of where we started, facing forward
-      frc::Pose2d(3_m, 0_m, frc::Rotation2d(0_deg)),
+      frc::Pose2d(1_m, 0_m, frc::Rotation2d(0_deg)),
       // Pass the config
       config);
+
+  auto MoveAndScoreTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+    frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
+    {frc::Translation2d(0.25_m, 0_m), frc::Translation2d(0.75_m, 0_m)},
+    frc::Pose2d(1_m, 0_m, frc::Rotation2d(0_deg)),
+    config
+  );
+
+  
 
   frc::ProfiledPIDController<units::radians> thetaController{
       AutoConstants::kPThetaController, 0, 0,
@@ -157,5 +151,5 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
                           units::meters_per_second_t(0),
                           units::radians_per_second_t(0), false);
           },
-          {})));
+          {}), SetFar, OpenClaw, DefaultPosition));
 }

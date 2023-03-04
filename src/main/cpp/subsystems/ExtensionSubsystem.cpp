@@ -10,35 +10,33 @@ ExtensionSubsystem::ExtensionSubsystem(frc::DutyCycleEncoder* encoder, frc::Powe
 
 // This method will be called once per scheduler run
 void ExtensionSubsystem::Periodic() {
-  // printf("Distance: %5.2f\n", m_Extension.GetDistance());
-  printf("ABS Encoder: %5.2f, Extension Position: %5.2f\n", m_Encoder->Get(), m_Extension.GetDistance());
-  // printf("Switch: %d\n", (int)m_LimitSwitch.Get());
     if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
     m_Extension.SetPosition(0);
   } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
     m_Extension.SetPosition(200);
   }
-
 }
 
 
 
 void ExtensionSubsystem::SetPos(double sp) {
-  if ((double)m_Encoder->Get() > 0.19) 
-  return;
-  else if (m_LimitSwitch.Get() && m_Extension.GetDistance() > 50) {
-  m_Extension.Set(0);
-  return;
-  }
-  else if (m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
-  m_Extension.Set(0);
-  return;
-  }
-  else {
   double calc = m_Controller.Calculate(std::lround(m_Extension.GetDistance()), sp);
   calc = std::clamp(calc, -0.5, 0.5);
+
+  if (SwitchHigh() && calc > 0) {
+    m_Extension.Set(0);
+    return;
+  } else if (SwitchHigh() && calc < 0) {
+    m_Extension.Set(calc);
+    return;
+  } else if (SwitchLow() && calc > 0) {
+    m_Extension.Set(calc);
+    return;
+  } else if (SwitchLow() && calc < 0) {
+    m_Extension.Set(0);
+    return;
+  } else
   m_Extension.Set(calc);
-  }
 }
 
 double ExtensionSubsystem::GetPosition() {
@@ -65,7 +63,6 @@ void ExtensionSubsystem::RunExtension(double set){
     }
   }
   m_Extension.Set(set);
-  // printf("Current: %5.2f\n", m_PDP.GetCurrent(7));
 }
 
 double ExtensionSubsystem::GetAngle() {
