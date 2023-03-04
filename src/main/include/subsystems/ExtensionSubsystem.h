@@ -37,6 +37,21 @@ class ExtensionSubsystem : public frc2::SubsystemBase {
 
   void ZeroExtension();
 
+  bool SwitchLow()
+  {
+    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
+      return true;
+    } else return false;
+  }
+
+  bool SwitchHigh() {
+    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
+      return true;
+    } else return false;
+    
+    
+  }
+
  private:
   hb::NeoMotor m_Extension{10, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
   frc::PIDController m_Controller{0.2125, 0, 0.004125};

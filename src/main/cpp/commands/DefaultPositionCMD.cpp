@@ -24,7 +24,7 @@ void DefaultPositionCMD::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool DefaultPositionCMD::IsFinished() {
-  if (m_Winch->GetPosition() < 0.7 && m_Extension->GetPosition() == 0) {
+  if (m_Winch->GetPosition() == 0.7 && m_Extension->GetPosition() == 0) {
     return true;
   } else return false;
 }

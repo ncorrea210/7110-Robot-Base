@@ -13,8 +13,15 @@ void ExtensionSubsystem::Periodic() {
   // printf("Distance: %5.2f\n", m_Extension.GetDistance());
   printf("ABS Encoder: %5.2f, Extension Position: %5.2f\n", m_Encoder->Get(), m_Extension.GetDistance());
   // printf("Switch: %d\n", (int)m_LimitSwitch.Get());
+    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
+    m_Extension.SetPosition(0);
+  } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
+    m_Extension.SetPosition(200);
+  }
 
 }
+
+
 
 void ExtensionSubsystem::SetPos(double sp) {
   if ((double)m_Encoder->Get() > 0.19) 
@@ -42,18 +49,22 @@ void ExtensionSubsystem::RunExtension(double set){
   if (m_Extension.GetDistance() < 50 && !m_LimitSwitch.Get()) {
     if (set > 0) {
       m_Extension.Set(set);
+      return;
     } else {
       m_Extension.Set(0);
+      return;
     }
   }
   if (m_Extension.GetDistance() > 150 && !m_LimitSwitch.Get()) {
     if (set < 0) {
       m_Extension.Set(set);
+      return;
     } else {
       m_Extension.Set(0);
+      return;
     }
   }
-
+  m_Extension.Set(set);
   // printf("Current: %5.2f\n", m_PDP.GetCurrent(7));
 }
 

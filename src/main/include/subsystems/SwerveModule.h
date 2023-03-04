@@ -49,7 +49,7 @@ class SwerveModule {
   static constexpr units::unit_t<radians_per_second_squared_t>
       kModuleMaxAngularAcceleration =
           units::unit_t<radians_per_second_squared_t>(
-              std::numbers::pi * 10.0);  // radians per second squared
+              std::numbers::pi * 100.0);  // radians per second squared
 
   hb::NeoMotor m_driveMotor;
   hb::NeoMotor m_turningMotor;
