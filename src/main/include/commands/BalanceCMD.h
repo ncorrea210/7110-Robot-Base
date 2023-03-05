@@ -6,9 +6,10 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/controller/PIDController.h>
 
-#include "subsystems/ExtensionSubsystem.h"
-#include "subsystems/WinchSUbsystem.h"
+#include "subsystems/DriveSubsystem.h"
+
 
 /**
  * An example command.
@@ -17,10 +18,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DefaultPositionCMD
-    : public frc2::CommandHelper<frc2::CommandBase, DefaultPositionCMD> {
+class BalanceCMD
+    : public frc2::CommandHelper<frc2::CommandBase, BalanceCMD> {
  public:
-  DefaultPositionCMD(ExtensionSubsystem* Extension, WinchSubsystem* Winch);
+  BalanceCMD(DriveSubsystem* Drive);
 
   void Initialize() override;
 
@@ -29,8 +30,8 @@ class DefaultPositionCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
- 
+
  private:
-  ExtensionSubsystem* m_Extension;
-  WinchSubsystem* m_Winch;
+  DriveSubsystem* m_Drive;
+  frc::PIDController m_Controller{0.5, 0, 0};
 };

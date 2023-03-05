@@ -40,6 +40,8 @@ namespace hb {
      */
     void Calibrate() override;
 
+    double GetPitch();
+
     /**
      * Working version of GetRotation2d
     */
