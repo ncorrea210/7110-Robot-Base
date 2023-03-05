@@ -25,6 +25,8 @@ class WinchSubsystem : public frc2::SubsystemBase {
 
   void RunWinch(double speed);
 
+  bool InRange();
+
  private:
 
   rev::CANSparkMax m_Winch{9, rev::CANSparkMax::MotorType::kBrushless};

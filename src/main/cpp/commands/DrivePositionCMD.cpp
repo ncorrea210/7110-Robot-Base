@@ -15,8 +15,8 @@ void DrivePositionCMD::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void DrivePositionCMD::Execute() {
-  m_Winch->SetPosition(30);
-  m_Extension->SetPos(0);
+  m_Extension->ZeroExtension();
+  m_Winch->SetPosition(0.1);
 }
 
 // Called once the command ends or is interrupted.
@@ -24,8 +24,7 @@ void DrivePositionCMD::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool DrivePositionCMD::IsFinished() {
-  if (m_Winch->GetPosition() != 30 || m_Extension->GetPosition() != 0)
-    return false;
-  if (m_Winch->GetPosition() == 30 && m_Extension->GetPosition() == 0)
+  if (m_Winch->GetPosition() == 0.1 && m_Extension->SwitchLow()) {
     return true;
+  } else return false;
 }

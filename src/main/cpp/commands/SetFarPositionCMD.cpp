@@ -15,8 +15,12 @@ void SetFarPositionCMD::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void SetFarPositionCMD::Execute() {
-  m_Extension->SetMax();
+  
   m_Winch->SetPosition(0.1);
+  if (m_Winch->GetPosition() == 0.1)
+  m_Extension->SetMax();
+  else
+  m_Extension->RunExtension(0);
 }
 
 // Called once the command ends or is interrupted.
@@ -24,7 +28,8 @@ void SetFarPositionCMD::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool SetFarPositionCMD::IsFinished() {
-  if (m_Extension->GetPosition() >= 198 && m_Winch->GetPosition() == 0.1) {
+  if (m_Extension->SwitchHigh() && m_Winch->GetPosition() == 0.1) {
+    printf("Called\n");
     return true;
   } else return false;
 }

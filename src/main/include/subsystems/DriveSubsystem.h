@@ -107,6 +107,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
         m_gyro.Reset();
     }
 
+  hb::pigeonGyro m_gyro{DriveConstants::CanIds::kPidgeonID};
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -117,7 +119,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_rearRight;
 
   // The gyro sensor
-  hb::pigeonGyro m_gyro{DriveConstants::CanIds::kPidgeonID};
 
   // Odometry class for tracking robot pose
   // 4 defines the number of modules

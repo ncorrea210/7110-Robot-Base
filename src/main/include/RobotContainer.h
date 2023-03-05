@@ -33,6 +33,7 @@
 #include "commands/CloseCubeCMD.h"
 #include "commands/DefaultPositionCMD.h"
 #include "commands/MidScoreCMD.h"
+#include "commands/PickUpAngleCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -56,9 +57,9 @@ class RobotContainer {
 
   Auto m_auto;
 
-  frc::SlewRateLimiter<units::scalar> m_speedLimitx{1.5 / 1_s};
-  frc::SlewRateLimiter<units::scalar> m_speedLimity{1.5 / 1_s};
-  frc::SlewRateLimiter<units::scalar> m_speedLimitz{1.5 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimitx{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_speedLimitz{3 / 1_s};
 
   // The robot's subsystems
   DriveSubsystem m_drive;
@@ -73,9 +74,12 @@ class RobotContainer {
   CloseCubeCMD CloseCube{&m_clamp};
   DefaultPositionCMD DefaultPosition{&m_Extension, &m_Winch};
   MidScoreCMD MidScore{&m_Extension, &m_Winch};
+  PickUpAngleCMD PickUpAngle{&m_Winch};
 
   frc::DutyCycleEncoder m_MainEncoder{0};
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
+
+
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

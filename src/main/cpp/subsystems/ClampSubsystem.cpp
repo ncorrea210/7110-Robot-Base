@@ -20,4 +20,3 @@ void ClampSubsystem::RunClaw(double set) {
 double ClampSubsystem::GetCurrent() {
   return m_PDP->GetCurrent(13);
 }
-
