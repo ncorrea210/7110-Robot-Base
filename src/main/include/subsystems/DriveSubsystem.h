@@ -17,6 +17,8 @@
 #include <frc2/command/SubsystemBase.h>
 #include <wpi/array.h>
 #include <frc/kinematics/SwerveModulePosition.h>
+#include <frc/DigitalInput.h>
+
 
 #include "Constants.h"
 #include "SwerveModule.h"
@@ -117,6 +119,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_rearLeft;
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
+
+    // frc::DigitalInput m_Limit{0};
 
   // The gyro sensor
 

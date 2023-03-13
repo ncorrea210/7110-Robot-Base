@@ -2,6 +2,7 @@
 
 #include <frc/interfaces/Gyro.h>
 #include <ctre/phoenix/sensors/PigeonIMU.h>
+#include <frc/Timer.h>
 
 namespace hb {
 
@@ -42,14 +43,23 @@ namespace hb {
 
     double GetPitch();
 
+    double GetRoll();
+
     /**
      * Working version of GetRotation2d
     */
     frc::Rotation2d GetRot2d();
 
+    double GetIntDist();
+
+    double Get2IntDist();
+
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;
     mutable double m_rate;
+    double m_lastTime;
+    frc::Timer m_timer;
+    double m_dist;
   };
 } // namespace hb

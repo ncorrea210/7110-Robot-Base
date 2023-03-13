@@ -57,20 +57,18 @@ class SwerveModule {
   
   int m_id;
 
-  const double m_kOffset;
-
   frc2::PIDController m_drivePIDController{
-      ModuleConstants::kPModuleDriveController, 0.01, 0.02};
+      1, 0.01, 0.00};
 //   frc::ProfiledPIDController<units::radians> m_turningPIDController{
 //       ModuleConstants::kPModuleTurningController,
 //       0.0,
 //       0.00,
 //       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
-    frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0.05_V, 2.67_V / 1_mps};
+    frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0_V, 2.67_V / 1_mps};
 
       frc::ProfiledPIDController<units::radians> m_turningPIDController{
-      1,
+      0.7,
       0.0,
-      0.009,
+      /*0.011*/0.0019,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
 };

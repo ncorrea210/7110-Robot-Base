@@ -9,6 +9,7 @@
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
 #include <math.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Constants.h"
 
@@ -39,10 +40,17 @@ DriveSubsystem::DriveSubsystem()
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
+  // printf("Gyro Heading: %5.2f, Rotation2d: %5.2f\n", m_gyro.GetRot2d(), m_gyro.GetRotation2d());
+
   m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
-  // printf("Gyro Heading: %5.2f\n", m_gyro.GetRot2d());
+  frc::SmartDashboard::PutNumber("Gyro Pitch", m_gyro.GetPitch());
+  frc::SmartDashboard::PutNumber("Gyro Roll", m_gyro.GetRoll());
+  frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetAngle());
+  frc::SmartDashboard::PutNumber("Gyro Int", m_gyro.GetIntDist());
+
+  // printf("Limit %d\n", (int)m_Limit.Get());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -51,10 +59,11 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            bool fieldRelative) {
   auto states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, m_gyro.GetRotation2d())
+                          xSpeed, ySpeed, rot, m_gyro.GetRot2d())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
 
-  kDriveKinematics.DesaturateWheelSpeeds(&states, AutoConstants::kMaxSpeed);
+  frc::SmartDashboard::PutNumber("M2 ReS", states[1].speed.value());
+  kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
 

@@ -39,9 +39,9 @@ RobotContainer::RobotContainer() {
   // printf("x: %5.2f y: %5.2f rot: %5.2f\n", xSpeed, ySpeed, rot);
 
   m_drive.SetDefaultCommand(DefaultDriveCMD(&m_drive, 
-          [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1)) * (double)DriveConstants::kMaxSpeed);}, 
-          [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1)) * (double)DriveConstants::kMaxSpeed);},
-          [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed);}, 
+          [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1) * (double)DriveConstants::kMaxSpeed);}, 
+          [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1) * (double)DriveConstants::kMaxSpeed);},
+          [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
           [this] {return true;}));
 
   // m_Extension.SetDefaultCommand(frc2::RunCommand(
@@ -57,27 +57,34 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // Drive controls
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(
+  //   frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
+  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kMaxSpeed);}, 
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kMaxSpeed);},
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
+  //         [this] {return true;}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(
     frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-          [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05)) * (double)DriveConstants::kMaxSpeed);}, 
-          [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05)) * (double)DriveConstants::kMaxSpeed);},
-          [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed);}, 
+          [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1) * (double)DriveConstants::kMaxSpeed);}, 
+          [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1) * (double)DriveConstants::kMaxSpeed);},
+          [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
           [this] {return true;}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(Balance);
   
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(
-    frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-          [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : 
-                                                  (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05)) * (double)DriveConstants::kPushnBalanceSpeed);}, 
-          [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : 
-                                                  (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05)) * (double)DriveConstants::kPushnBalanceSpeed);},
-          [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed);}, 
-          [this] {return true;})).WhenReleased(
-    frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-          [this] {return (-m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05)) * (double)DriveConstants::kMaxSpeed);}, 
-          [this] {return (m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05)) * (double)DriveConstants::kMaxSpeed);},
-          [this] {return (m_speedLimitz.Calculate(frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed);}, 
-          [this] {return true;})
-          );
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(DefaultDriveCMD(&m_drive, 
+  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : 
+  //                                                 (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kPushnBalanceSpeed);}, 
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : 
+  //                                                 (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kPushnBalanceSpeed);},
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed;}, 
+  //         [this] {return true;})).WhenReleased(DefaultDriveCMD(&m_drive, 
+  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kMaxSpeed);}, 
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kMaxSpeed);},
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed;}, 
+  //         [this] {return true;})
+  //         );
 
 }
 
@@ -94,6 +101,13 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
     frc::Pose2d(1_m, 0_m, frc::Rotation2d(0_deg)), config);
 
   
+
+  auto BackwardsTrajector = frc::TrajectoryGenerator::GenerateTrajectory(
+    frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
+    {frc::Translation2d(-0.25_m, 0_m), frc::Translation2d()},
+    frc::Pose2d(-0.5_m, 0_m, frc::Rotation2d(0_deg)),
+    config
+  );
 
   frc::ProfiledPIDController<units::radians> thetaController{
       AutoConstants::kPThetaController, 0, 0,
@@ -120,6 +134,18 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
       {&m_drive});
 
+  frc2::SwerveControllerCommand<4> swerveBackcomand(
+      m_SelectedTrajectory, [this]() { return m_drive.GetPose(); },
+
+      m_drive.kDriveKinematics,
+
+      frc2::PIDController(AutoConstants::kPXController, 0, 0),
+      frc2::PIDController(AutoConstants::kPYController, 0, 0), thetaController,
+
+      [this](auto moduleStates) { m_drive.SetModuleStates(moduleStates); },
+
+      {&m_drive});
+
   // Reset odometry to the starting pose of the trajectory.
   m_drive.ResetOdometry(m_SelectedTrajectory.InitialPose());
 
@@ -128,5 +154,14 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
   // will have a "wrapper" command group to run multiple actions at once using parellel command group
   return new frc2::ParallelCommandGroup(
   frc2::SequentialCommandGroup(
-      std::move(swerveControllerCommand), Balance));
+      std::move(swerveControllerCommand), frc2::InstantCommand([this] {m_drive.Drive(
+        0_mps,
+        0_mps,
+        units::radians_per_second_t(0),
+        true
+      );}, {&m_drive})));
+
+  //   return new frc2::ParallelCommandGroup(
+  // frc2::SequentialCommandGroup());
+
 }
