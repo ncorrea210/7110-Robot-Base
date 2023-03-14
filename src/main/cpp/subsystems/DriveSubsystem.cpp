@@ -9,7 +9,10 @@
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
 #include <math.h>
+#include <cmath>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include "utils/Limelight.h"
 
 #include "Constants.h"
 
@@ -73,14 +76,37 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   m_rearRight.SetDesiredState(br);
 }
 
+void DriveSubsystem::Drive(VecDrive Drive, units::radians_per_second_t rot, bool fieldRelative) {
+   units::meters_per_second_t xSpeed = units::meters_per_second_t(Drive.speed * sin(Drive.angle));
+   units::meters_per_second_t ySpeed = units::meters_per_second_t(Drive.speed * cos(Drive.angle));
+
+  auto states = kDriveKinematics.ToSwerveModuleStates(
+      fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                          xSpeed, ySpeed, rot, m_gyro.GetRot2d())
+                    : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
+  
+  kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+  m_frontLeft.SetDesiredState(fl);
+  m_frontRight.SetDesiredState(fr);
+  m_rearLeft.SetDesiredState(bl);
+  m_rearRight.SetDesiredState(br);
+}
+
+void DriveSubsystem::ToLimeLTarget() {
+  LimeLightVec llVec = hb::limeLight::GetVec();
+  
+}
+
 void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
   kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,
                                          AutoConstants::kMaxSpeed);
-  desiredStates[0].angle = desiredStates[0].angle * -1.0;
-  desiredStates[1].angle = desiredStates[1].angle * -1.0;
-  desiredStates[2].angle = desiredStates[2].angle * -1.0;
-  desiredStates[3].angle = desiredStates[3].angle * -1.0;
+  // desiredStates[0].angle = desiredStates[0].angle * -1.0;
+  // desiredStates[1].angle = desiredStates[1].angle * -1.0;
+  // desiredStates[2].angle = desiredStates[2].angle * -1.0;
+  // desiredStates[3].angle = desiredStates[3].angle * -1.0;
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);

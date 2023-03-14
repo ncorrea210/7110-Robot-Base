@@ -51,7 +51,7 @@ constexpr double kRearLeftOffset =  -43.24 /*-42.71*/ /**20.83**/; //encoder 1
 constexpr double kFrontRightOffset = 106.7 /*102.66*/ /*109.6**/; //encoder 3
 constexpr double kRearRightOffset = -167.17 /*-162.25*//**21.09*/; //encoder 4
 
-constexpr auto kMaxSpeed = 1.5_mps;
+constexpr auto kMaxSpeed = 4.5_mps;
 constexpr auto kMaxAngularSpeed = units::radians_per_second_t(3 * std::numbers::pi);
 
 constexpr auto kPushnBalanceSpeed = 2_mps;
@@ -76,8 +76,8 @@ using radians_per_second_squared_t =
     units::compound_unit<units::radians,
                          units::inverse<units::squared<units::second>>>;
 
-constexpr auto kMaxSpeed = units::meters_per_second_t(2.5);
-constexpr auto kMaxAcceleration = units::meters_per_second_squared_t(2.5);
+constexpr auto kMaxSpeed = units::meters_per_second_t(1.5);
+constexpr auto kMaxAcceleration = units::meters_per_second_squared_t(1.5);
 constexpr auto kMaxAngularSpeed = units::radians_per_second_t(3.142);
 constexpr auto kMaxAngularAcceleration = units::unit_t<radians_per_second_squared_t>(3.142);
 

@@ -33,5 +33,5 @@ class BalanceCMD
 
  private:
   DriveSubsystem* m_Drive;
-  frc::PIDController m_Controller{0.25, 0, 0.002};
+  frc::PIDController m_Controller{0.075, 0, 0.002};
 };

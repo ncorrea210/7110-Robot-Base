@@ -14,7 +14,7 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
                            const int turningEncoderPorts,
                            const double offset)
     : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kCoast),
-      m_turningMotor(turningMotorChannel, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kCoast),
+      m_turningMotor(turningMotorChannel, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake),
       m_turningEncoder(turningEncoderPorts, offset),
       m_id(turningEncoderPorts) {
   // Set the distance per pulse for the drive encoder. We can simply use the
@@ -43,6 +43,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
     // break;
 
   // }
+
+  frc::SmartDashboard::PutNumber("DModVal", 0);
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {
@@ -56,6 +58,10 @@ frc::SwerveModulePosition SwerveModule::GetPosition() {
 
 void SwerveModule::SetDesiredState(
     const frc::SwerveModuleState& referenceState) {
+
+  // m_turningPIDController.SetD(
+  // frc::SmartDashboard::GetNumber("DModVal", 0)
+  // );
 
   // Optimize the reference state to avoid spinning further than 90 degrees
   const auto state = frc::SwerveModuleState::Optimize(

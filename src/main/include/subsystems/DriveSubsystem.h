@@ -18,12 +18,18 @@
 #include <wpi/array.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/DigitalInput.h>
+#include <units/angle.h>
 
 
 #include "Constants.h"
 #include "SwerveModule.h"
 
 #include "utils/PigeonGyro.h"
+
+typedef struct {
+  double speed;
+  double angle;
+} VecDrive;
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -50,6 +56,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative);
+
+  void Drive(VecDrive Drive, units::radians_per_second_t rot, bool fieldRelative);
+
+  void ToLimeLTarget();
 
   /**
    * Resets the drive encoders to currently read a position of 0.

@@ -22,6 +22,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "commands/Auto1.h"
 
 using namespace DriveConstants;
 
@@ -97,19 +98,10 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
   auto ForwardTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
     frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
-    {frc::Translation2d(0.25_m, 0_m), frc::Translation2d(0.75_m, 0_m)},
-    frc::Pose2d(1_m, 0_m, frc::Rotation2d(0_deg)), config);
+    {frc::Translation2d(-2.5_m, -0.5_m), frc::Translation2d(-2.6_m, -0.5_m)},
+    frc::Pose2d(-3_m, -1_m, frc::Rotation2d(0_deg)), config);
 
-  
-
-  auto BackwardsTrajector = frc::TrajectoryGenerator::GenerateTrajectory(
-    frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
-    {frc::Translation2d(-0.25_m, 0_m), frc::Translation2d()},
-    frc::Pose2d(-0.5_m, 0_m, frc::Rotation2d(0_deg)),
-    config
-  );
-
-  frc::ProfiledPIDController<units::radians> thetaController{
+    frc::ProfiledPIDController<units::radians> thetaController{
       AutoConstants::kPThetaController, 0, 0,
       AutoConstants::kThetaControllerConstraints};
 
@@ -118,9 +110,7 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
   m_Routine = frc::SmartDashboard::GetNumber("Auto", 0);
 
-  frc::Trajectory m_SelectedTrajectory;
-
-  m_SelectedTrajectory = ForwardTrajectory;
+  frc::Trajectory m_SelectedTrajectory = ForwardTrajectory;
 
   frc2::SwerveControllerCommand<4> swerveControllerCommand(
       m_SelectedTrajectory, [this]() { return m_drive.GetPose(); },
@@ -134,17 +124,7 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
       {&m_drive});
 
-  frc2::SwerveControllerCommand<4> swerveBackcomand(
-      m_SelectedTrajectory, [this]() { return m_drive.GetPose(); },
 
-      m_drive.kDriveKinematics,
-
-      frc2::PIDController(AutoConstants::kPXController, 0, 0),
-      frc2::PIDController(AutoConstants::kPYController, 0, 0), thetaController,
-
-      [this](auto moduleStates) { m_drive.SetModuleStates(moduleStates); },
-
-      {&m_drive});
 
   // Reset odometry to the starting pose of the trajectory.
   m_drive.ResetOdometry(m_SelectedTrajectory.InitialPose());
