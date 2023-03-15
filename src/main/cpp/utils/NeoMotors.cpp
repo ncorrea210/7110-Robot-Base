@@ -7,6 +7,7 @@ rev::CANSparkMax(Id, type), rev::SparkMaxRelativeEncoder(GetEncoder()){
   if (rev::CANSparkMax::GetIdleMode() != mode){
   rev::CANSparkMax::SetIdleMode(mode);
   BurnFlash();
+  printf("Flash Burned on Spark Max %d\n", Id);
   }
 }
 

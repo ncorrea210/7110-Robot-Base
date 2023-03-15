@@ -58,34 +58,35 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // Drive controls
 
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(
+    frc2::RunCommand([this] { m_extension.RunExtension(-0.5);}, {&m_extension})).WhenReleased(
+      frc2::RunCommand([this] { m_extension.RunExtension(0);}, {&m_extension}));
+  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed(
+    frc2::RunCommand([this] { m_extension.RunExtension(0.5);}, {&m_extension})).WhenReleased(
+      frc2::RunCommand([this] { m_extension.RunExtension(0);}, {&m_extension}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed(
+    frc2::RunCommand([this] {m_actuator.Run(0.5);}, {&m_actuator})).WhenReleased(
+      frc2::RunCommand([this] {m_actuator.Run(0);}, {&m_actuator}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(
+    frc2::RunCommand([this] {m_actuator.Run(-0.5);}, {&m_actuator})).WhenReleased(
+      frc2::RunCommand([this] {m_actuator.Run(0);}, {&m_actuator}));
+
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kStart).WhenPressed(
   //   frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kMaxSpeed);}, 
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kMaxSpeed);},
+  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1) * (double)DriveConstants::kMaxSpeed);}, 
+  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1) * (double)DriveConstants::kMaxSpeed);},
   //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
   //         [this] {return true;}));
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(
-    frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-          [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1) * (double)DriveConstants::kMaxSpeed);}, 
-          [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1) * (double)DriveConstants::kMaxSpeed);},
-          [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
-          [this] {return true;}));
-
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(Balance);
-  
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenHeld(DefaultDriveCMD(&m_drive, 
-  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : 
-  //                                                 (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kPushnBalanceSpeed);}, 
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : 
-  //                                                 (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kPushnBalanceSpeed);},
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed;}, 
-  //         [this] {return true;})).WhenReleased(DefaultDriveCMD(&m_drive, 
-  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.05) * (double)DriveConstants::kMaxSpeed);}, 
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.05) * (double)DriveConstants::kMaxSpeed);},
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1)) * (double)DriveConstants::kMaxAngularSpeed;}, 
-  //         [this] {return true;})
-  //         );
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(CloseClamp);
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(OpenClamp);  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kStart).WhenPressed(
+    frc2::RunCommand([this] {m_clamp.RunClamp(-0.25);}, {&m_clamp})).WhenReleased(
+      frc2::RunCommand([this] {m_clamp.RunClamp(0);}, {&m_clamp}));
 
 }
 

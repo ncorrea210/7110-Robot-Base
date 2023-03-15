@@ -21,8 +21,13 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/ExtensionSubsystem.h"
+#include "subsystems/ActuatorSubsystem.h"
+#include "subsystems/ClampSubsystem.h"
 #include "commands/DefaultDriveCMD.h"
 #include "commands/BalanceCMD.h"
+#include "commands/CloseClampCMD.h"
+#include "commands/OpenClampCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -50,8 +55,16 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+  ExtensionSubsystem m_extension;
+  ActuatorSubsystem m_actuator;
+  ClampSubsystem m_clamp{&m_PDP};
 
   BalanceCMD Balance{&m_drive};
+  CloseClampCMD CloseClamp{&m_clamp};
+  OpenClampCMD OpenClamp{&m_clamp};
+
+
+  frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
