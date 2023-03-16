@@ -12,6 +12,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
+#include <units/angular_acceleration.h>
 #include <numbers>
 
 
@@ -53,6 +54,7 @@ constexpr double kRearRightOffset = -167.17 /*-162.25*//**21.09*/; //encoder 4
 
 constexpr auto kMaxSpeed = 2.5_mps;
 constexpr auto kMaxAngularSpeed = units::radians_per_second_t(3 * std::numbers::pi);
+constexpr auto kMaxAngularAcceleration = units::radians_per_second_squared_t(2 * std::numbers::pi);
 
 constexpr auto kPushnBalanceSpeed = 2_mps;
 

@@ -5,6 +5,7 @@
 #include "RobotContainer.h"
 
 #include <utility>
+#include <cmath>
 
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Translation2d.h>
@@ -23,16 +24,22 @@
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "commands/Auto1.h"
+#include "utils/Limelight.h"
 
 using namespace DriveConstants;
-
-
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
   // m_MainEncoder.SetDutyCycleRange(1/1025, 1024/1025);
 
   frc::SmartDashboard::PutNumber("Auto", 3);
+  frc::SmartDashboard::PutNumber("X Offset", hb::limeLight::GetX());
+  frc::SmartDashboard::PutNumber("Y Offset", hb::limeLight::GetY());
+
+  m_chooser.AddOption("Open Clamp", &OpenClamp);
+
+  m_chooser.GetSelected();
+  
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -88,6 +95,17 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::RunCommand([this] {m_clamp.RunClamp(-0.25);}, {&m_clamp})).WhenReleased(
       frc2::RunCommand([this] {m_clamp.RunClamp(0);}, {&m_clamp}));
 
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(
+  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kBlink);}));
+
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(
+  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);})); 
+
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed(
+  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);})); 
+
+  
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
@@ -99,8 +117,8 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
   auto ForwardTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
     frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
-    {frc::Translation2d(-2.5_m, -0.5_m), frc::Translation2d(-2.6_m, -0.5_m)},
-    frc::Pose2d(-3_m, -1_m, frc::Rotation2d(0_deg)), config);
+    {frc::Translation2d(-2.5_m, 0_m), frc::Translation2d(-2.6_m, 0_m)},
+    frc::Pose2d(-3_m, 0_m, frc::Rotation2d(0_deg)), config);
 
     frc::ProfiledPIDController<units::radians> thetaController{
       AutoConstants::kPThetaController, 0, 0,

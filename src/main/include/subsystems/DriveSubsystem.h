@@ -19,6 +19,7 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/DigitalInput.h>
 #include <units/angle.h>
+#include <frc/controller/ProfiledPIDController.h>
 
 
 #include "Constants.h"
@@ -58,6 +59,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
              bool fieldRelative);
 
   void Drive(VecDrive Drive, units::radians_per_second_t rot, bool fieldRelative);
+
+  void Drive(VecDrive Drive, units::radian_t heading);
 
   void ToLimeLTarget();
 
@@ -130,9 +133,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
 
-    // frc::DigitalInput m_Limit{0};
-
-  // The gyro sensor
+  frc::ProfiledPIDController<units::radians> m_turnController{0.5, 0, 0,
+   {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};
 
   // Odometry class for tracking robot pose
   // 4 defines the number of modules

@@ -9,7 +9,7 @@ ClampSubsystem::ClampSubsystem(frc::PowerDistribution* pdp) : m_PDP(pdp) {
 
 // This method will be called once per scheduler run
 void ClampSubsystem::Periodic() {
-  printf("Clamp Current: %5.2f\n", GetCurrent());
+  // printf("Clamp Current: %5.2f\n", GetCurrent());
 }
 
 void ClampSubsystem::RunClamp(double set) {

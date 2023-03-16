@@ -3,6 +3,7 @@
 #include <cmath>
 #include <utility>
 #include <frc/Timer.h>
+#include <numbers>
 
 using namespace ctre::phoenix::sensors;
 using namespace hb;
@@ -57,4 +58,8 @@ double pigeonGyro::GetIntDist() {
   m_dist = calc + m_dist;
   m_lastTime = m_timer.Get().value();
   return calc + m_dist;
+}
+
+units::radian_t pigeonGyro::GetRad() const {
+  return units::radian_t((std::numbers::pi * GetAngle()) / 180);
 }

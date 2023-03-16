@@ -77,14 +77,33 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
 }
 
 void DriveSubsystem::Drive(VecDrive Drive, units::radians_per_second_t rot, bool fieldRelative) {
-   units::meters_per_second_t xSpeed = units::meters_per_second_t(Drive.speed * sin(Drive.angle));
-   units::meters_per_second_t ySpeed = units::meters_per_second_t(Drive.speed * cos(Drive.angle));
+  units::meters_per_second_t xSpeed = units::meters_per_second_t(Drive.speed * sin(Drive.angle));
+  units::meters_per_second_t ySpeed = units::meters_per_second_t(Drive.speed * cos(Drive.angle));
 
   auto states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                           xSpeed, ySpeed, rot, m_gyro.GetRot2d())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
   
+  kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+  m_frontLeft.SetDesiredState(fl);
+  m_frontRight.SetDesiredState(fr);
+  m_rearLeft.SetDesiredState(bl);
+  m_rearRight.SetDesiredState(br);
+}
+
+void DriveSubsystem::Drive(VecDrive Drive, units::radian_t Heading) {
+  units::meters_per_second_t xSpeed = units::meters_per_second_t(Drive.speed * sin(Drive.angle));
+  units::meters_per_second_t ySpeed = units::meters_per_second_t(Drive.speed * cos(Drive.angle));
+  units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(m_gyro.GetRad(), Heading));
+
+  auto states = kDriveKinematics.ToSwerveModuleStates(
+    frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+      xSpeed, ySpeed, rot, m_gyro.GetRotation2d()
+    ));
+
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;

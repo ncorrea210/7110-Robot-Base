@@ -2,6 +2,7 @@
 
 #include <frc/interfaces/Gyro.h>
 #include <ctre/phoenix/sensors/PigeonIMU.h>
+#include <units/angle.h>
 #include <frc/Timer.h>
 
 namespace hb {
@@ -53,6 +54,8 @@ namespace hb {
     double GetIntDist();
 
     double Get2IntDist();
+
+    units::radian_t GetRad() const;
 
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;

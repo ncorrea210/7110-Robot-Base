@@ -2,6 +2,7 @@
 #include <networktables/NetworkTableInstance.h>
 #include <cmath>
 #include <numbers>
+#include <string>
 
 #include "utils/Limelight.h"
 
@@ -12,6 +13,34 @@
 
 using namespace nt;
 using namespace hb;
+
+
+        inline std::string sanitizeName(const std::string &name)
+    {
+        if (name == "")
+        {
+            return "limelight";
+        }
+        return name;
+    }
+
+
+    inline std::shared_ptr<nt::NetworkTable> getLimelightNTTable(const std::string &tableName)
+    {
+        return nt::NetworkTableInstance::GetDefault().GetTable(sanitizeName(tableName));
+    }
+
+    inline nt::NetworkTableEntry getLimelightNTTableEntry(const std::string &tableName, const std::string &entryName)
+    {
+        return getLimelightNTTable(tableName)->GetEntry(entryName);
+    }
+
+    
+    inline void setLimelightNTDouble(const std::string &tableName, const std::string entryName, double val)
+    {
+        getLimelightNTTableEntry(tableName, entryName).SetDouble(val);
+    }
+
 
 bool limeLight::HasTarget() {
   return (bool)GetVal("tv");
