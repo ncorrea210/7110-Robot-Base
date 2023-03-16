@@ -19,19 +19,42 @@ class ExtensionSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  /**
+   * @brief Checks if the limit switch is true
+   * 
+   * @returns true if Limit Switch is on and arm is high
+  */
   bool SwitchHigh();
 
+  /**
+   * @brief Checks if the limit switch is true
+   * 
+   * @returns true if limit switch is on and arm is low
+  */
   bool SwitchLow();
 
+  /**
+   * @brief Sets the arm position using a PID controller
+   * 
+   * @param setpoint of the arm
+  */
   void SetPos(double sp);
 
+  /**
+   * @brief Gets the position of the arm using the Neo 550 encoder
+   * 
+   * @returns the position of the arm
+  */
   double GetPosition();
 
+  /**
+   * @brief Runs the arm to the max position
+  */
   void SetMax();
 
   void RunExtension(double speed);
 
-  void ZeroExtension();
+  void SetMin();
 
  private:
   hb::NeoMotor m_Extension{9, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};

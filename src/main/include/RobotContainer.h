@@ -17,6 +17,7 @@
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/PowerDistribution.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 
 #include "Constants.h"
@@ -26,9 +27,6 @@
 #include "subsystems/ClampSubsystem.h"
 #include "commands/DefaultDriveCMD.h"
 #include "commands/BalanceCMD.h"
-#include "commands/CloseClampCMD.h"
-#include "commands/OpenClampCMD.h"
-
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -44,7 +42,7 @@ class RobotContainer {
 
  private:
   // The driver's controller
-  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+  frc::XboxController m_driverController{0};
   frc::XboxController m_operatorController{1};
 
   // The robot's subsystems and commands are defined here...
@@ -60,8 +58,7 @@ class RobotContainer {
   ClampSubsystem m_clamp{&m_PDP};
 
   BalanceCMD Balance{&m_drive};
-  CloseClampCMD CloseClamp{&m_clamp};
-  OpenClampCMD OpenClamp{&m_clamp};
+
 
 
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};

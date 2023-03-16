@@ -6,6 +6,7 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/Timer.h>
 
 #include "subsystems/ClampSubsystem.h"
 
@@ -16,10 +17,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class CloseClampCMD
-    : public frc2::CommandHelper<frc2::CommandBase, CloseClampCMD> {
+class CloseConeCMD
+    : public frc2::CommandHelper<frc2::CommandBase, CloseConeCMD> {
  public:
-  CloseClampCMD(ClampSubsystem* clamp);
+  CloseConeCMD(ClampSubsystem* clamp);
 
   void Initialize() override;
 
@@ -28,8 +29,8 @@ class CloseClampCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
-
+ 
  private:
   ClampSubsystem* m_clamp;
-  int i = 0;
+  frc::Timer m_timer;
 };

@@ -9,13 +9,12 @@
 ExtensionSubsystem::ExtensionSubsystem() {}
 
 void ExtensionSubsystem::Periodic() {
-  // if (SwitchLow()) printf("Switch Low\n");
-  // if (SwitchHigh()) printf("Switch High\n");
-  // printf("LimitSwitch %d\n", (int)m_LimitSwitch.Get());
+  if (SwitchLow()) m_Extension.SetPosition(0);
+  if (SwitchHigh()) m_Extension.SetPosition(100);
 }
 
 bool ExtensionSubsystem::SwitchHigh() {
-  if (m_Extension.GetDistance() > 75 && !m_LimitSwitch.Get()) {
+  if (m_Extension.GetDistance() > 50 && !m_LimitSwitch.Get()) {
     return true; 
   } else return false;
 }
@@ -50,28 +49,6 @@ double ExtensionSubsystem::GetPosition() {
   return m_Extension.GetDistance();
 }
 
-// void ExtensionSubsystem::RunExtension(double set){
-//   if (m_Extension.GetDistance() < 50 && !m_LimitSwitch.Get()) {
-//     if (set > 0) {
-//       m_Extension.Set(set);
-//       return;
-//     } else {
-//       m_Extension.Set(0);
-//       return;
-//     }
-//   }
-//   if (m_Extension.GetDistance() > 150 && !m_LimitSwitch.Get()) {
-//     if (set < 0) {
-//       m_Extension.Set(set);
-//       return;
-//     } else {
-//       m_Extension.Set(0);
-//       return;
-//     }
-//   }
-//   m_Extension.Set(set);
-// }
-
 void ExtensionSubsystem::RunExtension(double set) {
   if (SwitchLow()) {
     if (set > 0) {
@@ -89,20 +66,20 @@ void ExtensionSubsystem::RunExtension(double set) {
   m_Extension.Set(set);
 }
 
-void ExtensionSubsystem::ZeroExtension() {
-  if (m_LimitSwitch.Get() || m_Extension.GetDistance() > 50)
-  m_Extension.Set(-0.5);
-  else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
-  m_Extension.Set(0);
-  m_Extension.SetPosition(0);
+void ExtensionSubsystem::SetMax() {;
+  if(!SwitchHigh()) {
+    m_Extension.Set(0.7);
+  } else if (SwitchHigh()) {
+    m_Extension.Set(0);
+    m_Extension.SetPosition(100);
   }
 }
 
-void ExtensionSubsystem::SetMax() {;
-  if(m_LimitSwitch.Get() || m_Extension.GetDistance() < 50) {
-    m_Extension.Set(0.7);
-  } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 50) {
+void ExtensionSubsystem::SetMin() {
+  if (!SwitchLow()) {
+    m_Extension.Set(-0.7);
+  } else if (SwitchLow()) {
     m_Extension.Set(0);
-    m_Extension.SetPosition(200);
+    m_Extension.SetPosition(0);
   }
 }

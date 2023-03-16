@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #include "RobotContainer.h"
 
 #include <utility>
@@ -23,7 +25,6 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
-#include "commands/Auto1.h"
 #include "utils/Limelight.h"
 
 using namespace DriveConstants;
@@ -35,10 +36,6 @@ RobotContainer::RobotContainer() {
   frc::SmartDashboard::PutNumber("Auto", 3);
   frc::SmartDashboard::PutNumber("X Offset", hb::limeLight::GetX());
   frc::SmartDashboard::PutNumber("Y Offset", hb::limeLight::GetY());
-
-  m_chooser.AddOption("Open Clamp", &OpenClamp);
-
-  m_chooser.GetSelected();
   
 
   // Configure the button bindings
@@ -60,12 +57,7 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureButtonBindings() {
 
-  // Claw Control
-
-
-  // Drive controls
-
-
+  
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(
     frc2::RunCommand([this] { m_extension.RunExtension(-0.5);}, {&m_extension})).WhenReleased(
       frc2::RunCommand([this] { m_extension.RunExtension(0);}, {&m_extension}));
@@ -82,29 +74,13 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::RunCommand([this] {m_actuator.Run(-0.5);}, {&m_actuator})).WhenReleased(
       frc2::RunCommand([this] {m_actuator.Run(0);}, {&m_actuator}));
 
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kStart).WhenPressed(
-  //   frc2::RunCommand([this] {m_drive.ResetGyro();}, {&m_drive})).WhenReleased(DefaultDriveCMD(&m_drive, 
-  //         [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY(), 0.1) * (double)DriveConstants::kMaxSpeed);}, 
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX(), 0.1) * (double)DriveConstants::kMaxSpeed);},
-  //         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.1) * (double)DriveConstants::kMaxAngularSpeed);}, 
-  //         [this] {return true;}));
-
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed(CloseClamp);
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed(OpenClamp);  
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kStart).WhenPressed(
     frc2::RunCommand([this] {m_clamp.RunClamp(-0.25);}, {&m_clamp})).WhenReleased(
       frc2::RunCommand([this] {m_clamp.RunClamp(0);}, {&m_clamp}));
 
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(
-  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kBlink);}));
-
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(
-  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);})); 
-
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed(
-  //   frc2::RunCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);})); 
-
-  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kBack).WhenPressed(
+    frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);})).WhenReleased(
+      frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
 
 }
 
