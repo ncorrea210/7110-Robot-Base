@@ -8,6 +8,7 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc/Timer.h>
 
+#include "subsystems/ClampSubsystem.h"
 
 /**
  * An example command.
@@ -19,7 +20,7 @@
 class OpenClampCMD
     : public frc2::CommandHelper<frc2::CommandBase, OpenClampCMD> {
  public:
-  OpenClampCMD();
+  OpenClampCMD(ClampSubsystem* clamp);
 
   void Initialize() override;
 
@@ -28,4 +29,8 @@ class OpenClampCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+ 
+ private:
+  ClampSubsystem* m_clamp;
+  frc::Timer m_timer;
 };
