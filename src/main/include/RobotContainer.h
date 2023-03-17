@@ -27,6 +27,7 @@
 #include "subsystems/ClampSubsystem.h"
 #include "commands/DefaultDriveCMD.h"
 #include "commands/BalanceCMD.h"
+#include "commands/ToLLTargetCMD.h"
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -58,7 +59,7 @@ class RobotContainer {
   ClampSubsystem m_clamp{&m_PDP};
 
   BalanceCMD Balance{&m_drive};
-
+  ToLLTargetCMD LLTarget{&m_drive};
 
 
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};

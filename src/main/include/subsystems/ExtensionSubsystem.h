@@ -58,7 +58,7 @@ class ExtensionSubsystem : public frc2::SubsystemBase {
 
  private:
   hb::NeoMotor m_Extension{9, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
-  frc::PIDController m_Controller{0.2125, 0, 0.004125};
+  frc::PIDController m_Controller{0.1, 0, 0};
   frc::DigitalInput m_LimitSwitch{0};
 
   // Components (e.g. motor controllers and sensors) should generally be

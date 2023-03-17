@@ -18,11 +18,14 @@ class ActuatorSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  double GetPosition() const;
+
   void Run(const double& set);
 
-  void SetPosition(const double& position);
-
-  double GetPosition() const;
+  /**
+   * @brief min is 3 max is 48
+  */
+  void SetPosition(const int& position);
 
  private:
   frc::VictorSP m_Linear{1};

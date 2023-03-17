@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/ExtensionSubsystem.h"
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <cmath>
 
 #include <cmath>
 
@@ -10,7 +12,8 @@ ExtensionSubsystem::ExtensionSubsystem() {}
 
 void ExtensionSubsystem::Periodic() {
   if (SwitchLow()) m_Extension.SetPosition(0);
-  if (SwitchHigh()) m_Extension.SetPosition(100);
+  if(SwitchHigh()) m_Extension.SetPosition(158);
+
 }
 
 bool ExtensionSubsystem::SwitchHigh() {
@@ -25,9 +28,13 @@ bool ExtensionSubsystem::SwitchLow() {
   } else return false;
 }
 
+double ExtensionSubsystem::GetPosition() {
+  return std::lround(m_Extension.GetDistance());
+}
+
 void ExtensionSubsystem::SetPos(double sp) {
-  double calc = m_Controller.Calculate(std::lround(m_Extension.GetDistance()), sp);
-  calc = std::clamp(calc, -0.5, 0.5);
+  double calc = m_Controller.Calculate(GetPosition(), sp);
+  calc = std::clamp(calc, -0.75, 0.75);
 
   if (SwitchHigh() && calc > 0) {
     m_Extension.Set(0);
@@ -45,9 +52,6 @@ void ExtensionSubsystem::SetPos(double sp) {
   m_Extension.Set(calc);
 }
 
-double ExtensionSubsystem::GetPosition() {
-  return m_Extension.GetDistance();
-}
 
 void ExtensionSubsystem::RunExtension(double set) {
   if (SwitchLow()) {

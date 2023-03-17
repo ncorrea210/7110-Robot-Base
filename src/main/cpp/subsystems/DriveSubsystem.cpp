@@ -13,7 +13,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "utils/Limelight.h"
-
 #include "Constants.h"
 
 using namespace DriveConstants;
@@ -43,17 +42,14 @@ DriveSubsystem::DriveSubsystem()
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  // printf("Gyro Heading: %5.2f, Rotation2d: %5.2f\n", m_gyro.GetRot2d(), m_gyro.GetRotation2d());
-
   m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
-  frc::SmartDashboard::PutNumber("Gyro Pitch", m_gyro.GetPitch());
-  frc::SmartDashboard::PutNumber("Gyro Roll", m_gyro.GetRoll());
   frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetAngle());
-  frc::SmartDashboard::PutNumber("Gyro Int", m_gyro.GetIntDist());
-
-  // printf("Limit %d\n", (int)m_Limit.Get());
+  frc::SmartDashboard::PutNumber("llX", hb::limeLight::GetX());
+  frc::SmartDashboard::PutNumber("llD", hb::limeLight::GetVec().distance);
+  frc::SmartDashboard::PutNumber("llA", hb::limeLight::GetVec().angle);
+  frc::SmartDashboard::PutNumber("Gyro Rad", m_gyro.GetRad().value());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -100,6 +96,23 @@ void DriveSubsystem::Drive(VecDrive Drive, units::radian_t Heading) {
   units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(m_gyro.GetRad(), Heading));
 
   auto states = kDriveKinematics.ToSwerveModuleStates(
+    frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+      xSpeed, ySpeed, rot, m_gyro.GetRotation2d()
+    ));
+
+  kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+  m_frontLeft.SetDesiredState(fl);
+  m_frontRight.SetDesiredState(fr);
+  m_rearLeft.SetDesiredState(bl);
+  m_rearRight.SetDesiredState(br);
+}
+
+void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading) {
+    units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(m_gyro.GetRad(), heading));
+
+    auto states = kDriveKinematics.ToSwerveModuleStates(
     frc::ChassisSpeeds::FromFieldRelativeSpeeds(
       xSpeed, ySpeed, rot, m_gyro.GetRotation2d()
     ));

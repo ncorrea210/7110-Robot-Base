@@ -62,6 +62,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   void Drive(VecDrive Drive, units::radian_t heading);
 
+  void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading);
+
   void ToLimeLTarget();
 
   /**
@@ -133,7 +135,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
 
-  frc::ProfiledPIDController<units::radians> m_turnController{0.5, 0, 0,
+  frc::ProfiledPIDController<units::radians> m_turnController{7.5, 0, 0,
    {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};
 
   // Odometry class for tracking robot pose
