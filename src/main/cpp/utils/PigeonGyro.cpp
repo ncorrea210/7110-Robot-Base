@@ -63,3 +63,7 @@ double pigeonGyro::GetIntDist() {
 units::radian_t pigeonGyro::GetRad() const {
   return units::radian_t((std::numbers::pi * GetAngle()) / 180);
 }
+
+void pigeonGyro::SetPosition(units::degree_t angle) {
+  pigeon->SetFusedHeading(angle.value());
+}

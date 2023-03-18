@@ -20,6 +20,7 @@
 #include <frc/DigitalInput.h>
 #include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
+#include <frc/controller/HolonomicDriveController.h>
 
 
 #include "Constants.h"
@@ -64,8 +65,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading);
 
-  void ToLimeLTarget();
-
   /**
    * Resets the drive encoders to currently read a position of 0.
    */
@@ -108,6 +107,15 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   void ResetOdometry(frc::Pose2d pose);
+
+  frc::HolonomicDriveController GetController() {
+    return frc::HolonomicDriveController{
+      frc2::PIDController{AutoConstants::kPXController, 0, 0},
+      frc2::PIDController{AutoConstants::kPYController, 0, 0},
+      frc::ProfiledPIDController<units::radian>{
+        1, 0, 0, AutoConstants::kThetaControllerConstraints
+      }};
+  }
 
   units::meter_t kTrackWidth =
       0.31369_m;  // Distance between centers of right and left wheels on robot

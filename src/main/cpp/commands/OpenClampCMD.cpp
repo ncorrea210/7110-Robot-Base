@@ -28,4 +28,5 @@ bool OpenClampCMD::IsFinished() {
   return false;
   else if (m_clamp->GetCurrent() > 3)
   return true;
+  else return false;
 }

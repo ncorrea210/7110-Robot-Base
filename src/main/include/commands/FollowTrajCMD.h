@@ -6,10 +6,10 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include <frc/controller/PIDController.h>
 #include <frc/Timer.h>
 
 #include "subsystems/DriveSubsystem.h"
+#include "utils/Trajectories.h"
 
 /**
  * An example command.
@@ -18,10 +18,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class MoveBackCMD
-    : public frc2::CommandHelper<frc2::CommandBase, MoveBackCMD> {
+class FollowTrajCMD
+    : public frc2::CommandHelper<frc2::CommandBase, FollowTrajCMD> {
  public:
-  MoveBackCMD(DriveSubsystem* drive);
+  FollowTrajCMD(DriveSubsystem* drive, frc::Trajectory traj);
 
   void Initialize() override;
 
@@ -30,9 +30,8 @@ class MoveBackCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
-
  private:
   DriveSubsystem* m_drive;
-  frc::PIDController m_controler{0.5, 0, 0};
+  frc::Trajectory m_traj;
   frc::Timer m_timer;
 };

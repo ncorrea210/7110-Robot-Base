@@ -45,6 +45,9 @@ void DriveSubsystem::Periodic() {
   m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
+
+
+                    
   frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetAngle());
   frc::SmartDashboard::PutNumber("llX", hb::limeLight::GetX());
   frc::SmartDashboard::PutNumber("llD", hb::limeLight::GetVec().distance);
@@ -124,11 +127,6 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
   m_rearRight.SetDesiredState(br);
-}
-
-void DriveSubsystem::ToLimeLTarget() {
-  LimeLightVec llVec = hb::limeLight::GetVec();
-  
 }
 
 void DriveSubsystem::SetModuleStates(

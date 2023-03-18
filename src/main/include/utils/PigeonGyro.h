@@ -57,6 +57,8 @@ namespace hb {
 
     units::radian_t GetRad() const;
 
+    void SetPosition(units::degree_t);
+
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;
