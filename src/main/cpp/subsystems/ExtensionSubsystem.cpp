@@ -75,7 +75,7 @@ void ExtensionSubsystem::SetMax() {;
     m_Extension.Set(0.7);
   } else if (SwitchHigh()) {
     m_Extension.Set(0);
-    m_Extension.SetPosition(100);
+    m_Extension.SetPosition(158);
   }
 }
 

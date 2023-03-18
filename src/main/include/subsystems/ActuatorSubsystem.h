@@ -20,10 +20,10 @@ class ActuatorSubsystem : public frc2::SubsystemBase {
 
   double GetPosition() const;
 
-  void Run(const double& set);
+  void Run(double set);
 
   /**
-   * @brief min is 3 max is 48
+   * @brief min is 2 max is 100
   */
   void SetPosition(const int& position);
 

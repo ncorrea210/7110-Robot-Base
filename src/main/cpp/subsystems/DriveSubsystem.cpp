@@ -133,10 +133,16 @@ void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
   kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,
                                          AutoConstants::kMaxSpeed);
-  // desiredStates[0].angle = desiredStates[0].angle * -1.0;
-  // desiredStates[1].angle = desiredStates[1].angle * -1.0;
-  // desiredStates[2].angle = desiredStates[2].angle * -1.0;
-  // desiredStates[3].angle = desiredStates[3].angle * -1.0;
+  desiredStates[0].angle = ((desiredStates[0].angle * -1.0));
+  desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
+  desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
+  desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
+  frc::SmartDashboard::PutNumber("Angle mod fl", desiredStates[0].angle.Radians().value());
+  frc::SmartDashboard::PutNumber("Angle mod fr", desiredStates[1].angle.Radians().value());
+  frc::SmartDashboard::PutNumber("Angle mod rl", desiredStates[2].angle.Radians().value());
+  frc::SmartDashboard::PutNumber("Angle mod rr", desiredStates[3].angle.Radians().value());
+  
+
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
@@ -170,4 +176,11 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 
 units::radian_t DriveSubsystem::GetRad() const {
   return units::radian_t((GetHeading() / 180.0) * std::numbers::pi);
+}
+
+void DriveSubsystem::ResetEncoders() {
+  m_frontLeft.ResetEncoders();
+  m_frontRight.ResetEncoders();
+  m_rearLeft.ResetEncoders();
+  m_rearRight.ResetEncoders();
 }

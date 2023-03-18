@@ -17,11 +17,33 @@ double ActuatorSubsystem::GetPosition() const {
   return std::lround(100 * (((100 * m_Pot.Get().value()) - 3) / 45));
 }
 
-void ActuatorSubsystem::Run(const double& set) {
+void ActuatorSubsystem::Run(double set) {
+  if (GetPosition() < 6)
+  {
+    if (set < 0) {
+    m_Linear.Set(0);
+    return;
+    }
+    if (set > 0)
+    {
+    m_Linear.Set(set);
+    return;
+    }
+  } else if (GetPosition() > 95) {
+    if (set > 0) {
+      m_Linear.Set(0);
+      return;
+    } 
+    if (set < 0) {
+      m_Linear.Set(set);
+      return;
+    }
+  }
   m_Linear.Set(set);
 }
 
 void ActuatorSubsystem::SetPosition(const int& position) {
-  double calc = m_controller.Calculate(m_Pot.Get().value(), position);
-  m_Linear.Set(calc);
+  if (position > GetPosition()) Run(0.75);
+  if (position < GetPosition()) Run(-0.75);
+  if (position == GetPosition()) return;
 }

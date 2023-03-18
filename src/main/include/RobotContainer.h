@@ -29,6 +29,8 @@
 #include "commands/BalanceCMD.h"
 #include "commands/ToLLTargetCMD.h"
 #include "commands/autos/TestSeqCMD.h"
+#include "commands/autos/BalanceSeqCMD.h"
+#include "commands/autos/PlaceMidConeNLeaveSeqCMD.h"
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -62,6 +64,8 @@ class RobotContainer {
   BalanceCMD Balance{&m_drive};
   ToLLTargetCMD LLTarget{&m_drive};
   TestSeqCMD TestSeq{&m_drive};
+  BalanceSeqCMD BalanceSeq{&m_drive};
+  PlaceMidConeNLeaveSeqCMD PlaceMidNLeave{&m_drive, &m_extension, &m_actuator, &m_clamp};
 
 
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};

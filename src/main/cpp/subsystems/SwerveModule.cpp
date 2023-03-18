@@ -96,3 +96,7 @@ void SwerveModule::SetDesiredState(
       m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
       m_turningMotor.Set(turnOutput);
 }
+
+void SwerveModule::ResetEncoders() {
+  m_driveMotor.SetPosition(0);
+}
