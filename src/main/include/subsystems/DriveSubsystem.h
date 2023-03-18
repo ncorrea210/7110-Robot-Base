@@ -108,6 +108,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void ResetOdometry(frc::Pose2d pose);
 
+  units::radian_t GetRad() const;
+
   frc::HolonomicDriveController GetController() {
     return frc::HolonomicDriveController{
       frc2::PIDController{AutoConstants::kPXController, 0, 0},

@@ -167,3 +167,7 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
                     m_frontRight.GetPosition(), m_rearRight.GetPosition()},
                     pose);
 }
+
+units::radian_t DriveSubsystem::GetRad() const {
+  return units::radian_t((GetHeading() / 180.0) * std::numbers::pi);
+}

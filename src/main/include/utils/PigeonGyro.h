@@ -42,22 +42,20 @@ namespace hb {
      */
     void Calibrate() override;
 
-    double GetPitch();
+    virtual double GetPitch();
 
-    double GetRoll();
+    virtual double GetRoll();
 
     /**
      * Working version of GetRotation2d
     */
-    frc::Rotation2d GetRot2d();
+    virtual frc::Rotation2d GetRot2d();
 
-    double GetIntDist();
+    virtual double GetIntDist();
 
-    double Get2IntDist();
+    virtual units::radian_t GetRad() const;
 
-    units::radian_t GetRad() const;
-
-    void SetPosition(units::degree_t);
+    virtual void SetPosition(units::degree_t);
 
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;

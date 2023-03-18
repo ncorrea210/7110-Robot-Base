@@ -20,21 +20,28 @@ void ToLLTargetCMD::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ToLLTargetCMD::Execute() {
-  if (m_drive->m_gyro.GetRad().value() > (std::numbers::pi - 0.1) && m_drive->m_gyro.GetRad().value() < (std::numbers::pi + 0.1))
-  m_drive->Drive(
-    0_mps,
-    0_mps,
-    units::radian_t(std::numbers::pi));
-  else if (hb::limeLight::HasTarget()) {
-  double yCalc = -m_xController.Calculate(hb::limeLight::GetX(), 0);
-  double xCalc = m_yController.Calculate(hb::limeLight::GetY(), 0);
-  yCalc = std::clamp(yCalc, -0.4, 0.4);
-  xCalc = std::clamp(xCalc, -0.5, 0.5);
-  m_drive->Drive(
-    units::meters_per_second_t(xCalc),
-    units::meters_per_second_t(yCalc),
-    units::radian_t(0));
-  } 
+  if (hb::limeLight::HasTarget()) {
+    m_timer.Stop();
+    m_timer.Reset();
+    if (m_drive->GetRad().value() > std::numbers::pi + 0.1 || m_drive->GetRad().value() < std::numbers::pi - 0.1) {
+      m_drive->Drive(0_mps, 0_mps, units::radian_t(std::numbers::pi));
+      return;
+    }
+    double yCalc = m_yController.Calculate(-hb::limeLight::GetY(), 0);
+    double xCalc = m_xController.Calculate(hb::limeLight::GetX(), 0);
+    if (fabs(hb::limeLight::GetX()) < 1)
+    xCalc = 0;
+    if(fabs(hb::limeLight::GetY()) < 1)
+    yCalc = 0;
+    m_drive->Drive(
+      units::meters_per_second_t(yCalc),
+      units::meters_per_second_t(xCalc),
+      units::radians_per_second_t(0),
+      false
+    );
+  } else if (!hb::limeLight::HasTarget()) {
+    m_timer.Start();
+  }
 }
 
 // Called once the command ends or is interrupted.
@@ -42,5 +49,7 @@ void ToLLTargetCMD::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool ToLLTargetCMD::IsFinished() {
-  return false;
+  if (m_timer.Get() > 0.1_s) return true;
+  if (fabs(hb::limeLight::GetX()) < 1 && fabs(hb::limeLight::GetY()) < 1) return true;
+  else return false;
 }
