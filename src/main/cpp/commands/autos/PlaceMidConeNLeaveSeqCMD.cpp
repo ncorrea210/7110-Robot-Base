@@ -20,11 +20,6 @@ PlaceMidConeNLeaveSeqCMD::PlaceMidConeNLeaveSeqCMD(DriveSubsystem* drive, Extens
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
   AddCommands(
-              StopCMD(drive), 
-              frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);}),
-              frc2::WaitCommand(0.25_s), 
-              ToLLTargetCMD(drive), 
-              StopCMD(drive), 
               PlaceMidConeCMD(extension, actuator), 
               frc2::WaitCommand(1_s), 
               OpenClampCMD(clamp), 

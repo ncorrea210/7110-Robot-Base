@@ -31,6 +31,12 @@
 #include "commands/autos/TestSeqCMD.h"
 #include "commands/autos/BalanceSeqCMD.h"
 #include "commands/autos/PlaceMidConeNLeaveSeqCMD.h"
+#include "commands/armpositions/DrivePositionCMD.h"
+#include "commands/armpositions/InFrameCMD.h"
+#include "commands/armpositions/PickUpCMD.h"
+#include "commands/armpositions/PlaceMidConeCMD.h"
+#include "commands/armpositions/CubeGrapPosCMD.h"
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -43,6 +49,8 @@ class RobotContainer {
   RobotContainer();
 
   frc2::Command* GetAutonomousCommand();
+
+  bool ConeCubeToggle();
 
  private:
   // The driver's controller
@@ -73,6 +81,7 @@ class RobotContainer {
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
   int m_Routine;
+  bool m_last = true;
 
   void ConfigureButtonBindings();
 };

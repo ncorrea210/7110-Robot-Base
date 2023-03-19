@@ -13,6 +13,9 @@ ExtensionSubsystem::ExtensionSubsystem() {}
 void ExtensionSubsystem::Periodic() {
   if (SwitchLow()) m_Extension.SetPosition(0);
   if(SwitchHigh()) m_Extension.SetPosition(158);
+  frc::SmartDashboard::PutBoolean("Switch High", SwitchHigh());
+  frc::SmartDashboard::PutBoolean("Switch Low", SwitchLow());
+  frc::SmartDashboard::PutNumber("Arm Position", GetPosition());
 
 }
 
@@ -37,19 +40,19 @@ void ExtensionSubsystem::SetPos(double sp) {
   calc = std::clamp(calc, -0.75, 0.75);
 
   if (SwitchHigh() && calc > 0) {
-    m_Extension.Set(0);
+    RunExtension(0);
     return;
   } else if (SwitchHigh() && calc < 0) {
-    m_Extension.Set(calc);
+    RunExtension(calc);
     return;
   } else if (SwitchLow() && calc > 0) {
-    m_Extension.Set(calc);
+    RunExtension(calc);
     return;
   } else if (SwitchLow() && calc < 0) {
-    m_Extension.Set(0);
+    RunExtension(0);
     return;
   } else
-  m_Extension.Set(calc);
+  RunExtension(calc);
 }
 
 
@@ -72,7 +75,7 @@ void ExtensionSubsystem::RunExtension(double set) {
 
 void ExtensionSubsystem::SetMax() {;
   if(!SwitchHigh()) {
-    m_Extension.Set(0.7);
+    RunExtension(0.7);
   } else if (SwitchHigh()) {
     m_Extension.Set(0);
     m_Extension.SetPosition(158);
@@ -81,7 +84,7 @@ void ExtensionSubsystem::SetMax() {;
 
 void ExtensionSubsystem::SetMin() {
   if (!SwitchLow()) {
-    m_Extension.Set(-0.7);
+    RunExtension(-0.7);
   } else if (SwitchLow()) {
     m_Extension.Set(0);
     m_Extension.SetPosition(0);

@@ -27,9 +27,9 @@ void ToLLTargetCMD::Execute() {
     //   m_drive->Drive(0_mps, 0_mps, units::radian_t(std::numbers::pi));
     //   return;
     // }
-    double yCalc = std::clamp((m_yController.Calculate(hb::limeLight::GetY(), 0)), -1.0, 1.0);
-    double xCalc = std::clamp((-m_xController.Calculate(hb::limeLight::GetX(), 0)), -1.0, 1.0);
-    if (fabs(hb::limeLight::GetX()) < 0.75)
+    double yCalc = std::clamp((m_yController.Calculate(hb::limeLight::GetY(), 0)), -0.75, 0.75);
+    double xCalc = std::clamp((-m_xController.Calculate(hb::limeLight::GetX(), 0)), -0.75, 0.75);
+    if (fabs(hb::limeLight::GetX()) < 0.5)
     xCalc = 0;
     if(fabs(hb::limeLight::GetY()) < 0.75)
     yCalc = 0;
@@ -58,17 +58,17 @@ bool ToLLTargetCMD::IsFinished() {
       0_mps,
       0_mps,
       0_rad_per_s, 
-      false
+      true
     );
     return true;
   }
-  if (fabs(hb::limeLight::GetX()) < 0.75 && fabs(hb::limeLight::GetY()) < 0.75) 
+  if (fabs(hb::limeLight::GetX()) < 0.5 && fabs(hb::limeLight::GetY()) < 0.75) 
   {
     m_drive->Drive(
       0_mps,
       0_mps,
       0_rad_per_s,
-      false
+      true
     );
     return true;
   }
