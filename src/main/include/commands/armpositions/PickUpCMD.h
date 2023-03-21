@@ -22,7 +22,7 @@
 class PickUpCMD
     : public frc2::CommandHelper<frc2::CommandBase, PickUpCMD> {
  public:
-  PickUpCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, std::function<bool()> cone);
+  PickUpCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, bool cone);
 
   void Initialize() override;
 
@@ -34,5 +34,5 @@ class PickUpCMD
  private:
   ExtensionSubsystem* m_extension;
   ActuatorSubsystem* m_actuator;
-  std::function<bool()> m_cone;
+  bool m_cone;
 };

@@ -33,6 +33,8 @@
 
 using namespace DriveConstants;
 
+static bool cone = true;
+
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
   // m_MainEncoder.SetDutyCycleRange(1/1025, 1024/1025);
@@ -112,10 +114,10 @@ void RobotContainer::ConfigureButtonBindings() {
   
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed(InFrameCMD(&m_extension, &m_actuator));
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(PlaceMidConeCMD(&m_extension, &m_actuator));
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(PickUpCMD(&m_extension, &m_actuator, [this] {return m_last;}));
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(PickUpCMD(&m_extension, &m_actuator, cone));
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed(CubeGrapPosCMD(&m_extension, &m_actuator));
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed(
-    frc2::InstantCommand([this] {m_last ? m_last = false : m_last = true;}));
+    frc2::InstantCommand([this] {cone ? cone = false : cone = true;}));
   
 
 }

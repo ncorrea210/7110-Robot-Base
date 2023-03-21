@@ -4,7 +4,7 @@
 
 #include "commands/armpositions/PickUpCMD.h"
 
-PickUpCMD::PickUpCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, std::function<bool()> cone) : m_extension(extension), m_actuator(actuator), m_cone(std::move(cone)) {
+PickUpCMD::PickUpCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, bool cone) : m_extension(extension), m_actuator(actuator), m_cone(cone) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(extension);
   AddRequirements(actuator);
@@ -16,9 +16,9 @@ void PickUpCMD::Initialize() {}
 // Called repeatedly when this Command is scheduled to run
 void PickUpCMD::Execute() {
   m_actuator->SetPosition(2);
-  if (m_cone()) {
+  if (m_cone) {
   m_extension->SetPos(100);
-  } else if (!m_cone()) {
+  } else if (!m_cone) {
   m_extension->SetPos(50);
   }
 }
