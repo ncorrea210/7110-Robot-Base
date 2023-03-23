@@ -72,7 +72,7 @@ class RobotContainer {
   BalanceCMD Balance{&m_drive};
   ToLLTargetCMD LLTarget{&m_drive};
   TestSeqCMD TestSeq{&m_drive};
-  BalanceSeqCMD BalanceSeq{&m_drive};
+  BalanceSeqCMD BalanceSeq{&m_drive, &m_extension, &m_actuator, &m_clamp};
   PlaceMidConeNLeaveSeqCMD PlaceMidNLeave{&m_drive, &m_extension, &m_actuator, &m_clamp};
 
 

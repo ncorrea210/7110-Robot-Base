@@ -70,6 +70,12 @@ namespace hb {
       */
       static void SetPipeline(Pipeline);
 
+      static Pipeline GetPipeline();
+
+      static CamMode GetMode();
+
+      static LEDMode GetLED();
+
   };
 }
 

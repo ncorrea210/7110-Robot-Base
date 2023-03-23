@@ -9,12 +9,12 @@
 
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ExtensionSubsystem.h"
-#include "subsystems/ActuatorSubsystem.h"
+#include"subsystems/ActuatorSubsystem.h"
 #include "subsystems/ClampSubsystem.h"
 
-class BalanceSeqCMD
+class BalanceConeSeqCMD
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 BalanceSeqCMD> {
+                                 BalanceConeSeqCMD> {
  public:
-  BalanceSeqCMD(DriveSubsystem* drive, ExtensionSubsystem* extension, ActuatorSubsystem* actuator, ClampSubsystem* clamp);
+  BalanceConeSeqCMD(DriveSubsystem* drive, ExtensionSubsystem* extension, ActuatorSubsystem* actuator, ClampSubsystem* clamp);
 };

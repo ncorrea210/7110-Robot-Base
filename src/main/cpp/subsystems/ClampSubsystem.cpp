@@ -9,7 +9,7 @@ ClampSubsystem::ClampSubsystem(frc::PowerDistribution* pdp) : m_PDP(pdp) {}
 
 // This method will be called once per scheduler run
 void ClampSubsystem::Periodic() {
-  frc::SmartDashboard::PutNumber("PDP", m_PDP->GetCurrent(12));
+  frc::SmartDashboard::PutNumber("PDP", m_PDP->GetCurrent(10));
 }
 
 void ClampSubsystem::RunClamp(double set) {

@@ -22,6 +22,9 @@
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
 
+#include <frc/AddressableLED.h>
+#include <array>
+
 
 #include "Constants.h"
 #include "SwerveModule.h"
@@ -119,6 +122,22 @@ class DriveSubsystem : public frc2::SubsystemBase {
       }};
   }
 
+  inline void ConeCubeMode() {
+    m_mode = m_mode ? false : true;
+  }
+
+  inline bool GetMode() {
+    return m_mode;
+  }
+
+  inline void SlowFastSpeed() {
+    m_sMode = m_sMode ? false : true;
+  }
+
+  inline bool GetSpeed() {
+    return m_sMode;
+  }
+
   units::meter_t kTrackWidth =
       0.31369_m;  // Distance between centers of right and left wheels on robot
   units::meter_t kWheelBase =
@@ -136,6 +155,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   hb::pigeonGyro m_gyro{DriveConstants::CanIds::kPidgeonID};
 
+  void SetRGB(int R, int G, int B);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -144,6 +165,12 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_rearLeft;
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
+
+  bool m_mode = false;
+  bool m_sMode = true;
+
+  frc::AddressableLED m_led;
+  std::array<frc::AddressableLED::LEDData, 1> m_ledBuffer; 
 
   frc::ProfiledPIDController<units::radians> m_turnController{7.5, 0, 0,
    {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};

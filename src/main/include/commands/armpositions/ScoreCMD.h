@@ -7,7 +7,6 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 #include <functional>
-#include <utility>
 
 #include "subsystems/ExtensionSubsystem.h"
 #include "subsystems/ActuatorSubsystem.h"
@@ -19,10 +18,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class PickUpCMD
-    : public frc2::CommandHelper<frc2::CommandBase, PickUpCMD> {
+class ScoreCMD
+    : public frc2::CommandHelper<frc2::CommandBase, ScoreCMD> {
  public:
-  PickUpCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, std::function<bool()> cone);
+  ScoreCMD(ExtensionSubsystem* extension, ActuatorSubsystem* actuator, std::function<bool()> cone);
 
   void Initialize() override;
 
@@ -31,6 +30,7 @@ class PickUpCMD
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+ 
  private:
   ExtensionSubsystem* m_extension;
   ActuatorSubsystem* m_actuator;

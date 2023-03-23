@@ -19,11 +19,19 @@ void BalanceCMD::Initialize() {}
 // Called repeatedly when this Command is scheduled to run
 void BalanceCMD::Execute() {
   double calc = m_Controller.Calculate(std::lround(m_Drive->m_gyro.GetRoll()), 0.0);
+  if (fabs(m_Drive->m_gyro.GetRoll()) < 2.5) 
+  m_Drive->Drive(
+    0_mps,
+    0_mps,
+    0_rad_per_s,
+    true
+  );
+  else
   m_Drive->Drive(
     units::meters_per_second_t(std::clamp(calc, -0.25, 0.25)),
     0_mps,
     units::radians_per_second_t(0),
-    true
+    false
   );
 }
 

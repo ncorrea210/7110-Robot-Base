@@ -45,3 +45,15 @@ void limeLight::SetMode(CamMode Mode) {
 void limeLight::SetPipeline(Pipeline Pipe) {
   SetVal("pipeline", (int)Pipe);
 }
+
+limeLight::Pipeline limeLight::GetPipeline() {
+  return limeLight::Pipeline(GetVal("pipeline"));
+}
+
+limeLight::CamMode limeLight::GetMode() {
+  return limeLight::CamMode(GetVal("camMode"));
+}
+
+limeLight::LEDMode limeLight::GetLED() {
+  return limeLight::LEDMode(GetVal("ledMode"));
+}

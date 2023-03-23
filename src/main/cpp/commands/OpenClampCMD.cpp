@@ -28,5 +28,7 @@ bool OpenClampCMD::IsFinished() {
   return false;
   else if (m_clamp->GetCurrent() > 3)
   return true;
+  // else if (m_timer.Get().value() > 2) 
+  // return true;
   else return false;
 }

@@ -22,8 +22,9 @@ FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_dr
 void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
   auto initPose = initState.pose;
-  m_drive->m_gyro.SetPosition(initPose.Rotation().Degrees());
+  printf("init rotation: %5.2f\n", initState.holonomicRotation.Degrees().value());
   m_drive->ResetOdometry({initPose.Translation(), initState.holonomicRotation});
+  m_drive->m_gyro.SetPosition(initState.holonomicRotation.Degrees());
   m_drive->ResetEncoders();
   m_timer.Reset();
   m_timer.Start();

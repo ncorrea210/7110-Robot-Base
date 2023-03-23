@@ -35,10 +35,16 @@ DriveSubsystem::DriveSubsystem()
       m_rearRight{
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightTurningEncoderPorts,  kRearRightOffset},
+      
+      m_led(2), 
 
       m_odometry(kDriveKinematics, m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {}
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {
+  m_led.SetLength(1);
+  m_led.SetData(m_ledBuffer);
+  m_led.Start();
+  }
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
@@ -46,13 +52,16 @@ void DriveSubsystem::Periodic() {
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
 
+  if (GetMode()) {
+    SetRGB(50, 0, 255);
+  } else {
+    SetRGB(255, 255, 0);
+  }
 
-                    
+  frc::SmartDashboard::PutBoolean("Cone Cube Mode", m_mode);              
   frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetAngle());
-  frc::SmartDashboard::PutNumber("llX", hb::limeLight::GetX());
-  frc::SmartDashboard::PutNumber("llD", hb::limeLight::GetVec().distance);
-  frc::SmartDashboard::PutNumber("llA", hb::limeLight::GetVec().angle);
-  frc::SmartDashboard::PutNumber("Gyro Rad", m_gyro.GetRad().value());
+  frc::SmartDashboard::PutBoolean("Speed", m_sMode);
+  frc::SmartDashboard::PutNumber("Gyro Roll", m_gyro.GetRoll());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -64,7 +73,6 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                           xSpeed, ySpeed, rot, m_gyro.GetRot2d())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
 
-  frc::SmartDashboard::PutNumber("M2 ReS", states[1].speed.value());
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
@@ -137,12 +145,6 @@ void DriveSubsystem::SetModuleStates(
   desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
   desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
   desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
-  frc::SmartDashboard::PutNumber("Angle mod fl", desiredStates[0].angle.Radians().value());
-  frc::SmartDashboard::PutNumber("Angle mod fr", desiredStates[1].angle.Radians().value());
-  frc::SmartDashboard::PutNumber("Angle mod rl", desiredStates[2].angle.Radians().value());
-  frc::SmartDashboard::PutNumber("Angle mod rr", desiredStates[3].angle.Radians().value());
-  
-
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
@@ -183,4 +185,10 @@ void DriveSubsystem::ResetEncoders() {
   m_frontRight.ResetEncoders();
   m_rearLeft.ResetEncoders();
   m_rearRight.ResetEncoders();
+}
+
+void DriveSubsystem::SetRGB(int R, int G, int B) {
+  m_ledBuffer[0].SetRGB(R, G, B);
+  m_led.SetData(m_ledBuffer);
+  return;
 }
