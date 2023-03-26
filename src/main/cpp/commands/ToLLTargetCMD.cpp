@@ -60,6 +60,7 @@ bool ToLLTargetCMD::IsFinished() {
       0_rad_per_s, 
       true
     );
+    m_timer.Reset();
     return true;
   }
   if (fabs(hb::limeLight::GetX()) < 0.5 && fabs(hb::limeLight::GetY()) < 0.75) 

@@ -16,7 +16,7 @@ void InFrameCMD::Initialize() {}
 // Called repeatedly when this Command is scheduled to run
 void InFrameCMD::Execute() {
   m_actuator->SetPosition(100);
-  if (m_actuator->GetPosition() < 20) return;
+  if (m_actuator->GetPosition() < 35) return;
   else 
   m_extension->SetMin();
 }
