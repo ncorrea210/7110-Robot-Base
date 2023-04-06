@@ -17,11 +17,24 @@
 #include <frc2/command/SubsystemBase.h>
 #include <wpi/array.h>
 #include <frc/kinematics/SwerveModulePosition.h>
+#include <frc/DigitalInput.h>
+#include <units/angle.h>
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/controller/HolonomicDriveController.h>
+
+#include <frc/AddressableLED.h>
+#include <array>
+
 
 #include "Constants.h"
 #include "SwerveModule.h"
 
 #include "utils/PigeonGyro.h"
+
+typedef struct {
+  double speed;
+  double angle;
+} VecDrive;
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -48,6 +61,12 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative);
+
+  void Drive(VecDrive Drive, units::radians_per_second_t rot, bool fieldRelative);
+
+  void Drive(VecDrive Drive, units::radian_t heading);
+
+  void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading);
 
   /**
    * Resets the drive encoders to currently read a position of 0.
@@ -92,6 +111,33 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void ResetOdometry(frc::Pose2d pose);
 
+  units::radian_t GetRad() const;
+
+  frc::HolonomicDriveController GetController() {
+    return frc::HolonomicDriveController{
+      frc2::PIDController{AutoConstants::kPXController, 0, 0},
+      frc2::PIDController{AutoConstants::kPYController, 0, 0},
+      frc::ProfiledPIDController<units::radian>{
+        1, 0, 0, AutoConstants::kThetaControllerConstraints
+      }};
+  }
+
+  inline void ConeCubeMode() {
+    m_mode = m_mode ? false : true;
+  }
+
+  inline bool GetMode() {
+    return m_mode;
+  }
+
+  inline void SlowFastSpeed() {
+    m_sMode = m_sMode ? false : true;
+  }
+
+  inline bool GetSpeed() {
+    return m_sMode;
+  }
+
   units::meter_t kTrackWidth =
       0.31369_m;  // Distance between centers of right and left wheels on robot
   units::meter_t kWheelBase =
@@ -109,6 +155,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   hb::pigeonGyro m_gyro{DriveConstants::CanIds::kPidgeonID};
 
+  void SetRGB(int R, int G, int B);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -118,7 +166,14 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
 
-  // The gyro sensor
+  bool m_mode = false;
+  bool m_sMode = true;
+
+  frc::AddressableLED m_led;
+  std::array<frc::AddressableLED::LEDData, 1> m_ledBuffer; 
+
+  frc::ProfiledPIDController<units::radians> m_turnController{7.5, 0, 0,
+   {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};
 
   // Odometry class for tracking robot pose
   // 4 defines the number of modules

@@ -3,86 +3,90 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/ExtensionSubsystem.h"
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <cmath>
 
 #include <cmath>
 
-ExtensionSubsystem::ExtensionSubsystem(frc::DutyCycleEncoder* encoder, frc::PowerDistribution* pdp) : m_Encoder(encoder), m_PDP(pdp) {}
+ExtensionSubsystem::ExtensionSubsystem() {}
 
-// This method will be called once per scheduler run
 void ExtensionSubsystem::Periodic() {
-    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
-    m_Extension.SetPosition(0);
-  } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
-    m_Extension.SetPosition(200);
-  }
+  if (SwitchLow()) m_Extension.SetPosition(0);
+  if(SwitchHigh()) m_Extension.SetPosition(158);
+  frc::SmartDashboard::PutBoolean("Switch High", SwitchHigh());
+  frc::SmartDashboard::PutBoolean("Switch Low", SwitchLow());
+  frc::SmartDashboard::PutNumber("Arm Position", GetPosition());
+
 }
 
+bool ExtensionSubsystem::SwitchHigh() {
+  if (m_Extension.GetDistance() > 50 && !m_LimitSwitch.Get()) {
+    return true; 
+  } else return false;
+}
 
-
-void ExtensionSubsystem::SetPos(double sp) {
-  double calc = m_Controller.Calculate(std::lround(m_Extension.GetDistance()), sp);
-  calc = std::clamp(calc, -0.5, 0.5);
-
-  if (SwitchHigh() && calc > 0) {
-    m_Extension.Set(0);
-    return;
-  } else if (SwitchHigh() && calc < 0) {
-    m_Extension.Set(calc);
-    return;
-  } else if (SwitchLow() && calc > 0) {
-    m_Extension.Set(calc);
-    return;
-  } else if (SwitchLow() && calc < 0) {
-    m_Extension.Set(0);
-    return;
-  } else
-  m_Extension.Set(calc);
+bool ExtensionSubsystem::SwitchLow() {
+  if (m_Extension.GetDistance() < 75 && !m_LimitSwitch.Get()) {
+    return true; 
+  } else return false;
 }
 
 double ExtensionSubsystem::GetPosition() {
-  return m_Extension.GetDistance();
+  return std::lround(m_Extension.GetDistance());
 }
 
-void ExtensionSubsystem::RunExtension(double set){
-  if (m_Extension.GetDistance() < 50 && !m_LimitSwitch.Get()) {
+void ExtensionSubsystem::SetPos(double sp) {
+  double calc = m_Controller.Calculate(GetPosition(), sp);
+  calc = std::clamp(calc, -0.75, 0.75);
+
+  if (SwitchHigh() && calc > 0) {
+    RunExtension(0);
+    return;
+  } else if (SwitchHigh() && calc < 0) {
+    RunExtension(calc);
+    return;
+  } else if (SwitchLow() && calc > 0) {
+    RunExtension(calc);
+    return;
+  } else if (SwitchLow() && calc < 0) {
+    RunExtension(0);
+    return;
+  } else
+  RunExtension(calc);
+}
+
+
+void ExtensionSubsystem::RunExtension(double set) {
+  if (SwitchLow()) {
     if (set > 0) {
       m_Extension.Set(set);
-      return;
     } else {
       m_Extension.Set(0);
-      return;
     }
-  }
-  if (m_Extension.GetDistance() > 150 && !m_LimitSwitch.Get()) {
+  } else if (SwitchHigh()) {
     if (set < 0) {
       m_Extension.Set(set);
-      return;
     } else {
       m_Extension.Set(0);
-      return;
     }
-  }
+  } else 
   m_Extension.Set(set);
 }
 
-double ExtensionSubsystem::GetAngle() {
-  return m_Encoder->GetDistance();
-}
-
-void ExtensionSubsystem::ZeroExtension() {
-  if (m_LimitSwitch.Get() || m_Extension.GetDistance() > 50)
-  m_Extension.Set(-0.5);
-  else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
-  m_Extension.Set(0);
-  m_Extension.SetPosition(0);
+void ExtensionSubsystem::SetMax() {;
+  if(!SwitchHigh()) {
+    RunExtension(0.7);
+  } else if (SwitchHigh()) {
+    m_Extension.Set(0);
+    m_Extension.SetPosition(158);
   }
 }
 
-void ExtensionSubsystem::SetMax() {;
-  if(m_LimitSwitch.Get() || m_Extension.GetDistance() < 50) {
-    m_Extension.Set(0.7);
-  } else if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 50) {
+void ExtensionSubsystem::SetMin() {
+  if (!SwitchLow()) {
+    RunExtension(-0.7);
+  } else if (SwitchLow()) {
     m_Extension.Set(0);
-    m_Extension.SetPosition(200);
+    m_Extension.SetPosition(0);
   }
 }

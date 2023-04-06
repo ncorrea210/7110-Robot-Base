@@ -5,13 +5,15 @@
 #include <utility>
 
 #include "commands/DefaultDriveCMD.h"
+#include "Constants.h"
 
 using namespace units::velocity;
 using namespace units::angular_velocity;
 
 DefaultDriveCMD::DefaultDriveCMD(DriveSubsystem* subsystem, std::function<double()> x, 
-  std::function<double()> y, std::function<double()> rot, std::function<bool()> field) :
-  m_subsystem(subsystem), m_x(std::move(x)), m_y(std::move(y)), m_rot(std::move(rot)), m_field(std::move(field)) {
+  std::function<double()> y, std::function<double()> rot, std::function<bool()> field, std::function<bool()> speed) :
+  m_subsystem(subsystem), m_x(std::move(x)), m_y(std::move(y)), 
+  m_rot(std::move(rot)), m_field(std::move(field)), m_speed(std::move(speed)) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(subsystem);
 }
@@ -23,8 +25,8 @@ void DefaultDriveCMD::Initialize() {}
 void DefaultDriveCMD::Execute() {
   // printf("x: %5.2f y: %5.2f rot %5.2f\n", m_x(), m_y(), m_rot());
   m_subsystem->Drive(
-  meters_per_second_t(m_x()),
-  meters_per_second_t(m_y()), 
+  meters_per_second_t(m_x() * (m_speed() ? (double)DriveConstants::kMaxSpeed : (double)DriveConstants::kFineSpeed)),
+  meters_per_second_t(m_y() * (m_speed() ? (double)DriveConstants::kMaxSpeed : (double)DriveConstants::kFineSpeed)), 
   radians_per_second_t(m_rot()),
   true
   );

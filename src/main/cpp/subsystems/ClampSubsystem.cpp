@@ -3,20 +3,19 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/ClampSubsystem.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 
-ClampSubsystem::ClampSubsystem(frc::PowerDistribution* pdp) : m_PDP(pdp) {
-  // m_motor.SetSmartCurrentLimit(15);
-}
+ClampSubsystem::ClampSubsystem(frc::PowerDistribution* pdp) : m_PDP(pdp) {}
 
 // This method will be called once per scheduler run
 void ClampSubsystem::Periodic() {
-  // printf("ClawCurrent: %5.2f\n", m_PDP->GetCurrent(13));
+  frc::SmartDashboard::PutNumber("PDP", m_PDP->GetCurrent(10));
 }
 
-void ClampSubsystem::RunClaw(double set) {
+void ClampSubsystem::RunClamp(double set) {
   m_motor.Set(set);
 }
 
 double ClampSubsystem::GetCurrent() {
-  return m_PDP->GetCurrent(13);
+  return m_PDP->GetCurrent(9);
 }

@@ -4,59 +4,62 @@
 
 #pragma once
 
-#define E_MAX 50.0
-#define E_MIN 5.0
-
 #include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
-#include <frc/DutyCycleEncoder.h>
-#include <utility>
-#include <frc/PowerDistribution.h>
 #include <frc/DigitalInput.h>
 
 #include "utils/NeoMotors.h"
 
 class ExtensionSubsystem : public frc2::SubsystemBase {
  public:
-  ExtensionSubsystem(frc::DutyCycleEncoder* encoder, frc::PowerDistribution* pdp);
+  ExtensionSubsystem();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
+  /**
+   * @brief Checks if the limit switch is true
+   * 
+   * @returns true if Limit Switch is on and arm is high
+  */
+  bool SwitchHigh();
+
+  /**
+   * @brief Checks if the limit switch is true
+   * 
+   * @returns true if limit switch is on and arm is low
+  */
+  bool SwitchLow();
+
+  /**
+   * @brief Sets the arm position using a PID controller
+   * 
+   * @param setpoint of the arm
+  */
   void SetPos(double sp);
 
+  /**
+   * @brief Gets the position of the arm using the Neo 550 encoder
+   * 
+   * @returns the position of the arm
+  */
   double GetPosition();
 
+  /**
+   * @brief Runs the arm to the max position
+  */
   void SetMax();
 
   void RunExtension(double speed);
 
-  double GetAngle();
-
-  void ZeroExtension();
-
-  inline bool SwitchLow()
-  {
-    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() < 50) {
-      return true;
-    } else return false;
-  }
-
-  inline bool SwitchHigh() {
-    if (!m_LimitSwitch.Get() && m_Extension.GetDistance() > 150) {
-      return true;
-    } else return false;
-  }
+  void SetMin();
 
  private:
-  hb::NeoMotor m_Extension{10, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
-  frc::PIDController m_Controller{0.2125, 0, 0.004125};
-  frc::DutyCycleEncoder* m_Encoder;
-  const double m_Ratio = 1;
-  frc::PowerDistribution* m_PDP;
-  frc::DigitalInput m_LimitSwitch{1};
+  hb::NeoMotor m_Extension{9, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
+  frc::PIDController m_Controller{0.1, 0, 0};
+  frc::DigitalInput m_LimitSwitch{0};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

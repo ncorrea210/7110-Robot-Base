@@ -17,23 +17,25 @@
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/PowerDistribution.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ExtensionSubsystem.h"
-#include "subsystems/WinchSubsystem.h"
-#include "commands/AutoRoutines.h"
-#include "commands/DefaultDriveCMD.h"
+#include "subsystems/ActuatorSubsystem.h"
 #include "subsystems/ClampSubsystem.h"
-#include "commands/SetFarPositionCMD.h"
-#include "commands/CloseClawCMD.h"
-#include "commands/OpenClawCMD.h"
-#include "commands/InFrameCMD.h"
-#include "commands/CloseCubeCMD.h"
-#include "commands/DefaultPositionCMD.h"
-#include "commands/MidScoreCMD.h"
-#include "commands/PickUpAngleCMD.h"
+#include "commands/DefaultDriveCMD.h"
+#include "commands/BalanceCMD.h"
+#include "commands/ToLLTargetCMD.h"
+#include "commands/autos/TestSeqCMD.h"
+#include "commands/autos/BalanceSeqCMD.h"
+#include "commands/autos/PlaceMidConeNLeaveSeqCMD.h"
+#include "commands/armpositions/DrivePositionCMD.h"
+#include "commands/armpositions/InFrameCMD.h"
+#include "commands/armpositions/PickUpCMD.h"
+#include "commands/armpositions/PlaceMidConeCMD.h"
+#include "commands/armpositions/CubeGrapPosCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -48,14 +50,14 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
+  bool ConeCubeToggle();
+
  private:
   // The driver's controller
-  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+  frc::XboxController m_driverController{0};
   frc::XboxController m_operatorController{1};
 
   // The robot's subsystems and commands are defined here...
-
-  Auto m_auto;
 
   frc::SlewRateLimiter<units::scalar> m_speedLimitx{3 / 1_s};
   frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
@@ -63,28 +65,23 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  WinchSubsystem m_Winch{&m_MainEncoder, &m_PDP};
-  ExtensionSubsystem m_Extension{&m_MainEncoder, &m_PDP};
+  ExtensionSubsystem m_extension;
+  ActuatorSubsystem m_actuator;
   ClampSubsystem m_clamp{&m_PDP};
 
-  SetFarPositionCMD SetFar{&m_Extension, &m_Winch};
-  CloseClawCMD CloseClaw{&m_clamp};
-  OpenClawCMD OpenClaw{&m_clamp};
-  InFrameCMD InFrame{&m_Winch, &m_Extension};
-  CloseCubeCMD CloseCube{&m_clamp};
-  DefaultPositionCMD DefaultPosition{&m_Extension, &m_Winch};
-  MidScoreCMD MidScore{&m_Extension, &m_Winch};
-  PickUpAngleCMD PickUpAngle{&m_Winch};
+  BalanceCMD Balance{&m_drive};
+  ToLLTargetCMD LLTarget{&m_drive};
+  TestSeqCMD TestSeq{&m_drive};
+  BalanceSeqCMD BalanceSeq{&m_drive, &m_extension, &m_actuator, &m_clamp};
+  PlaceMidConeNLeaveSeqCMD PlaceMidNLeave{&m_drive, &m_extension, &m_actuator, &m_clamp};
 
-  frc::DutyCycleEncoder m_MainEncoder{0};
+
   frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
-
-
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
-  frc::Trajectory m_SelectedTrajectory;
   int m_Routine;
+  bool m_last = true;
 
   void ConfigureButtonBindings();
 };

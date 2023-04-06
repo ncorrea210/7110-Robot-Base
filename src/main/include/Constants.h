@@ -12,6 +12,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
+#include <units/angular_acceleration.h>
 #include <numbers>
 
 
@@ -46,10 +47,17 @@ namespace DriveConstants {
     const int kPidgeonID = 0;
     } // namespace CanIds
 
-constexpr double kFrontLeftOffset = -138.25/**-142.03**/; //encoder 0
-constexpr double kRearLeftOffset = -42.71/**20.83**/; //encoder 2
-constexpr double kFrontRightOffset = 102.66/*109.6**/; //encoder 1
-constexpr double kRearRightOffset = -162.25/**21.09*/; //encoder 3
+constexpr double kFrontLeftOffset = 41.31  /*-138.25*/ /**-142.03**/; //encoder 2
+constexpr double kRearLeftOffset =  -42.71 /*-42.71*/ /**20.83**/; //encoder 1
+constexpr double kFrontRightOffset = 107.48 /*102.66*/ /*109.6**/; //encoder 3
+constexpr double kRearRightOffset = -168.75 /*-162.25*//**21.09*/; //encoder 4
+
+constexpr auto kMaxSpeed = 4_mps;
+constexpr auto kFineSpeed = 1_mps;
+constexpr auto kMaxAngularSpeed = units::radians_per_second_t(2 * std::numbers::pi);
+constexpr auto kMaxAngularAcceleration = units::radians_per_second_squared_t(2 * std::numbers::pi);
+
+constexpr auto kPushnBalanceSpeed = 2_mps;
 
 }  // namespace DriveConstants
 
@@ -71,10 +79,10 @@ using radians_per_second_squared_t =
     units::compound_unit<units::radians,
                          units::inverse<units::squared<units::second>>>;
 
-constexpr auto kMaxSpeed = units::meters_per_second_t(/*4.4*/ 4.5);
-constexpr auto kMaxAcceleration = units::meters_per_second_squared_t(2.5);
-constexpr auto kMaxAngularSpeed = units::radians_per_second_t(3.142 * 3);
-constexpr auto kMaxAngularAcceleration = units::unit_t<radians_per_second_squared_t>(3.142 * 3);
+constexpr auto kMaxSpeed = units::meters_per_second_t(1.5);
+constexpr auto kMaxAcceleration = units::meters_per_second_squared_t(1.5);
+constexpr auto kMaxAngularSpeed = units::radians_per_second_t(3.142);
+constexpr auto kMaxAngularAcceleration = units::unit_t<radians_per_second_squared_t>(3.142);
 
 constexpr double kPXController = 0.5;
 constexpr double kPYController = 0.5;

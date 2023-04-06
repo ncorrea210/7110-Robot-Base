@@ -2,6 +2,8 @@
 
 #include <frc/interfaces/Gyro.h>
 #include <ctre/phoenix/sensors/PigeonIMU.h>
+#include <units/angle.h>
+#include <frc/Timer.h>
 
 namespace hb {
 
@@ -40,14 +42,27 @@ namespace hb {
      */
     void Calibrate() override;
 
+    virtual double GetPitch();
+
+    virtual double GetRoll();
+
     /**
      * Working version of GetRotation2d
     */
-    frc::Rotation2d GetRot2d();
+    virtual frc::Rotation2d GetRot2d();
+
+    virtual double GetIntDist();
+
+    virtual units::radian_t GetRad() const;
+
+    virtual void SetPosition(units::degree_t);
 
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;
     mutable double m_rate;
+    double m_lastTime;
+    frc::Timer m_timer;
+    double m_dist;
   };
 } // namespace hb

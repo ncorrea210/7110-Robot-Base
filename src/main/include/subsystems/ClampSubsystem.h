@@ -18,18 +18,15 @@ class ClampSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void RunClaw(double set);
-
-  void CloseClaw();
-
-  void OpenClaw();
+  void RunClamp(double set);
 
   double GetCurrent();
 
  private:
-  //  hb::NeoMotor m_motor{11, rev::CANSparkMax::MotorType::kBrushless, rev::CANSparkMax::IdleMode::kBrake};
+
   frc::VictorSP m_motor{0};
   frc::PowerDistribution* m_PDP;
+  
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 };
