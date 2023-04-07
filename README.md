@@ -9,3 +9,9 @@ Includes
 * Neo Motor Code
 * PathPlanner Implentation
 * Maybe More in the Future
+
+#TODO
+
+- Set gyro heading capability 
+- PathPlanner fully implemented
+- Methods to create advanced autonomous routines
