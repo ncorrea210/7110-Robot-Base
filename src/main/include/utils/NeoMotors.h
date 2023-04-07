@@ -17,7 +17,7 @@ namespace hb {
        * 
        * @param ratio
        */
-      void SetRPM2MPS(const double&);
+      void SetRatio(const double&);
 
       /**
        * @brief calling this function will multiply the rotations per second of the
@@ -34,6 +34,11 @@ namespace hb {
        */
       void SetRPMpid(double&);
 
+      /**
+       * @brief Gets the total rotations of the motor
+       * 
+       * @returns the number of rotations
+      */
       double GetDistance();
 
     private:

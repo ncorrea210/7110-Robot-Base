@@ -19,31 +19,13 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   // Set the distance per pulse for the drive encoder. We can simply use the
   // distance traveled for one rotation of the wheel divided by the encoder
   // resolution.
-  m_driveMotor.SetRPM2MPS(
+  m_driveMotor.SetRatio(
       ModuleConstants::kDriveEncoderDistancePerPulse);
 
   // Limit the PID Controller's input range between -pi and pi and set the input
   // to be continuous.
   m_turningPIDController.EnableContinuousInput(
       units::radian_t(-std::numbers::pi), units::radian_t(std::numbers::pi));
-
-  // switch(turningEncoderPorts) {
-    // case 1:
-    //   m_turningPIDController.SetD(0.006);
-    // break;
-    // case 2:
-    //   m_turningPIDController.SetD(0.006);
-    // break;
-    // case 3:
-    //   m_turningPIDController.SetD(0.0075);
-    // break;
-    // case 4:
-    //   m_turningPIDController.SetD(0.006);
-    // break;
-
-  // }
-
-  frc::SmartDashboard::PutNumber("DModVal", 0);
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {

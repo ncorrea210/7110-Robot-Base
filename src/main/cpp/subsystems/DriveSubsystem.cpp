@@ -35,33 +35,21 @@ DriveSubsystem::DriveSubsystem()
       m_rearRight{
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightTurningEncoderPorts,  kRearRightOffset},
-      
-      m_led(2), 
 
-      m_odometry(kDriveKinematics, m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+      m_speed(DriveConstants::kMaxSpeed.value()), 
+
+      m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {
-  m_led.SetLength(1);
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
-  }
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  m_odometry.Update(m_gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+  m_odometry.Update(gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
-
-  if (GetMode()) {
-    SetRGB(50, 0, 255);
-  } else {
-    SetRGB(255, 255, 0);
-  }
-
-  frc::SmartDashboard::PutBoolean("Cone Cube Mode", m_mode);              
-  frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetAngle());
-  frc::SmartDashboard::PutBoolean("Speed", m_sMode);
-  frc::SmartDashboard::PutNumber("Gyro Roll", m_gyro.GetRoll());
+       
+  frc::SmartDashboard::PutNumber("Gyro Angle", gyro.GetAngle());
+  frc::SmartDashboard::PutNumber("Gyro Roll", gyro.GetRoll());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -70,7 +58,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            bool fieldRelative) {
   auto states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, m_gyro.GetRot2d())
+                          xSpeed, ySpeed, rot, gyro.GetRot2d())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
 
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
@@ -89,7 +77,7 @@ void DriveSubsystem::Drive(VecDrive Drive, units::radians_per_second_t rot, bool
 
   auto states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, m_gyro.GetRot2d())
+                          xSpeed, ySpeed, rot, gyro.GetRot2d())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
   
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
@@ -104,11 +92,11 @@ void DriveSubsystem::Drive(VecDrive Drive, units::radians_per_second_t rot, bool
 void DriveSubsystem::Drive(VecDrive Drive, units::radian_t Heading) {
   units::meters_per_second_t xSpeed = units::meters_per_second_t(Drive.speed * sin(Drive.angle));
   units::meters_per_second_t ySpeed = units::meters_per_second_t(Drive.speed * cos(Drive.angle));
-  units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(m_gyro.GetRad(), Heading));
+  units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(gyro.GetRad(), Heading));
 
   auto states = kDriveKinematics.ToSwerveModuleStates(
     frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-      xSpeed, ySpeed, rot, m_gyro.GetRotation2d()
+      xSpeed, ySpeed, rot, gyro.GetRotation2d()
     ));
 
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
@@ -121,11 +109,11 @@ void DriveSubsystem::Drive(VecDrive Drive, units::radian_t Heading) {
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading) {
-    units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(m_gyro.GetRad(), heading));
+    units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(gyro.GetRad(), heading));
 
     auto states = kDriveKinematics.ToSwerveModuleStates(
     frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-      xSpeed, ySpeed, rot, m_gyro.GetRotation2d()
+      xSpeed, ySpeed, rot, gyro.GetRotation2d()
     ));
 
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
@@ -149,20 +137,14 @@ void DriveSubsystem::SetModuleStates(
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
   m_rearRight.SetDesiredState(desiredStates[3]);
-
-  // printf("speed=%5.2f angle=%5.2f\n", desiredStates[0].speed, desiredStates[0].angle);
-}
-
-units::degree_t DriveSubsystem::GetHeading() const {
-  return units::degree_t(std::lround(m_gyro.GetAngle()) % 360);
 }
 
 void DriveSubsystem::ZeroHeading() {
-  m_gyro.Reset();
+  gyro.Reset();
 }
 
 double DriveSubsystem::GetTurnRate() {
-  return -m_gyro.GetRate();
+  return -gyro.GetRate();
 }
 
 frc::Pose2d DriveSubsystem::GetPose() {
@@ -170,14 +152,10 @@ frc::Pose2d DriveSubsystem::GetPose() {
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
-  m_odometry.ResetPosition(frc::Rotation2d(units::degree_t(m_gyro.GetAngle())), 
+  m_odometry.ResetPosition(frc::Rotation2d(units::degree_t(gyro.GetAngle())), 
                     {m_frontLeft.GetPosition(), m_rearLeft.GetPosition(),
                     m_frontRight.GetPosition(), m_rearRight.GetPosition()},
                     pose);
-}
-
-units::radian_t DriveSubsystem::GetRad() const {
-  return units::radian_t((GetHeading() / 180.0) * std::numbers::pi);
 }
 
 void DriveSubsystem::ResetEncoders() {
@@ -185,10 +163,4 @@ void DriveSubsystem::ResetEncoders() {
   m_frontRight.ResetEncoders();
   m_rearLeft.ResetEncoders();
   m_rearRight.ResetEncoders();
-}
-
-void DriveSubsystem::SetRGB(int R, int G, int B) {
-  m_ledBuffer[0].SetRGB(R, G, B);
-  m_led.SetData(m_ledBuffer);
-  return;
 }

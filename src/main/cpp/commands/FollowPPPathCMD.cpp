@@ -23,7 +23,7 @@ void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
   auto initPose = initState.pose;
   m_drive->ResetOdometry({initPose.Translation(), initState.holonomicRotation});
-  m_drive->m_gyro.SetPosition(initState.holonomicRotation.Degrees());
+  m_drive->gyro.SetPosition(initState.holonomicRotation.Degrees());
   m_drive->ResetEncoders();
   m_timer.Reset();
   m_timer.Start();

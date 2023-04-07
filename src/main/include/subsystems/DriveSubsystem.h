@@ -21,7 +21,6 @@
 #include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
-#include <frc/AddressableLED.h>
 #include <array>
 
 
@@ -76,12 +75,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
-  /**
-   * Returns the heading of the robot.
-   *
-   * @return the robot's heading in degrees, from 180 to 180
-   */
-  units::degree_t GetHeading() const;
 
   /**
    * Zeroes the heading of the robot.
@@ -109,8 +102,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void ResetOdometry(frc::Pose2d pose);
 
-  units::radian_t GetRad() const;
-
   frc::HolonomicDriveController GetController() {
     return frc::HolonomicDriveController{
       frc2::PIDController{AutoConstants::kPXController, 0, 0},
@@ -120,20 +111,13 @@ class DriveSubsystem : public frc2::SubsystemBase {
       }};
   }
 
-  inline void ConeCubeMode() {
-    m_mode = m_mode ? false : true;
+  void SetSpeed(const double& speed) {
+    m_speed = speed;
   }
 
-  inline bool GetMode() {
-    return m_mode;
-  }
-
-  inline void SlowFastSpeed() {
-    m_sMode = m_sMode ? false : true;
-  }
-
-  inline bool GetSpeed() {
-    return m_sMode;
+  units::meters_per_second_t GetSpeed() {
+    return m_speed > DriveConstants::kMaxSpeed.value() ? 
+    DriveConstants::kMaxSpeed : units::meters_per_second_t(m_speed);
   }
 
   units::meter_t kTrackWidth =
@@ -148,12 +132,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2)};
 
     void ResetGyro() {
-        m_gyro.Reset();
+        gyro.Reset();
     }
 
-  hb::pigeonGyro m_gyro{DriveConstants::CanIds::kPidgeonID};
-
-  void SetRGB(int R, int G, int B);
+  hb::pigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -164,11 +146,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
 
-  bool m_mode = false;
-  bool m_sMode = true;
-
-  frc::AddressableLED m_led;
-  std::array<frc::AddressableLED::LEDData, 1> m_ledBuffer; 
+  double m_speed;
 
   frc::ProfiledPIDController<units::radians> m_turnController{7.5, 0, 0,
    {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};

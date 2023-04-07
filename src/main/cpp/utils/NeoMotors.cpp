@@ -11,7 +11,7 @@ rev::CANSparkMax(Id, type), rev::SparkMaxRelativeEncoder(GetEncoder()){
   // }
 }
 
-void NeoMotor::SetRPM2MPS(const double& Ratio) {
+void NeoMotor::SetRatio(const double& Ratio) {
   m_Ratio = Ratio;
 }
 

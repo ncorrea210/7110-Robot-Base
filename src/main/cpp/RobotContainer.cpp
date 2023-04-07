@@ -53,7 +53,7 @@ RobotContainer::RobotContainer() {
         [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
         [this] {return true;},
-        [this] {return m_drive.GetSpeed();}));
+        [this] {return m_drive.GetSpeed().value();}));
 
 }
 
