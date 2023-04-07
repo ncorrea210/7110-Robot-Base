@@ -6,12 +6,10 @@
 
 #include "utils/Limelight.h"
 
-#define GetVal(x) NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
-#define SetVal(x , y) NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
-#define ToRadians(x) ((x/180) * std::numbers::pi)
-#define ToDegrees(x) ((x/std::numbers::pi) * 180)
+#define GetVal(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
+#define SetVal(x , y) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
 
-using namespace nt;
+// using namespace nt;
 using namespace hb;
 
 
@@ -25,13 +23,6 @@ double limeLight::GetX() {
 
 double limeLight::GetY() {
   return GetVal("ty");
-}
-
-LimeLightVec limeLight::GetVec() {
-  LimeLightVec Vec;
-  Vec.distance = std::sqrt((GetX() * GetX()) + (GetY() * GetY()));
-  Vec.angle = ToDegrees(atan(GetY() / GetX()));
-  return Vec;
 }
 
 void limeLight::SetLED(LEDMode Mode) {

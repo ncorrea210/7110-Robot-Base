@@ -1,10 +1,5 @@
 #pragma once
 
-typedef struct {
-  double distance;
-  double angle;
-} LimeLightVec;
-
 namespace hb {
   
   class limeLight {
@@ -47,11 +42,6 @@ namespace hb {
        * @returns The Y offset to target
       */
       static double GetY();
-
-      /**
-       * @returns vector to the target
-      */
-      static LimeLightVec GetVec();
 
       /**
        * @param LEDMode enum class sets the LED on, off, or to the pipeline
