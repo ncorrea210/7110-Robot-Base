@@ -22,7 +22,6 @@ FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_dr
 void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
   auto initPose = initState.pose;
-  printf("init rotation: %5.2f\n", initState.holonomicRotation.Degrees().value());
   m_drive->ResetOdometry({initPose.Translation(), initState.holonomicRotation});
   m_drive->m_gyro.SetPosition(initState.holonomicRotation.Degrees());
   m_drive->ResetEncoders();
@@ -41,15 +40,16 @@ void FollowPPPathCMD::Execute() {
 
 // Called once the command ends or is interrupted.
 void FollowPPPathCMD::End(bool interrupted) {
+  m_timer.Stop();
   m_timer.Reset();
 }
 
 // Returns true when the command should end.
 bool FollowPPPathCMD::IsFinished() {
   if (m_traj.getTotalTime().value() < (m_timer.Get().value() + 0.1)) {
-    printf("Called");
+    m_timer.Stop();
     m_timer.Reset();
     return true;
-  }
+  } 
   else return false;
 }

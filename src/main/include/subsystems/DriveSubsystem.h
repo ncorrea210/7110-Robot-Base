@@ -21,14 +21,12 @@
 #include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
-
 #include <frc/AddressableLED.h>
 #include <array>
 
 
 #include "Constants.h"
-#include "SwerveModule.h"
-
+#include "utils/SwerveModule.h"
 #include "utils/PigeonGyro.h"
 
 typedef struct {

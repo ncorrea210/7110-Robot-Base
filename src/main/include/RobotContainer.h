@@ -22,20 +22,8 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/ExtensionSubsystem.h"
-#include "subsystems/ActuatorSubsystem.h"
-#include "subsystems/ClampSubsystem.h"
 #include "commands/DefaultDriveCMD.h"
-#include "commands/BalanceCMD.h"
-#include "commands/ToLLTargetCMD.h"
-#include "commands/autos/TestSeqCMD.h"
-#include "commands/autos/BalanceSeqCMD.h"
-#include "commands/autos/PlaceMidConeNLeaveSeqCMD.h"
-#include "commands/armpositions/DrivePositionCMD.h"
-#include "commands/armpositions/InFrameCMD.h"
-#include "commands/armpositions/PickUpCMD.h"
-#include "commands/armpositions/PlaceMidConeCMD.h"
-#include "commands/armpositions/CubeGrapPosCMD.h"
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -50,8 +38,6 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
-  bool ConeCubeToggle();
-
  private:
   // The driver's controller
   frc::XboxController m_driverController{0};
@@ -65,23 +51,9 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  ExtensionSubsystem m_extension;
-  ActuatorSubsystem m_actuator;
-  ClampSubsystem m_clamp{&m_PDP};
-
-  BalanceCMD Balance{&m_drive};
-  ToLLTargetCMD LLTarget{&m_drive};
-  TestSeqCMD TestSeq{&m_drive};
-  BalanceSeqCMD BalanceSeq{&m_drive, &m_extension, &m_actuator, &m_clamp};
-  PlaceMidConeNLeaveSeqCMD PlaceMidNLeave{&m_drive, &m_extension, &m_actuator, &m_clamp};
-
-
-  frc::PowerDistribution m_PDP{0, frc::PowerDistribution::ModuleType::kCTRE};
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
-  int m_Routine;
-  bool m_last = true;
 
   void ConfigureButtonBindings();
 };
