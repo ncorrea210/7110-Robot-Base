@@ -50,7 +50,8 @@ namespace hb {
 
       /**
        * @param CAMMode enum class 
-       * sets the Camera from processed to unprocessed
+       * 
+       * @brief sets the Camera from processed to unprocessed
       */
       static void SetMode(CamMode);
 
