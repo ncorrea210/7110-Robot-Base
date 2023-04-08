@@ -59,7 +59,7 @@ void SwerveModule::SetDesiredState(
 
   units::volt_t driveFF = m_driveFeedforward.Calculate(state.speed);
   if (fabs(state.speed.value()) < 0.01) {
-    StopMotors()
+    StopMotors();
   } else {
     m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
     m_turningMotor.Set(turnOutput);
