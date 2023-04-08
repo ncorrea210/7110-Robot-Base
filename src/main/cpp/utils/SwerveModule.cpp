@@ -57,29 +57,22 @@ void SwerveModule::SetDesiredState(
   auto turnOutput = m_turningPIDController.Calculate(
       units::radian_t(m_turningEncoder.Get()), state.angle.Radians());
 
-
   units::volt_t driveFF = m_driveFeedforward.Calculate(state.speed);
-
-    if (m_id == 1) {
-      frc::SmartDashboard::PutNumber("dRate 1", m_driveMotor.GetRate());
-    }
-    if (m_id == 2) {
-      frc::SmartDashboard::PutNumber("dRate 2", m_driveMotor.GetRate());
-      // frc::SmartDashboard::PutNumber("dOut 2", driveOutput);
-    }
-    if (m_id == 3) {
-      frc::SmartDashboard::PutNumber("dRate 3", m_driveMotor.GetRate());
-    }
-    if (m_id == 4) {
-      frc::SmartDashboard::PutNumber("dRate 4", m_driveMotor.GetRate());
-    }
-
-      m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
-      m_turningMotor.Set(turnOutput);
+  if (fabs(state.speed.value()) < 0.01) {
+    StopMotors()
+  } else {
+    m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
+    m_turningMotor.Set(turnOutput);
+  }
 }
 
 void SwerveModule::ResetEncoders() {
   m_driveMotor.SetPosition(0);
+}
+
+void SwerveModule::StopMotors() {
+  m_driveMotor.Set(0);
+  m_turningMotor.Set(0);
 }
 
 units::celsius_t SwerveModule::GetDriveMotorTemp() {

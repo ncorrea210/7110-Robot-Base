@@ -39,6 +39,8 @@ class SwerveModule {
 
   void ResetEncoders();
 
+  void StopMotors();
+
   units::celsius_t GetDriveMotorTemp();
 
   units::celsius_t GetTurnMotorTemp(); 
