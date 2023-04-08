@@ -10,10 +10,8 @@
 TelemetryCMD::TelemetryCMD(std::initializer_list<hb::Subsystem*> base) {
   // Use addRequirements() here to declare subsystem dependencies.
   for (hb::Subsystem* a : base) {
-    if (a->TelemetryEnabled == false) continue;
     m_subsys.insert(m_subsys.end(), a);
-    AddRequirements(a);
-    
+    AddRequirements(a); 
   }
 
 }

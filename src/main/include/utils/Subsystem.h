@@ -10,7 +10,7 @@ namespace hb {
 
       bool TelemetryEnabled = false;
 
-      virtual std::unordered_map<std::string, double> GetTelemetry();
+      virtual std::unordered_map<std::string, double> GetTelemetry() = 0;
 
       virtual void UpdateTelemetry();
 

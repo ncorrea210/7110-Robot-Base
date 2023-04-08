@@ -40,7 +40,7 @@ DriveSubsystem::DriveSubsystem()
 
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {TelemetryEnabled = true; SetName("Swerve");}
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {SetName("Swerve");}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
