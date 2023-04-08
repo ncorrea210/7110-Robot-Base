@@ -55,5 +55,5 @@ units::radian_t pigeonGyro::GetRad() const {
 }
 
 void pigeonGyro::SetPosition(units::degree_t angle) {
-  pigeon->SetFusedHeading(angle.value());
+  pigeon->SetFusedHeading(angle.value(), 30);
 }

@@ -81,3 +81,11 @@ void SwerveModule::SetDesiredState(
 void SwerveModule::ResetEncoders() {
   m_driveMotor.SetPosition(0);
 }
+
+units::celsius_t SwerveModule::GetDriveMotorTemp() {
+  return units::celsius_t(m_driveMotor.GetMotorTemperature());
+}
+
+units::celsius_t SwerveModule::GetTurnMotorTemp() {
+  return units::celsius_t(m_turningMotor.GetMotorTemperature());
+}

@@ -21,9 +21,13 @@
 
 
 #include "Constants.h"
-#include "subsystems/DriveSubsystem.h"
-#include "commands/DefaultDriveCMD.h"
 
+//Subsystems
+#include "subsystems/DriveSubsystem.h"
+
+//Commands
+#include "commands/DefaultDriveCMD.h"
+#include "commands/TelemetryCMD.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -51,6 +55,9 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+
+  // The robot's commands
+  TelemetryCMD m_telemetry;
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

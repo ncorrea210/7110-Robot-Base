@@ -4,6 +4,7 @@
 #include <numbers>
 #include <frc/controller/PIDController.h>
 #include <units/length.h>
+#include <units/temperature.h>
 
 namespace hb {
   class NeoMotor : public rev::CANSparkMax, public rev::SparkMaxRelativeEncoder{

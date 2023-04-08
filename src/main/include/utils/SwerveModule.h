@@ -39,6 +39,10 @@ class SwerveModule {
 
   void ResetEncoders();
 
+  units::celsius_t GetDriveMotorTemp();
+
+  units::celsius_t GetTurnMotorTemp(); 
+
  private:
   // We have to use meters here instead of radians due to the fact that
   // ProfiledPIDController's constraints only take in meters per second and

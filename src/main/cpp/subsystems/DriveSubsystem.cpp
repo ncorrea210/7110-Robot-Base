@@ -40,16 +40,49 @@ DriveSubsystem::DriveSubsystem()
 
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {}
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {TelemetryEnabled = true;}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
-       
-  frc::SmartDashboard::PutNumber("Gyro Angle", gyro.GetAngle());
-  frc::SmartDashboard::PutNumber("Gyro Roll", gyro.GetRoll());
+
+  UpdateTelemetry();
+}
+
+std::unordered_map<std::string, double> DriveSubsystem::GetTelemetry() {
+  return m_telemetry;
+}
+
+void DriveSubsystem::UpdateTelemetry() {
+  // Front Left Telemetry
+  m_telemetry.insert({"FL Speed" , m_frontLeft.GetState().speed.value()});
+  m_telemetry.insert({"FL Angle" , m_frontLeft.GetState().angle.Degrees().value()});
+  m_telemetry.insert({"FL D Temp", m_frontLeft.GetDriveMotorTemp().value()});
+  m_telemetry.insert({"FL T Temp", m_frontLeft.GetTurnMotorTemp().value()});
+
+  // Front Right Telemetry
+  m_telemetry.insert({"FR Speed" , m_frontRight.GetState().speed.value()});
+  m_telemetry.insert({"FR Angle" , m_frontRight.GetState().angle.Degrees().value()});
+  m_telemetry.insert({"FR D Temp", m_frontRight.GetDriveMotorTemp().value()});
+  m_telemetry.insert({"FR T Temp", m_frontRight.GetTurnMotorTemp().value()});
+
+  // Rear Left Telemetry
+  m_telemetry.insert({"RL Speed" , m_rearLeft.GetState().speed.value()});
+  m_telemetry.insert({"RL Angle" , m_rearLeft.GetState().angle.Degrees().value()});
+  m_telemetry.insert({"RL D Temp", m_rearLeft.GetDriveMotorTemp().value()});
+  m_telemetry.insert({"RL T Temp", m_rearLeft.GetTurnMotorTemp().value()});
+
+  // Rear Right Telemetry
+  m_telemetry.insert({"RR Speed" , m_rearRight.GetState().speed.value()});
+  m_telemetry.insert({"RR Angle" , m_rearRight.GetState().angle.Degrees().value()});
+  m_telemetry.insert({"RR D Temp", m_rearRight.GetDriveMotorTemp().value()});
+  m_telemetry.insert({"RR T Temp", m_rearRight.GetTurnMotorTemp().value()});
+
+  m_telemetry.insert({"Gyro Angle", gyro.GetRot2d().Degrees().value()});
+
+  m_telemetry.insert({"Max Speed", GetSpeed().value()});
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,

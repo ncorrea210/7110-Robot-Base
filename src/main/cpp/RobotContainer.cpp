@@ -34,7 +34,8 @@
 using namespace DriveConstants;
 
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() :
+  m_telemetry({&m_drive}) {
 
   /**
    * Adding options to chooser should be done as such
@@ -54,6 +55,8 @@ RobotContainer::RobotContainer() {
         [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
         [this] {return true;},
         [this] {return m_drive.GetSpeed().value();}));
+
+  frc2::CommandScheduler::GetInstance().Schedule(&m_telemetry);
 
 }
 

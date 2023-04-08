@@ -27,9 +27,10 @@
 #include "Constants.h"
 #include "utils/SwerveModule.h"
 #include "utils/PigeonGyro.h"
+#include "utils/Subsystem.h"
 
 
-class DriveSubsystem : public frc2::SubsystemBase {
+class DriveSubsystem : public hb::Subsystem {
  public:
   DriveSubsystem();
 
@@ -37,6 +38,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
+
+  std::unordered_map<std::string, double> GetTelemetry() override;
+
+  void UpdateTelemetry() override;
 
   // Subsystem methods go here.
 
@@ -146,4 +151,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // Odometry class for tracking robot pose
   // 4 defines the number of modules
   frc::SwerveDriveOdometry<4> m_odometry;
+
+  std::unordered_map<std::string, double> m_telemetry;
 };
