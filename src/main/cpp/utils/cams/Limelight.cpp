@@ -4,12 +4,11 @@
 #include <numbers>
 #include <string>
 
-#include "utils/Limelight.h"
+#include "utils/cams/Limelight.h"
 
 #define GetVal(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
 #define SetVal(x , y) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
 
-// using namespace nt;
 using namespace hb;
 
 
