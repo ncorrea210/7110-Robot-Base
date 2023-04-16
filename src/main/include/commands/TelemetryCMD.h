@@ -20,7 +20,7 @@ class TelemetryCMD
     : public frc2::CommandHelper<frc2::CommandBase, TelemetryCMD> {
  public:
 
-  TelemetryCMD(std::initializer_list<hb::Subsystem*> base);
+  TelemetryCMD(const std::initializer_list<hb::SubsystemData>& base);
 
   void Initialize() override;
 
@@ -31,6 +31,6 @@ class TelemetryCMD
   bool IsFinished() override;
 
  private:
-  std::vector<hb::Subsystem*> m_subsys;
+  std::vector<hb::SubsystemData> m_data;
 
 };

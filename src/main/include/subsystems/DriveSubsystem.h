@@ -39,9 +39,11 @@ class DriveSubsystem : public hb::Subsystem {
    */
   void Periodic() override;
 
-  std::unordered_map<std::string, double> GetTelemetry() override;
+  std::unordered_map<std::string, std::function<double()>> GetTelemetry() override;
 
-  void UpdateTelemetry() override;
+  void SetTelemetry() override;
+
+  hb::SubsystemData GetData() override;
 
   // Subsystem methods go here.
 
@@ -152,5 +154,5 @@ class DriveSubsystem : public hb::Subsystem {
   // 4 defines the number of modules
   frc::SwerveDriveOdometry<4> m_odometry;
 
-  std::unordered_map<std::string, double> m_telemetry;
+  std::unordered_map<std::string, std::function<double()>> m_telemetry;
 };

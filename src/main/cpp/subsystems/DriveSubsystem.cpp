@@ -14,6 +14,8 @@
 
 #include "Constants.h"
 
+#define LAMBDA(x) [this] {return x;}
+
 using namespace DriveConstants;
 using namespace DriveConstants::CanIds;
 
@@ -39,7 +41,7 @@ DriveSubsystem::DriveSubsystem()
 
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {SetName("Swerve");}
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {SetName("Swerve"); SetTelemetry();}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
@@ -47,41 +49,45 @@ void DriveSubsystem::Periodic() {
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
 
-  UpdateTelemetry();
 }
 
-std::unordered_map<std::string, double> DriveSubsystem::GetTelemetry() {
+std::unordered_map<std::string, std::function<double()>> DriveSubsystem::GetTelemetry() {
   return m_telemetry;
 }
 
-void DriveSubsystem::UpdateTelemetry() {
+void DriveSubsystem::SetTelemetry() {
   // Front Left Telemetry
-  m_telemetry.insert({"FL Speed" , m_frontLeft.GetState().speed.value()});
-  m_telemetry.insert({"FL Angle" , m_frontLeft.GetState().angle.Degrees().value()});
-  m_telemetry.insert({"FL D Temp", m_frontLeft.GetDriveMotorTemp().value()});
-  m_telemetry.insert({"FL T Temp", m_frontLeft.GetTurnMotorTemp().value()});
+  m_telemetry.insert({"FL Speed" , LAMBDA(m_frontLeft.GetState().speed.value())});
+  m_telemetry.insert({"FL Angle" , LAMBDA(m_frontLeft.GetState().angle.Degrees().value())});
+  m_telemetry.insert({"FL D Temp", LAMBDA(m_frontLeft.GetDriveMotorTemp().value())});
+  m_telemetry.insert({"FL T Temp", LAMBDA(m_frontLeft.GetTurnMotorTemp().value())});
+
 
   // Front Right Telemetry
-  m_telemetry.insert({"FR Speed" , m_frontRight.GetState().speed.value()});
-  m_telemetry.insert({"FR Angle" , m_frontRight.GetState().angle.Degrees().value()});
-  m_telemetry.insert({"FR D Temp", m_frontRight.GetDriveMotorTemp().value()});
-  m_telemetry.insert({"FR T Temp", m_frontRight.GetTurnMotorTemp().value()});
+  m_telemetry.insert({"FR Speed" , LAMBDA(m_frontRight.GetState().speed.value())});
+  m_telemetry.insert({"FR Angle" , LAMBDA(m_frontRight.GetState().angle.Degrees().value())});
+  m_telemetry.insert({"FR D Temp", LAMBDA(m_frontRight.GetDriveMotorTemp().value())});
+  m_telemetry.insert({"FR T Temp", LAMBDA(m_frontRight.GetTurnMotorTemp().value())});
 
   // Rear Left Telemetry
-  m_telemetry.insert({"RL Speed" , m_rearLeft.GetState().speed.value()});
-  m_telemetry.insert({"RL Angle" , m_rearLeft.GetState().angle.Degrees().value()});
-  m_telemetry.insert({"RL D Temp", m_rearLeft.GetDriveMotorTemp().value()});
-  m_telemetry.insert({"RL T Temp", m_rearLeft.GetTurnMotorTemp().value()});
+  m_telemetry.insert({"RL Speed" , LAMBDA(m_rearLeft.GetState().speed.value())});
+  m_telemetry.insert({"RL Angle" , LAMBDA(m_rearLeft.GetState().angle.Degrees().value())});
+  m_telemetry.insert({"RL D Temp", LAMBDA(m_rearLeft.GetDriveMotorTemp().value())});
+  m_telemetry.insert({"RL T Temp", LAMBDA(m_rearLeft.GetTurnMotorTemp().value())});
 
   // Rear Right Telemetry
-  m_telemetry.insert({"RR Speed" , m_rearRight.GetState().speed.value()});
-  m_telemetry.insert({"RR Angle" , m_rearRight.GetState().angle.Degrees().value()});
-  m_telemetry.insert({"RR D Temp", m_rearRight.GetDriveMotorTemp().value()});
-  m_telemetry.insert({"RR T Temp", m_rearRight.GetTurnMotorTemp().value()});
+  m_telemetry.insert({"RR Speed" , LAMBDA(m_rearRight.GetState().speed.value())});
+  m_telemetry.insert({"RR Angle" , LAMBDA(m_rearRight.GetState().angle.Degrees().value())});
+  m_telemetry.insert({"RR D Temp", LAMBDA(m_rearRight.GetDriveMotorTemp().value())});
+  m_telemetry.insert({"RR T Temp", LAMBDA(m_rearRight.GetTurnMotorTemp().value())});
 
-  m_telemetry.insert({"Gyro Angle", gyro.GetRot2d().Degrees().value()});
+  m_telemetry.insert({"Gyro Angle", LAMBDA(gyro.GetRot2d().Degrees().value())});
 
-  m_telemetry.insert({"Max Speed", GetSpeed().value()});
+  m_telemetry.insert({"Max Speed", LAMBDA(GetSpeed().value())});
+}
+
+hb::SubsystemData DriveSubsystem::GetData() {
+  return {GetName(), GetTelemetry()};
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,

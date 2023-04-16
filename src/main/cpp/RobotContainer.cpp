@@ -35,7 +35,7 @@ using namespace DriveConstants;
 
 
 RobotContainer::RobotContainer() :
-  m_telemetry({&m_drive}) {
+  m_telemetry({m_drive.GetData()}) {
 
   /**
    * Adding options to chooser should be done as such
@@ -56,8 +56,6 @@ RobotContainer::RobotContainer() :
         [this] {return true;},
         [this] {return m_drive.GetSpeed().value();}));
 
-  frc2::CommandScheduler::GetInstance().Schedule(&m_telemetry);
-
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -65,6 +63,7 @@ void RobotContainer::ConfigureButtonBindings() {
    *  When binding buttons use this as the template
    *  frc::JoystickButton(&m_controller, frc::XboxController::Button::kButton).WhenPressed(Command);
   */
+  m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
 }
 
 

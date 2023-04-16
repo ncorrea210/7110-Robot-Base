@@ -4,4 +4,4 @@ using namespace hb;
 
 Subsystem::Subsystem() = default;
 
-void Subsystem::UpdateTelemetry() {}
+void Subsystem::SetTelemetry() {}

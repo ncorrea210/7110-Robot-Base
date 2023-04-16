@@ -7,27 +7,26 @@
 
 #include "commands/TelemetryCMD.h"
 
-TelemetryCMD::TelemetryCMD(std::initializer_list<hb::Subsystem*> base) {
+TelemetryCMD::TelemetryCMD(const std::initializer_list<hb::SubsystemData>& base) {
   // Use addRequirements() here to declare subsystem dependencies.
-  for (hb::Subsystem* a : base) {
-    m_subsys.insert(m_subsys.end(), a);
-    AddRequirements(a); 
+  for (hb::SubsystemData a : base) {
+    m_data.insert(m_data.end(), a);
   }
 
 }
 
 // Called when the command is initially scheduled.
-void TelemetryCMD::Initialize() {}
-
-// Called repeatedly when this Command is scheduled to run
-void TelemetryCMD::Execute() {
-  for (auto a : m_subsys) {
-    frc::ShuffleboardTab& tab = frc::Shuffleboard::GetTab(a->GetName());
-    for (auto b = a->GetTelemetry().begin(); b != a->GetTelemetry().end(); ++b) {
-      tab.Add(b->first, b->second);
+void TelemetryCMD::Initialize() {
+    for (auto a : m_data) {
+    frc::ShuffleboardTab& tab = frc::Shuffleboard::GetTab(a.name);
+    for (auto b = a.telemetry.begin(); b != a.telemetry.end(); ++b) {
+      tab.AddNumber(b->first, b->second);
     }
   }
 }
+
+// Called repeatedly when this Command is scheduled to run
+void TelemetryCMD::Execute() {}
 
 // Called once the command ends or is interrupted.
 void TelemetryCMD::End(bool interrupted) {}
