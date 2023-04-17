@@ -1,10 +1,10 @@
 #pragma once
 
 #include <rev/CANSparkMax.h>
-#include <numbers>
 #include <frc/controller/PIDController.h>
 #include <units/length.h>
 #include <units/temperature.h>
+#include <numbers>
 
 namespace hb {
   class NeoMotor : public rev::CANSparkMax, public rev::SparkMaxRelativeEncoder{
@@ -43,7 +43,9 @@ namespace hb {
       double GetDistance();
 
     private:
+    
       double m_Ratio = 1;
       frc2::PIDController m_PID{1 , 0 , 0};
+
   }; // class NeoMotor
 } // namespace hb
