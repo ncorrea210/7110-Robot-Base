@@ -20,7 +20,7 @@
 
 #include "Constants.h"
 #include "utils/NeoMotors.h"
-#include "utils/CANCoder.h"
+#include "utils/swerve/CANCoder.h"
 
 class SwerveModule {
   using radians_per_second_squared_t =

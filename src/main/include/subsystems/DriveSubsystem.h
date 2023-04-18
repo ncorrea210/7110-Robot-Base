@@ -25,8 +25,8 @@
 
 
 #include "Constants.h"
-#include "utils/SwerveModule.h"
-#include "utils/PigeonGyro.h"
+#include "utils/swerve/SwerveModule.h"
+#include "utils/swerve/PigeonGyro.h"
 #include "utils/subsystems/Subsystem.h"
 
 
