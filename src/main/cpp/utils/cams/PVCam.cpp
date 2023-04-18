@@ -8,10 +8,6 @@ using namespace hb;
 
 PVCam::PVCam(std::string name) : photonlib::PhotonCamera(name) {}
 
-void PVCam::UpdateResults() {
-  m_result = GetLatestResult();
-}
-
 photonlib::PhotonPipelineResult PVCam::GetResult() {
-  return m_result;
+  return GetLatestResult();
 }

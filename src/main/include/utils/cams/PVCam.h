@@ -13,8 +13,6 @@ namespace hb {
 
       explicit PVCam(std::string);
 
-      void UpdateResults();
-
       photonlib::PhotonPipelineResult GetResult();
 
     private:
