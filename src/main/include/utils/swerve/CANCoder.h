@@ -1,8 +1,8 @@
 #pragma once 
 
 #include <ctre/phoenix.h>
-#include <numbers>
 #include <units/angle.h>
+#include <numbers>
 
 namespace hb{
   class CANcode : CANCoder{

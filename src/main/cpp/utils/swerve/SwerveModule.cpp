@@ -34,7 +34,7 @@ frc::SwerveModuleState SwerveModule::GetState() {
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
-    return {units::meter_t(m_driveMotor.GetDistance()), units::radian_t(m_turningEncoder.Get())};
+    return {units::meter_t(m_driveMotor.GetPosition()), units::radian_t(m_turningEncoder.Get())};
 }
 
 void SwerveModule::SetDesiredState(

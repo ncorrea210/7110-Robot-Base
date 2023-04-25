@@ -56,6 +56,9 @@ constexpr auto kMaxSpeed = 4_mps;
 constexpr auto kMaxAngularSpeed = units::radians_per_second_t(2 * std::numbers::pi);
 constexpr auto kMaxAngularAcceleration = units::radians_per_second_squared_t(2 * std::numbers::pi);
 
+constexpr auto kTrackWidth = 0.31369_m;
+constexpr auto kTrackLength = 0.31369_m;
+
 
 }  // namespace DriveConstants
 
@@ -64,12 +67,24 @@ constexpr double kGearRatio = 1/6.75;
 constexpr double kWheelDiameterMeters = 0.05092958;
 constexpr double kDriveEncoderDistancePerPulse =
 kGearRatio * 2 * std::numbers::pi * kWheelDiameterMeters;
+constexpr double kDriveEncoderVelocityRatio = kDriveEncoderDistancePerPulse;
+constexpr double kDriveEncoderPositionRatio = kDriveEncoderDistancePerPulse;
 
 constexpr double kTurnRatio = 7.0/150.0;
 constexpr double kTurnEncoderRatio = kTurnRatio * 2.0 * std::numbers::pi;
 
 constexpr double kPModuleTurningController = 1;
 constexpr double kPModuleDriveController = 0.75;
+
+constexpr double kPDrive = 1.0;
+constexpr double kIDrive = 0;
+constexpr double kDDrive = 0;
+constexpr double kFFDrive = 2.67;
+
+constexpr double kPTurn = 0.75;
+constexpr double kITurn = 0;
+constexpr double kDTurn = 0.004;
+constexpr double kFFTurn = 0;
 }  // namespace ModuleConstants
 
 namespace AutoConstants {
