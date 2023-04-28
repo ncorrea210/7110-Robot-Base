@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RegressionBase.h"
+
 namespace hb {
   
   /**
@@ -10,13 +12,13 @@ namespace hb {
    * ax^3 + bx^2 + cx + d
    * 
    */
-  class Cubic {
+  class Cubic : public RegressionBase {
 
     public:
 
       Cubic(double a, double b, double c, double d);
 
-      double Calculate(double x) const;
+      double Calculate(double x) const override;
 
     private:
 

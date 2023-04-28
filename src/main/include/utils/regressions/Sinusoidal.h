@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RegressionBase.h"
+
 namespace hb {
 
   /**
@@ -11,7 +13,7 @@ namespace hb {
    * 
    * @warning This uses radians, not degrees
   */
-  class Sinusoidal {
+  class Sinusoidal : public RegressionBase {
     public:
 
       explicit Sinusoidal(double a, double b, double c, double d);
@@ -21,7 +23,7 @@ namespace hb {
        * 
        * @returns The calculated value
       */
-      double Calculate(double x) const;
+      double Calculate(double x) const override;
 
     private:
 

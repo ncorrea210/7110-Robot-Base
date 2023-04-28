@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RegressionBase.h"
+
 namespace hb {
   
   /**
@@ -10,13 +12,13 @@ namespace hb {
    * a * b^x
    * 
    */
-  class Exponential {
+  class Exponential : public RegressionBase {
 
     public:
 
       explicit Exponential(double a, double b);
 
-      double Calculate(double x) const;
+      double Calculate(double x) const override;
 
     private:
 

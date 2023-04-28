@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RegressionBase.h"
+
 namespace hb {
 
   /**
@@ -10,13 +12,13 @@ namespace hb {
    * a + (b)ln x
    * 
    */
-  class Logarithmic {
+  class Logarithmic : public RegressionBase {
     
     public: 
 
       explicit Logarithmic(double a, double b);
 
-      double Calculate(double x) const;
+      double Calculate(double x) const override;
 
     private:
 

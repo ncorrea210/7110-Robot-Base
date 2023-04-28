@@ -1,5 +1,7 @@
 #pragma once 
 
+#include "RegressionBase.h"
+
 namespace hb {
   
   /**
@@ -10,13 +12,13 @@ namespace hb {
    * a * sqrt(b * x - h) + k
    * 
    */
-  class SquareRoot {
+  class SquareRoot : public RegressionBase {
 
     public:
 
       SquareRoot(double a, double b, double h, double k);
 
-      double Calculate(double x) const;
+      double Calculate(double x) const override;
 
     private:
 
