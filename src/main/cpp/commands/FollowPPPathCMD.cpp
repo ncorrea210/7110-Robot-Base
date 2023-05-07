@@ -15,7 +15,6 @@ FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_dr
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
   m_traj = PathPlanner::loadPath(path, PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration), false);
-  frc::SmartDashboard::PutNumber("Total Time", m_traj.getTotalTime().value());
 }
 
 // Called when the command is initially scheduled.
@@ -35,7 +34,6 @@ void FollowPPPathCMD::Execute() {
   frc::Trajectory::State stateW = state.asWPILibState();
   m_drive->SetModuleStates(m_drive->kDriveKinematics.ToSwerveModuleStates(
     m_drive->GetController().Calculate(m_drive->GetPose(), stateW, state.holonomicRotation)));
-  frc::SmartDashboard::PutNumber("Cur Time", m_timer.Get().value());
 }
 
 // Called once the command ends or is interrupted.
