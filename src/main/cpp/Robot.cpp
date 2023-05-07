@@ -9,7 +9,7 @@
 #include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
 
-#include <string>
+#include "utils/cams/Limelight.h"
 
 void Robot::RobotInit() {
 
@@ -22,6 +22,9 @@ void Robot::RobotInit() {
 
   // Tells user where to find the log for this run of the robot
   printf("************** LOG STARTED AT %s **************\n", frc::DataLogManager::GetLogDir().c_str());
+
+  // Ensures the LimeLight doesn't burn our eyes out upon startup
+  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
 
 }
 
@@ -42,7 +45,9 @@ void Robot::RobotPeriodic() {
  * can use it to reset any subsystem information you want to clear when the
  * robot is disabled.
  */
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
+}
 
 void Robot::DisabledPeriodic() {}
 
@@ -51,6 +56,9 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
+
+  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
+
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
   if (m_autonomousCommand != nullptr) {
@@ -69,6 +77,8 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
+
+  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 }
 
 /**
