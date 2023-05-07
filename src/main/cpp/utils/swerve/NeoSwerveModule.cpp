@@ -64,3 +64,11 @@ void NeoSwerveModule::SetDesiredState(const frc::SwerveModuleState& refstate) {
 void NeoSwerveModule::ResetEncoders() {
   m_driveEncoder.SetPosition(0);
 }
+
+units::celsius_t NeoSwerveModule::GetDriveTemp() {
+  return units::celsius_t(m_driveMotor.GetMotorTemperature());
+}
+
+units::celsius_t NeoSwerveModule::GetTurnTemp() {
+  return units::celsius_t(m_turnMotor.GetMotorTemperature());
+}

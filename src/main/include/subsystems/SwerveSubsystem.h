@@ -29,6 +29,8 @@ class SwerveSubsystem : public frc2::SubsystemBase {
 
     void ResetOdometry(const frc::Pose2d& pose);
 
+    void InitSendable(wpi::SendableBuilder& builder) override;
+
   private:
 
     NeoSwerveModule m_FrontLeft;
