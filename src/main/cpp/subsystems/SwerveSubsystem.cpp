@@ -19,6 +19,8 @@ SwerveSubsystem::SwerveSubsystem() :
     m_RearRight.GetPosition()
   ), 
   m_Odometry(m_Kinematics, m_Gyro.GetRot2d(),
+    m_ModulePositions, frc::Pose2d()),
+  m_PoseEstimation(m_Kinematics, m_Gyro.GetRot2d(), 
     m_ModulePositions, frc::Pose2d()) {}
 
 void SwerveSubsystem::Periodic() {
@@ -29,6 +31,8 @@ void SwerveSubsystem::Periodic() {
   m_ModulePositions[3] = m_RearRight.GetPosition();
 
   m_Odometry.Update(m_Gyro.GetRot2d(), m_ModulePositions);
+
+  m_PoseEstimation.Update(m_Gyro.GetRot2d(), m_ModulePositions);
 }
 
 void SwerveSubsystem::Drive(units::meters_per_second_t x, 

@@ -5,6 +5,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <units/velocity.h>
 #include <units/angular_velocity.h>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
 
 #include "utils/swerve/NeoSwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
@@ -51,4 +52,5 @@ class SwerveSubsystem : public frc2::SubsystemBase {
 
     frc::SwerveDriveOdometry<4> m_Odometry;
 
+    frc::SwerveDrivePoseEstimator<4> m_PoseEstimation;
 };
