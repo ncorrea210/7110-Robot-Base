@@ -62,8 +62,8 @@ void SwerveSubsystem::ZeroHeading(units::degree_t heading = 0_deg) {
   m_Gyro.SetPosition(heading);
 } 
 
-frc::Pose2d SwerveSubsystem::GetPose() {
-  return m_Odometry.GetPose();
+frc::Pose2d SwerveSubsystem::GetPose() const {
+  return m_PoseEstimation.GetEstimatedPosition();
 }
 
 void SwerveSubsystem::ResetOdometry(const frc::Pose2d& pose) {

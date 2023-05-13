@@ -10,7 +10,6 @@
 #include "utils/swerve/NeoSwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
 #include "Constants.h"
-// #include "SwerveConfigs.h"
 
 class SwerveSubsystem : public frc2::SubsystemBase {
   public:
@@ -26,7 +25,7 @@ class SwerveSubsystem : public frc2::SubsystemBase {
 
     void ZeroHeading(units::degree_t heading);
 
-    frc::Pose2d GetPose();
+    frc::Pose2d GetPose() const;
 
     void ResetOdometry(const frc::Pose2d& pose);
 

@@ -34,8 +34,7 @@
 using namespace DriveConstants;
 
 
-RobotContainer::RobotContainer() :
-  m_telemetry({m_drive.GetData()}) {
+RobotContainer::RobotContainer() {
 
   /**
    * Adding options to chooser should be done as such
@@ -44,6 +43,7 @@ RobotContainer::RobotContainer() :
   */
 
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Swerve Drive", &m_swerve);
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -62,6 +62,7 @@ void RobotContainer::ConfigureButtonBindings() {
   /**
    *  When binding buttons use this as the template
    *  frc::JoystickButton(&m_controller, frc::XboxController::Button::kButton).WhenPressed(Command);
+   *  TODO: test command xbox controller implementation(found below) and see if it works
   */
   m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
 }
