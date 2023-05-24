@@ -11,6 +11,7 @@
 #include <math.h>
 #include <cmath>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <wpi/sendable/SendableBuilder.h>
 
 #include "Constants.h"
 
@@ -41,7 +42,7 @@ DriveSubsystem::DriveSubsystem()
 
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {SetName("Swerve"); SetTelemetry();}
+                    m_rearRight.GetPosition()}, frc::Pose2d()) {}
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
@@ -49,45 +50,6 @@ void DriveSubsystem::Periodic() {
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
 
-}
-
-std::unordered_map<std::string, std::function<double()>> DriveSubsystem::GetTelemetry() {
-  return m_telemetry;
-}
-
-void DriveSubsystem::SetTelemetry() {
-  // Front Left Telemetry
-  m_telemetry.insert({"FL Speed" , LAMBDA(m_frontLeft.GetState().speed.value())});
-  m_telemetry.insert({"FL Angle" , LAMBDA(m_frontLeft.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"FL D Temp", LAMBDA(m_frontLeft.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"FL T Temp", LAMBDA(m_frontLeft.GetTurnMotorTemp().value())});
-
-
-  // Front Right Telemetry
-  m_telemetry.insert({"FR Speed" , LAMBDA(m_frontRight.GetState().speed.value())});
-  m_telemetry.insert({"FR Angle" , LAMBDA(m_frontRight.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"FR D Temp", LAMBDA(m_frontRight.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"FR T Temp", LAMBDA(m_frontRight.GetTurnMotorTemp().value())});
-
-  // Rear Left Telemetry
-  m_telemetry.insert({"RL Speed" , LAMBDA(m_rearLeft.GetState().speed.value())});
-  m_telemetry.insert({"RL Angle" , LAMBDA(m_rearLeft.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"RL D Temp", LAMBDA(m_rearLeft.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"RL T Temp", LAMBDA(m_rearLeft.GetTurnMotorTemp().value())});
-
-  // Rear Right Telemetry
-  m_telemetry.insert({"RR Speed" , LAMBDA(m_rearRight.GetState().speed.value())});
-  m_telemetry.insert({"RR Angle" , LAMBDA(m_rearRight.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"RR D Temp", LAMBDA(m_rearRight.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"RR T Temp", LAMBDA(m_rearRight.GetTurnMotorTemp().value())});
-
-  m_telemetry.insert({"Gyro Angle", LAMBDA(gyro.GetRot2d().Degrees().value())});
-
-  m_telemetry.insert({"Max Speed", LAMBDA(GetSpeed().value())});
-}
-
-hb::SubsystemData DriveSubsystem::GetData() {
-  return {GetName(), GetTelemetry()};
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -164,4 +126,13 @@ void DriveSubsystem::ResetEncoders() {
   m_frontRight.ResetEncoders();
   m_rearLeft.ResetEncoders();
   m_rearRight.ResetEncoders();
+}
+
+void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
+  builder.SetSmartDashboardType("Swerve Drive");
+
+  builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
+  
+  builder.AddDoubleProperty("FLD T", LAMBDA(m_frontLeft.GetDriveMotorTemp().value()), nullptr);
+
 }

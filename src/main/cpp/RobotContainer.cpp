@@ -43,7 +43,6 @@ RobotContainer::RobotContainer() {
   */
 
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  // frc::SmartDashboard::PutData("Swerve Drive", &m_swerve);
 
   // Configure the button bindings
   ConfigureButtonBindings();

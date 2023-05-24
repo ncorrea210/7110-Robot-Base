@@ -30,7 +30,7 @@
 #include "utils/subsystems/Subsystem.h"
 
 
-class DriveSubsystem : public hb::Subsystem {
+class DriveSubsystem : public frc2::SubsystemBase {
  public:
   DriveSubsystem();
 
@@ -38,12 +38,6 @@ class DriveSubsystem : public hb::Subsystem {
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
-
-  std::unordered_map<std::string, std::function<double()>> GetTelemetry() override;
-
-  void SetTelemetry() override;
-
-  hb::SubsystemData GetData() override;
 
   // Subsystem methods go here.
 
@@ -135,6 +129,8 @@ class DriveSubsystem : public hb::Subsystem {
     }
 
   hb::pigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
