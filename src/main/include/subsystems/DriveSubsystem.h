@@ -119,10 +119,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       0.31369_m;  // Distance between centers of front and back wheels on robot
 
   frc::SwerveDriveKinematics<4> kDriveKinematics{
-      frc::Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-      frc::Translation2d(kWheelBase / 2, kTrackWidth / 2),
-      frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-      frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2)};
+      frc::Translation2d(kWheelBase, -kTrackWidth),
+      frc::Translation2d(kWheelBase, kTrackWidth),
+      frc::Translation2d(-kWheelBase, -kTrackWidth),
+      frc::Translation2d(-kWheelBase, kTrackWidth)};
 
     void ResetGyro() {
         gyro.Reset();

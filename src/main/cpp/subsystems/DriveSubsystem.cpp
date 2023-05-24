@@ -133,6 +133,9 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
   
-  builder.AddDoubleProperty("FLD T", LAMBDA(m_frontLeft.GetDriveMotorTemp().value()), nullptr);
+  builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
+
+  
 
 }

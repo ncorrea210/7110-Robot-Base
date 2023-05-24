@@ -43,6 +43,7 @@ RobotContainer::RobotContainer() {
   */
 
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  frc::SmartDashboard::PutData("Swerve", &m_drive);
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -63,7 +64,7 @@ void RobotContainer::ConfigureButtonBindings() {
    *  frc::JoystickButton(&m_controller, frc::XboxController::Button::kButton).WhenPressed(Command);
    *  TODO: test command xbox controller implementation(found below) and see if it works
   */
-  m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
+  // m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
 }
 
 
