@@ -42,8 +42,9 @@ RobotContainer::RobotContainer() {
    * Where auto has already been declared in RobotContainer.h
   */
 
-  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  frc::SmartDashboard::PutData("Swerve", &m_drive);
+  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Swerve", &m_drive);
+  frc::SmartDashboard::PutData("Arm", &m_arm);
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -67,6 +68,23 @@ void RobotContainer::ConfigureButtonBindings() {
   // m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
   // m_driverController.A().WhenActive(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.RunExtension(0.1);})
+    .WhenReleased([this] {m_arm.RunExtension(0);});
+  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.RunExtension(-0.1);})
+    .WhenReleased([this] {m_arm.RunExtension(0);});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed([this] {m_arm.RunActuator(0.5);})
+    .WhenReleased([this] {m_arm.RunActuator(0);});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.RunActuator(-0.5);})
+    .WhenReleased([this] {m_arm.RunActuator(0);});
+  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_arm.Stow();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_arm.MidCone();});
+
 }
 
 

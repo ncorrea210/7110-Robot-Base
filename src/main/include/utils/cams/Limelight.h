@@ -76,9 +76,9 @@ namespace hb {
 
       static LEDMode GetLED();
 
-      static std::array<double, 6> GetBotpose(); 
+      // static std::array<double, 6> GetBotpose(); 
 
-      static frc::Translation2d GetBotPose2D();
+      // static frc::Translation2d GetBotPose2D();
 
   };
 }
