@@ -4,9 +4,10 @@ using namespace hb;
 
 NeoMotor::NeoMotor(const int& Id, rev::CANSparkMax::MotorType type, rev::CANSparkMax::IdleMode mode) : 
 rev::CANSparkMax(Id, type), rev::SparkMaxRelativeEncoder(GetEncoder()) {
+  RestoreFactoryDefaults();
   // if (rev::CANSparkMax::GetIdleMode() != mode){
-  // rev::CANSparkMax::SetIdleMode(mode);
-  // BurnFlash();
+  rev::CANSparkMax::SetIdleMode(mode);
+  BurnFlash();
   // printf("Flash Burned on Spark Max %d\n", Id);
   // }
 }

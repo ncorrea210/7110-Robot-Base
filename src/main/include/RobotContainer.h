@@ -43,9 +43,9 @@ class RobotContainer {
 
  private:
   // The driver's controller
-  frc::XboxController m_driverController{0};
+  // frc::XboxController m_driverController{0};
   // frc::XboxController m_operatorController{1};
-  // frc2::CommandXboxController m_driver{2};
+  frc2::CommandXboxController m_driverController{0};
 
   // The robot's subsystems and commands are defined here...
 

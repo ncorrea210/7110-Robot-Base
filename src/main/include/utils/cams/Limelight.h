@@ -1,5 +1,9 @@
 #pragma once
 
+#include <array>
+
+#include <frc/geometry/Translation2d.h>
+
 namespace hb {
   
   class limeLight {
@@ -44,6 +48,11 @@ namespace hb {
       static double GetY();
 
       /**
+       * @returns The area the target covers, meant for apriltags
+      */
+      static double GetA();
+
+      /**
        * @param LEDMode enum class sets the LED on, off, or to the pipeline
       */
       static void SetLED(LEDMode); 
@@ -66,6 +75,10 @@ namespace hb {
       static CamMode GetMode();
 
       static LEDMode GetLED();
+
+      static std::array<double, 6> GetBotpose(); 
+
+      static frc::Translation2d GetBotPose2D();
 
   };
 }

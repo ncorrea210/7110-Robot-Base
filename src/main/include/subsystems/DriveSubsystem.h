@@ -21,6 +21,10 @@
 #include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/filter/LinearFilter.h>
+
 #include <array>
 
 
@@ -151,4 +155,16 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::SwerveDriveOdometry<4> m_odometry;
 
   std::unordered_map<std::string, std::function<double()>> m_telemetry;
+
+  frc::Field2d m_field;
+
+  frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
+
+  frc::Translation2d m_visionPoseRaw;
+
+  frc::Pose2d m_calcVisionPose;
+
+  frc::LinearFilter<units::meter_t> m_xFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
+  frc::LinearFilter<units::meter_t> m_yFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
+
 };

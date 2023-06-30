@@ -3,47 +3,65 @@
 #include <cmath>
 #include <numbers>
 #include <string>
+#include <vector>
 
 #include "utils/cams/Limelight.h"
 
-#define GetVal(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
-#define SetVal(x , y) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
+#define GETVAL(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
+#define GET_ARRAY_VAL(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray(x, std::span<const double>(6))
+#define SETVAL(x , y) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
 
 using namespace hb;
 
 
 bool limeLight::HasTarget() {
-  return (bool)GetVal("tv");
+  return (bool)GETVAL("tv");
 }
 
 double limeLight::GetX() {
-  return GetVal("tx");
+  return GETVAL("tx");
 };
 
 double limeLight::GetY() {
-  return GetVal("ty");
+  return GETVAL("ty");
+}
+
+double limeLight::GetA() {
+  return GETVAL("tx");
 }
 
 void limeLight::SetLED(LEDMode Mode) {
-  SetVal("ledMode", (int)Mode);
+  SETVAL("ledMode", (int)Mode);
 }
 
 void limeLight::SetMode(CamMode Mode) {
-  SetVal("camMode", (int)Mode);
+  SETVAL("camMode", (int)Mode);
 }
 
 void limeLight::SetPipeline(Pipeline Pipe) {
-  SetVal("pipeline", (int)Pipe);
+  SETVAL("pipeline", (int)Pipe);
 }
 
 limeLight::Pipeline limeLight::GetPipeline() {
-  return limeLight::Pipeline(GetVal("pipeline"));
+  return limeLight::Pipeline(GETVAL("pipeline"));
 }
 
 limeLight::CamMode limeLight::GetMode() {
-  return limeLight::CamMode(GetVal("camMode"));
+  return limeLight::CamMode(GETVAL("camMode"));
 }
 
 limeLight::LEDMode limeLight::GetLED() {
-  return limeLight::LEDMode(GetVal("ledMode"));
+  return limeLight::LEDMode(GETVAL("ledMode"));
+}
+
+std::array<double, 6> limeLight::GetBotpose() {
+  static std::array<double, 6> arr;
+  for (int i = 0; i < 6; i++) {
+    arr[i] = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetValue("botpose").GetDoubleArray()[i];
+  }
+  return arr;
+}
+
+frc::Translation2d limeLight::GetBotPose2D() {
+  return frc::Translation2d(units::meter_t(GetBotpose()[0]), -units::meter_t(GetBotpose()[1]));
 }
