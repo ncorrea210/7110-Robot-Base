@@ -69,21 +69,19 @@ void RobotContainer::ConfigureButtonBindings() {
   // m_driverController.A().WhenActive(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.RunExtension(0.1);})
-    .WhenReleased([this] {m_arm.RunExtension(0);});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.MidCone();});
   
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.RunExtension(-0.1);})
-    .WhenReleased([this] {m_arm.RunExtension(0);});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.Stow();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed([this] {m_arm.RunActuator(0.5);})
-    .WhenReleased([this] {m_arm.RunActuator(0);});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed([this] {m_arm.MidCubeConePickup();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.RunActuator(-0.5);})
-    .WhenReleased([this] {m_arm.RunActuator(0);});
-  
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_arm.Stow();});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.CubePickup();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_arm.MidCone();});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_claw.Run(0.2);})
+    .WhenReleased([this] {m_claw.Run(0);});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.2);})
+    .WhenReleased([this] {m_claw.Run(0);});
 
 }
 

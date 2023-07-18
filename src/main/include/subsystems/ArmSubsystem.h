@@ -8,6 +8,7 @@
 #include <frc/motorcontrol/VictorSP.h>
 #include <frc/AnalogEncoder.h>
 #include <frc/controller/PIDController.h>
+#include <frc/DigitalInput.h>
 
 #include <rev/CANSparkMax.h>
 #include <rev/SparkMaxPIDController.h>
@@ -72,6 +73,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
       m_actuator.Set(speed);
     }
 
+    bool SwitchLow() const;
+
+    bool SwitchHigh() const;
+
     void InitSendable(wpi::SendableBuilder& builder) override;
 
   private:
@@ -87,6 +92,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
     frc::AnalogEncoder m_actuatorEncoder;
     frc::PIDController m_actuatorController;
 
+    frc::DigitalInput m_limitSwitch;
+
     const ArmPosition m_stow;
     const ArmPosition m_coneMid;
     const ArmPosition m_cubeMidconePickup;
@@ -94,7 +101,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
     const ArmPosition m_cubePickup;
 
     ArmPosition m_target;
-    
+
     // Components (e.g. motor controllers and sensors) should generally be
     // declared private and exposed only through public methods.
 };

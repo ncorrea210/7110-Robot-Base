@@ -13,6 +13,7 @@
 
 #define EPSILON_EXTENSION 2
 #define EPSILON_ANGLE 2
+#define SWITCH_CHECK 75
 
 static bool InRange(double val, double target, double epsilon) {
     return (val > (target - epsilon) && val < (target + epsilon));
@@ -27,6 +28,7 @@ m_extensionController(m_extension.GetPIDController()),
 m_actuator(1),
 m_actuatorEncoder(0),
 m_actuatorController(1, 0, 0),
+m_limitSwitch(0),
 m_stow(0, 98), 
 m_coneMid(160, 2),
 m_cubeMidconePickup(100, 2),
@@ -35,13 +37,21 @@ m_cubePickup(50, 2),
 m_target(m_stow)
 {
 
-    m_extensionController.SetP(0.1);
-    m_extensionController.SetOutputRange(-0.1, 0.1);
+    m_extensionController.SetP(0.03);
+    m_extensionController.SetOutputRange(-0.5, 0.5);
     
 }
 
 // This method will be called once per scheduler run
 void ArmSubsystem::Periodic() {
+
+    if (SwitchHigh()) {
+        m_extensionEncoder.SetPosition(160);
+    }
+
+    if (SwitchLow()) {
+        m_extensionEncoder.SetPosition(0);
+    }
 
     CheckState();
 
@@ -112,6 +122,7 @@ void ArmSubsystem::CheckState() {
 
     m_actualState = State::kRunning;
 
+        
     
 }
 
@@ -150,6 +161,18 @@ ArmSubsystem::State ArmSubsystem::GetTarget() const {
 
 int ArmSubsystem::GetAngle() const {
     return std::lround(100 * (((100 * m_actuatorEncoder.Get().value()) - 3) / 45));
+}
+
+bool ArmSubsystem::SwitchLow() const {
+    if (m_extensionEncoder.GetPosition() < 75 && !m_limitSwitch.Get()) 
+        return true;
+    else return false;
+}
+
+bool ArmSubsystem::SwitchHigh() const {
+    if (m_extensionEncoder.GetPosition() > 75 && !m_limitSwitch.Get()) 
+        return true;
+    else return false;
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {

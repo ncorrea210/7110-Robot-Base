@@ -25,6 +25,7 @@
 //Subsystems
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
+#include "subsystems/ClawSubsystem.h"
 
 //Commands
 #include "commands/DefaultDriveCMD.h"
@@ -57,6 +58,7 @@ class RobotContainer {
   // The robot's subsystems
   DriveSubsystem m_drive;
   ArmSubsystem m_arm;
+  ClawSubsystem m_claw;
 
   // The robot's commands
 
