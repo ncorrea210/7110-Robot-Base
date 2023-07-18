@@ -11,6 +11,10 @@
 #include <math.h>
 #include <cmath>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <wpi/sendable/SendableBuilder.h>
+#include <frc/DriverStation.h>
+#include <frc/filter/MedianFilter.h>
+#include "utils/cams/Limelight.h"
 
 #include "Constants.h"
 
@@ -41,53 +45,36 @@ DriveSubsystem::DriveSubsystem()
 
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()) {SetName("Swerve"); SetTelemetry();}
+                    m_rearRight.GetPosition()}, frc::Pose2d()),
+      m_poseEstimator(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+                    m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
+                    m_rearRight.GetPosition()}, frc::Pose2d())
+                     {
+                      m_field.SetRobotPose(frc::Pose2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad)));
+                      frc::SmartDashboard::PutData(&m_field);
+                      m_visionPoseRaw = frc::Translation2d();
+                      m_calcVisionPose = frc::Pose2d();
+                    }
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  m_odometry.Update(gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+  m_odometry.Update(-gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+                    m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
+                    m_rearRight.GetPosition()});
+  m_poseEstimator.Update(gyro.GetRot2d(),{m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
 
-}
+  // m_visionPoseRaw = hb::limeLight::GetBotPose2D();
 
-std::unordered_map<std::string, std::function<double()>> DriveSubsystem::GetTelemetry() {
-  return m_telemetry;
-}
+  // m_calcVisionPose = frc::Pose2d(m_xFilter.Calculate(m_visionPoseRaw.X()), m_yFilter.Calculate(m_visionPoseRaw.Y()), gyro.GetRot2d());
 
-void DriveSubsystem::SetTelemetry() {
-  // Front Left Telemetry
-  m_telemetry.insert({"FL Speed" , LAMBDA(m_frontLeft.GetState().speed.value())});
-  m_telemetry.insert({"FL Angle" , LAMBDA(m_frontLeft.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"FL D Temp", LAMBDA(m_frontLeft.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"FL T Temp", LAMBDA(m_frontLeft.GetTurnMotorTemp().value())});
+  // m_field.SetRobotPose(m_odometry.GetPose());
+  // m_field.SetRobotPose(m_calcVisionPose);
 
+  frc::SmartDashboard::PutNumber("LimeLight tx", hb::limeLight::GetX());
+  frc::SmartDashboard::PutNumber("LimeLight ta", hb::limeLight::GetA());
 
-  // Front Right Telemetry
-  m_telemetry.insert({"FR Speed" , LAMBDA(m_frontRight.GetState().speed.value())});
-  m_telemetry.insert({"FR Angle" , LAMBDA(m_frontRight.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"FR D Temp", LAMBDA(m_frontRight.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"FR T Temp", LAMBDA(m_frontRight.GetTurnMotorTemp().value())});
-
-  // Rear Left Telemetry
-  m_telemetry.insert({"RL Speed" , LAMBDA(m_rearLeft.GetState().speed.value())});
-  m_telemetry.insert({"RL Angle" , LAMBDA(m_rearLeft.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"RL D Temp", LAMBDA(m_rearLeft.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"RL T Temp", LAMBDA(m_rearLeft.GetTurnMotorTemp().value())});
-
-  // Rear Right Telemetry
-  m_telemetry.insert({"RR Speed" , LAMBDA(m_rearRight.GetState().speed.value())});
-  m_telemetry.insert({"RR Angle" , LAMBDA(m_rearRight.GetState().angle.Degrees().value())});
-  m_telemetry.insert({"RR D Temp", LAMBDA(m_rearRight.GetDriveMotorTemp().value())});
-  m_telemetry.insert({"RR T Temp", LAMBDA(m_rearRight.GetTurnMotorTemp().value())});
-
-  m_telemetry.insert({"Gyro Angle", LAMBDA(gyro.GetRot2d().Degrees().value())});
-
-  m_telemetry.insert({"Max Speed", LAMBDA(GetSpeed().value())});
-}
-
-hb::SubsystemData DriveSubsystem::GetData() {
-  return {GetName(), GetTelemetry()};
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -164,4 +151,31 @@ void DriveSubsystem::ResetEncoders() {
   m_frontRight.ResetEncoders();
   m_rearLeft.ResetEncoders();
   m_rearRight.ResetEncoders();
+}
+
+void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
+  builder.SetSmartDashboardType("Swerve Drive");
+
+  // builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
+  
+  // builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
+  // builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
+
+  // builder.AddDoubleProperty("FR V", LAMBDA(m_frontRight.GetState().speed.value()), nullptr);
+  // builder.AddDoubleProperty("FR A", LAMBDA(m_frontRight.GetState().angle.Radians().value()), nullptr);  
+
+  // builder.AddDoubleProperty("RL V", LAMBDA(m_rearLeft.GetState().speed.value()), nullptr);
+  // builder.AddDoubleProperty("RL A", LAMBDA(m_rearLeft.GetState().angle.Radians().value()), nullptr);
+
+  // builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
+  // builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
+
+  // builder.AddDoubleProperty("Battery", LAMBDA(frc::DriverStation::GetBatteryVoltage()), nullptr);
+
+  // builder.AddDoubleProperty("FL DS", LAMBDA(m_frontLeft.GetDSetpoint()), nullptr);
+
+  // builder.AddDoubleProperty("FL AO", LAMBDA(m_frontLeft.GetAppliedOut().first), nullptr);
+
+  // builder.AddDoubleProperty("FL RV", LAMBDA(m_frontLeft.RequestedV()), nullptr);
+
 }

@@ -24,6 +24,8 @@
 
 //Subsystems
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ClawSubsystem.h"
 
 //Commands
 #include "commands/DefaultDriveCMD.h"
@@ -44,8 +46,8 @@ class RobotContainer {
  private:
   // The driver's controller
   frc::XboxController m_driverController{0};
-  frc::XboxController m_operatorController{1};
-  frc2::CommandXboxController m_driver{2};
+  // frc::XboxController m_operatorController{1};
+  // frc2::CommandXboxController m_driverController{0};
 
   // The robot's subsystems and commands are defined here...
 
@@ -55,6 +57,8 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+  ArmSubsystem m_arm;
+  ClawSubsystem m_claw;
 
   // The robot's commands
 

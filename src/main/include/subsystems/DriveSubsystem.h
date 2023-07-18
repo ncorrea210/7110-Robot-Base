@@ -21,6 +21,10 @@
 #include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/filter/LinearFilter.h>
+
 #include <array>
 
 
@@ -30,7 +34,7 @@
 #include "utils/subsystems/Subsystem.h"
 
 
-class DriveSubsystem : public hb::Subsystem {
+class DriveSubsystem : public frc2::SubsystemBase {
  public:
   DriveSubsystem();
 
@@ -38,12 +42,6 @@ class DriveSubsystem : public hb::Subsystem {
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
-
-  std::unordered_map<std::string, std::function<double()>> GetTelemetry() override;
-
-  void SetTelemetry() override;
-
-  hb::SubsystemData GetData() override;
 
   // Subsystem methods go here.
 
@@ -125,16 +123,18 @@ class DriveSubsystem : public hb::Subsystem {
       0.31369_m;  // Distance between centers of front and back wheels on robot
 
   frc::SwerveDriveKinematics<4> kDriveKinematics{
-      frc::Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-      frc::Translation2d(kWheelBase / 2, kTrackWidth / 2),
-      frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-      frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2)};
+      frc::Translation2d(kWheelBase, -kTrackWidth),
+      frc::Translation2d(kWheelBase, kTrackWidth),
+      frc::Translation2d(-kWheelBase, -kTrackWidth),
+      frc::Translation2d(-kWheelBase, kTrackWidth)};
 
     void ResetGyro() {
         gyro.Reset();
     }
 
   hb::pigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -155,4 +155,16 @@ class DriveSubsystem : public hb::Subsystem {
   frc::SwerveDriveOdometry<4> m_odometry;
 
   std::unordered_map<std::string, std::function<double()>> m_telemetry;
+
+  frc::Field2d m_field;
+
+  frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
+
+  frc::Translation2d m_visionPoseRaw;
+
+  frc::Pose2d m_calcVisionPose;
+
+  frc::LinearFilter<units::meter_t> m_xFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
+  frc::LinearFilter<units::meter_t> m_yFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
+
 };

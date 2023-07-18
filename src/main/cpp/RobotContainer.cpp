@@ -42,17 +42,18 @@ RobotContainer::RobotContainer() {
    * Where auto has already been declared in RobotContainer.h
   */
 
-  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
-  // frc::SmartDashboard::PutData("Swerve Drive", &m_swerve);
+  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  // frc::SmartDashboard::PutData("Swerve", &m_drive);
+  frc::SmartDashboard::PutData("Arm", &m_arm);
 
   // Configure the button bindings
   ConfigureButtonBindings();
 
   //Default subsystem commands are defined in this section
   m_drive.SetDefaultCommand(DefaultDriveCMD(&m_drive, 
-        [this] {return -(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01));}, 
-        [this] {return (frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
-        [this] {return (frc::ApplyDeadband(m_driverController.GetRightX(), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
+        [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
+        [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
+        [this] {return -(frc::ApplyDeadband(m_driverController.GetRightX() < 0 ? -(m_driverController.GetRightX() * m_driverController.GetRightX()) : (m_driverController.GetRightX() * m_driverController.GetRightX()), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
         [this] {return true;},
         [this] {return m_drive.GetSpeed().value();}));
 
@@ -64,7 +65,24 @@ void RobotContainer::ConfigureButtonBindings() {
    *  frc::JoystickButton(&m_controller, frc::XboxController::Button::kButton).WhenPressed(Command);
    *  TODO: test command xbox controller implementation(found below) and see if it works
   */
-  m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
+  // m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
+  // m_driverController.A().WhenActive(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.MidCone();});
+  
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.Stow();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed([this] {m_arm.MidCubeConePickup();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.CubePickup();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_claw.Run(0.2);})
+    .WhenReleased([this] {m_claw.Run(0);});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.2);})
+    .WhenReleased([this] {m_claw.Run(0);});
+
 }
 
 

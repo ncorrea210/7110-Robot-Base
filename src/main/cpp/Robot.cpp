@@ -78,7 +78,7 @@ void Robot::TeleopInit() {
     m_autonomousCommand = nullptr;
   }
 
-  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
+  // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 }
 
 /**
