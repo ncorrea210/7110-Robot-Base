@@ -5,6 +5,8 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/trajectory/TrapezoidProfile.h>
+#include <frc/geometry/Transform3d.h>
+
 #include <units/acceleration.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
@@ -13,6 +15,8 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 #include <units/angular_acceleration.h>
+
+
 #include <numbers>
 
 
@@ -86,6 +90,13 @@ constexpr double kITurn = 0;
 constexpr double kDTurn = 0.004;
 constexpr double kFFTurn = 0;
 }  // namespace ModuleConstants
+
+namespace VisionConstants {
+    // constexpr frc::Translation3d m_rightTranslation{-15_in, -7_in, 24_in};
+    // constexpr frc::Rotation3d m_rightRotation{0_deg, 0_deg, -165_deg}; 
+    static frc::Transform3d m_rightTransform{frc::Translation3d(-15_in, -7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, -165_deg}};
+
+}
 
 namespace AutoConstants {
 using radians_per_second_squared_t =

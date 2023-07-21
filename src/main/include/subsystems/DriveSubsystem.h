@@ -32,6 +32,7 @@
 #include "utils/swerve/SwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
 #include "utils/subsystems/Subsystem.h"
+#include "subsystems/visionSubsystem.h"
 
 
 class DriveSubsystem : public frc2::SubsystemBase {
@@ -166,5 +167,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   frc::LinearFilter<units::meter_t> m_xFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
   frc::LinearFilter<units::meter_t> m_yFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
+
+  VisionSubsystem& m_visionSystem;
+  // photonlib::PhotonCamera m_rightCam;
 
 };

@@ -48,7 +48,9 @@ DriveSubsystem::DriveSubsystem()
                     m_rearRight.GetPosition()}, frc::Pose2d()),
       m_poseEstimator(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d())
+                    m_rearRight.GetPosition()}, frc::Pose2d()),
+      m_visionSystem(VisionSubsystem::GetInstance())
+      // m_rightCam(m_visionSystem.GetRightCam())
                      {
                       m_field.SetRobotPose(frc::Pose2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad)));
                       frc::SmartDashboard::PutData(&m_field);
@@ -72,8 +74,14 @@ void DriveSubsystem::Periodic() {
   // m_field.SetRobotPose(m_odometry.GetPose());
   // m_field.SetRobotPose(m_calcVisionPose);
 
-  frc::SmartDashboard::PutNumber("LimeLight tx", hb::limeLight::GetX());
-  frc::SmartDashboard::PutNumber("LimeLight ta", hb::limeLight::GetA());
+  if (m_visionSystem.GetPose().first.has_value()) {
+    m_poseEstimator.AddVisionMeasurement(m_visionSystem.GetPose().second.value(), m_visionSystem.GetPose().first.value());
+    m_calcVisionPose = m_visionSystem.GetPose().second.value();
+    m_field.SetRobotPose(m_calcVisionPose);
+  }
+
+  // frc::SmartDashboard::PutNumber("LimeLight tx", hb::limeLight::GetX());
+  // frc::SmartDashboard::PutNumber("LimeLight ta", hb::limeLight::GetA());
 
 }
 
@@ -177,5 +185,7 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   // builder.AddDoubleProperty("FL AO", LAMBDA(m_frontLeft.GetAppliedOut().first), nullptr);
 
   // builder.AddDoubleProperty("FL RV", LAMBDA(m_frontLeft.RequestedV()), nullptr);
+
+  // builder.AddDoubleProperty("RCam X", LAMBDA(m_rightCam.GetLatestResult().GetBestTarget().GetYaw()), nullptr);
 
 }
