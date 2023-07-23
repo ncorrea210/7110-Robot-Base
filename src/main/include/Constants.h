@@ -94,7 +94,9 @@ constexpr double kFFTurn = 0;
 namespace VisionConstants {
     // constexpr frc::Translation3d m_rightTranslation{-15_in, -7_in, 24_in};
     // constexpr frc::Rotation3d m_rightRotation{0_deg, 0_deg, -165_deg}; 
-    static frc::Transform3d m_rightTransform{frc::Translation3d(-15_in, -7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, -165_deg}};
+    static frc::Transform3d RightTransform{frc::Translation3d(-15_in, -7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, -150_deg}};
+    static frc::Transform3d LeftTransform{frc::Translation3d(-15_in, 7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, 150_deg}};
+
 
 }
 

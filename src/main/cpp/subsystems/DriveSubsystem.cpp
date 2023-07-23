@@ -48,12 +48,12 @@ DriveSubsystem::DriveSubsystem()
                     m_rearRight.GetPosition()}, frc::Pose2d()),
       m_poseEstimator(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d()),
-      m_visionSystem(VisionSubsystem::GetInstance())
+                    m_rearRight.GetPosition()}, frc::Pose2d())
+      // m_visionSystem(VisionSubsystem::GetInstance())
       // m_rightCam(m_visionSystem.GetRightCam())
                      {
-                      m_field.SetRobotPose(frc::Pose2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad)));
-                      frc::SmartDashboard::PutData(&m_field);
+                      // m_field.SetRobotPose(frc::Pose2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad)));
+                      // frc::SmartDashboard::PutData(&m_field);
                       m_visionPoseRaw = frc::Translation2d();
                       m_calcVisionPose = frc::Pose2d();
                     }
@@ -74,11 +74,11 @@ void DriveSubsystem::Periodic() {
   // m_field.SetRobotPose(m_odometry.GetPose());
   // m_field.SetRobotPose(m_calcVisionPose);
 
-  if (m_visionSystem.GetPose().first.has_value()) {
-    m_poseEstimator.AddVisionMeasurement(m_visionSystem.GetPose().second.value(), m_visionSystem.GetPose().first.value());
-    m_calcVisionPose = m_visionSystem.GetPose().second.value();
-    m_field.SetRobotPose(m_calcVisionPose);
-  }
+  // if (m_visionSystem.GetPose().first.has_value()) {
+  //   m_poseEstimator.AddVisionMeasurement(m_visionSystem.GetPose().second.value(), m_visionSystem.GetPose().first.value());
+  //   m_calcVisionPose = m_visionSystem.GetPose().second.value();
+  //   m_field.SetRobotPose(m_calcVisionPose);
+  // }
 
   // frc::SmartDashboard::PutNumber("LimeLight tx", hb::limeLight::GetX());
   // frc::SmartDashboard::PutNumber("LimeLight ta", hb::limeLight::GetA());
@@ -164,21 +164,21 @@ void DriveSubsystem::ResetEncoders() {
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Swerve Drive");
 
-  // builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
+  builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
   
-  // builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
 
-  // builder.AddDoubleProperty("FR V", LAMBDA(m_frontRight.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("FR A", LAMBDA(m_frontRight.GetState().angle.Radians().value()), nullptr);  
+  builder.AddDoubleProperty("FR V", LAMBDA(m_frontRight.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("FR A", LAMBDA(m_frontRight.GetState().angle.Radians().value()), nullptr);  
 
-  // builder.AddDoubleProperty("RL V", LAMBDA(m_rearLeft.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("RL A", LAMBDA(m_rearLeft.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("RL V", LAMBDA(m_rearLeft.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("RL A", LAMBDA(m_rearLeft.GetState().angle.Radians().value()), nullptr);
 
-  // builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
 
-  // builder.AddDoubleProperty("Battery", LAMBDA(frc::DriverStation::GetBatteryVoltage()), nullptr);
+  builder.AddDoubleProperty("Battery", LAMBDA(frc::DriverStation::GetBatteryVoltage()), nullptr);
 
   // builder.AddDoubleProperty("FL DS", LAMBDA(m_frontLeft.GetDSetpoint()), nullptr);
 

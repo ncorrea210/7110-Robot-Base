@@ -13,18 +13,18 @@
 
 void Robot::RobotInit() {
 
-  // Auto Logs all data sent to network tables to datalogs on Rio
-  frc::DataLogManager::Start();
-  frc::DataLogManager::LogNetworkTables(true);
+  // // Auto Logs all data sent to network tables to datalogs on Rio
+  // frc::DataLogManager::Start();
+  // frc::DataLogManager::LogNetworkTables(true);
 
-  // Logs all data from the Driver Station to the log
-  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+  // // Logs all data from the Driver Station to the log
+  // frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
 
-  // Tells user where to find the log for this run of the robot
-  printf("************** LOG STARTED AT %s **************\n", frc::DataLogManager::GetLogDir().c_str());
+  // // Tells user where to find the log for this run of the robot
+  // printf("************** LOG STARTED AT %s **************\n", frc::DataLogManager::GetLogDir().c_str());
 
-  // Ensures the LimeLight doesn't burn our eyes out upon startup
-  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
+  // // Ensures the LimeLight doesn't burn our eyes out upon startup
+  // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
 
 }
 
@@ -46,7 +46,7 @@ void Robot::RobotPeriodic() {
  * robot is disabled.
  */
 void Robot::DisabledInit() {
-  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
+  // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
 }
 
 void Robot::DisabledPeriodic() {}
@@ -57,7 +57,7 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() {
 
-  hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
+  // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 
   m_autonomousCommand = m_container.GetAutonomousCommand();
 

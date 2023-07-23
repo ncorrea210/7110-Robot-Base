@@ -1,8 +1,13 @@
 #pragma once
 
 #include <array>
+#include <optional>
+#include <utility>
 
 #include <frc/geometry/Translation2d.h>
+#include <frc/geometry/Pose2d.h>
+
+#include <units/time.h>
 
 namespace hb {
   
@@ -75,6 +80,8 @@ namespace hb {
       static CamMode GetMode();
 
       static LEDMode GetLED();
+
+      static std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> GetPose();
 
       // static std::array<double, 6> GetBotpose(); 
 

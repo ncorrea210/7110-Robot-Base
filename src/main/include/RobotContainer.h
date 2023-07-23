@@ -26,6 +26,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/ClawSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 
 //Commands
 #include "commands/DefaultDriveCMD.h"
@@ -55,10 +56,13 @@ class RobotContainer {
   frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
   frc::SlewRateLimiter<units::scalar> m_speedLimitz{3 / 1_s};
 
+  frc::PowerDistribution m_pdp{0, frc::PowerDistribution::ModuleType::kCTRE};
+
   // The robot's subsystems
   DriveSubsystem m_drive;
   ArmSubsystem m_arm;
-  ClawSubsystem m_claw;
+  ClawSubsystem m_claw{&m_pdp};
+  VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
 
   // The robot's commands
 

@@ -12,6 +12,9 @@
 #include <frc/geometry/Pose2d.h>
 #include <frc/apriltag/AprilTagFields.h>
 #include <frc/apriltag/AprilTagFieldLayout.h>
+#include <frc/smartdashboard/Field2d.h>
+
+#include <wpi/sendable/SendableBuilder.h>
 
 #include <units/time.h>
 
@@ -29,11 +32,17 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   static VisionSubsystem& GetInstance();
 
-  photonlib::PhotonCamera& GetRightCam();
+  // photonlib::PhotonCamera& GetRightCam();
 
   // static photonlib::PhotonCamera& GetLeftCam();
 
   std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> GetPose();
+
+  // double GetLeftX();
+
+  // double GetLeftY();
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -41,9 +50,13 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   frc::AprilTagFieldLayout m_layout = frc::LoadAprilTagLayoutField(frc::AprilTagField::k2023ChargedUp);
 
-  photonlib::PhotonCamera m_rightCam;
+  // photonlib::PhotonCamera m_rightCam;
   // photonlib::PhotonCamera m_leftCam;
 
   photonlib::PhotonPoseEstimator m_rightEst;
-  // photonlib::PhotonPoseEstimator m_leftEst;
+  photonlib::PhotonPoseEstimator m_leftEst;
+
+  frc::Field2d m_field;
+
+  // photonlib::PhotonPipelineResult m_leftResult;
 };
