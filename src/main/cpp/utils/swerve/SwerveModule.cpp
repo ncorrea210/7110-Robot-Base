@@ -68,7 +68,7 @@ frc::SwerveModuleState SwerveModule::GetState() {
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
-    return {units::meter_t(m_sparkDriveEncoder.GetPosition()), units::radian_t(m_turningEncoder.Get())};
+    return {units::meter_t(-m_sparkDriveEncoder.GetPosition()), units::radian_t(-m_sparkTurnEncoder.GetPosition())};
 }
 
 void SwerveModule::SetDesiredState(

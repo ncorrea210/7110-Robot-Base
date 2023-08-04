@@ -105,7 +105,7 @@ class SwerveModule {
       /*0.011*/0.004,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
 
-    frc2::PIDController m_turningController {1.0, 0.0, 0};
+    frc2::PIDController m_turningController {1.25, 0.0, 0};
 
     
 };

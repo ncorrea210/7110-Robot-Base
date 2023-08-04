@@ -50,8 +50,8 @@ DriveSubsystem::DriveSubsystem()
       m_visionSystem(VisionSubsystem::GetInstance()), 
       m_poseEstimator(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                    m_rearRight.GetPosition()}, frc::Pose2d())
-      // m_rightCam(m_visionSystem.GetRightCam())
+                    m_rearRight.GetPosition()}, frc::Pose2d()),
+                    m_vision(true)
                      {
                       frc::SmartDashboard::PutData("Field2", &m_field);
                     }
@@ -65,9 +65,12 @@ void DriveSubsystem::Periodic() {
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()});
 
+
+  if (m_vision) {
   std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> CamPose = m_visionSystem.GetPose();
   if (CamPose.first.has_value()) {
     m_poseEstimator.AddVisionMeasurement(CamPose.second.value(), CamPose.first.value());
+  }
   }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
@@ -114,10 +117,10 @@ void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
   kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,
                                          AutoConstants::kMaxSpeed);
-  desiredStates[0].angle = ((desiredStates[0].angle * -1.0));
-  desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
-  desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
-  desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
+  // desiredStates[0].angle = ((desiredStates[0].angle * -1.0));
+  // desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
+  // desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
+  // desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
@@ -133,7 +136,13 @@ double DriveSubsystem::GetTurnRate() {
 }
 
 frc::Pose2d DriveSubsystem::GetPose() {
-  return m_odometry.GetPose();
+  return m_poseEstimator.GetEstimatedPosition();
+}
+
+void DriveSubsystem::SetPose(frc::Pose2d pose) {
+  m_poseEstimator.ResetPosition(-gyro.GetRot2d(), {m_frontLeft.GetPosition(),
+                    m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
+                    m_rearRight.GetPosition()}, pose);
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
@@ -155,6 +164,7 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddDoubleProperty("FL D", LAMBDA(m_frontLeft.GetPosition().distance.value()), nullptr);
   builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetPosition().angle.Radians().value()), nullptr);
+  builder.AddBooleanProperty("Vision", LAMBDA(m_vision), nullptr);
 
   // builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
   

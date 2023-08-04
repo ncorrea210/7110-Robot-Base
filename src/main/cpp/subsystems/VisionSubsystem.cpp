@@ -22,7 +22,7 @@ m_yFilter(frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s))
 {
     m_leftEst.SetMultiTagFallbackStrategy(photonlib::PoseStrategy::LOWEST_AMBIGUITY);
     m_rightEst.SetMultiTagFallbackStrategy(photonlib::PoseStrategy::LOWEST_AMBIGUITY);
-    frc::SmartDashboard::PutData("Field", &m_field);
+    // frc::SmartDashboard::PutData("Field", &m_field);
 
 }
 
@@ -38,10 +38,10 @@ void VisionSubsystem::Periodic() {
     //     m_field.SetRobotPose(hb::limeLight::GetPose().first.value());
     // }
 
-    std::optional<frc::Pose2d> pose = GetPose().second;
-    if (pose.has_value()) {
-        m_field.SetRobotPose(pose.value());
-    }
+    // std::optional<frc::Pose2d> pose = GetPose().second;
+    // if (pose.has_value()) {
+    //     m_field.SetRobotPose(pose.value());
+    // }
 
 
     // frc::SmartDashboard::PutBoolean("Has Targets", m_leftCam.GetLatestResult().HasTargets());
@@ -104,6 +104,7 @@ std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> VisionSubs
 void VisionSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Vision");
 
+    
     // builder.AddDoubleProperty("dX", [this] {return GetLeftX();}, nullptr);
     // builder.AddDoubleProperty("dY", [this] {return m_leftCam.GetLatestResult().GetBestTarget().GetPitch();}, nullptr);
 }

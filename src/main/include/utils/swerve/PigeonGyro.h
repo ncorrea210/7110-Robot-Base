@@ -58,5 +58,6 @@ namespace hb {
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;
     mutable double m_rate;
+    double m_offset;
   };
 } // namespace hb

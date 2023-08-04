@@ -93,6 +93,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   frc::Pose2d GetPose();
 
+  
+  void SetPose(frc::Pose2d pose);
+
   /**
    * Resets the odometry to the specified pose.
    *
@@ -137,6 +140,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 
+  inline void ToggleVision() {
+    m_vision ? m_vision = false : m_vision = true;
+  }
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -161,5 +168,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
+  bool m_vision;
 
 };

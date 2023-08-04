@@ -11,6 +11,7 @@ using namespace hb;
 pigeonGyro::pigeonGyro(int ID) {
   pigeon = new ctre::phoenix::sensors::PigeonIMU(ID);
   pigeon->ConfigFactoryDefault();
+  m_offset = 0;
 }
 
 double pigeonGyro::GetAngle() const {
@@ -19,7 +20,7 @@ double pigeonGyro::GetAngle() const {
     pigeon->GetFusedHeading(stat);
     m_angle = stat.heading;
   } 
-  return -m_angle;
+  return -m_angle - m_offset;
 }
 
 double pigeonGyro::GetRate() const {
@@ -55,5 +56,8 @@ units::radian_t pigeonGyro::GetRad() const {
 }
 
 void pigeonGyro::SetPosition(units::degree_t angle) {
-  pigeon->SetFusedHeading(angle.value(), 30);
+  // actual - offset = angle
+  // actual - angle = offset
+  m_offset;
+  m_offset = GetAngle() - angle.value();
 }

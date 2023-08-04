@@ -21,7 +21,7 @@ FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_dr
 void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
   auto initPose = initState.pose;
-  m_drive->ResetOdometry({initPose.Translation(), initState.holonomicRotation});
+  m_drive->SetPose(initPose);
   m_drive->gyro.SetPosition(initState.holonomicRotation.Degrees());
   m_drive->ResetEncoders();
   m_timer.Reset();
@@ -30,8 +30,14 @@ void FollowPPPathCMD::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void FollowPPPathCMD::Execute() {
+
+  // Get the desired state with respect to time for the given path
   auto state = m_traj.sample(m_timer.Get());
+
+  // Convert the state to WPILib State
   frc::Trajectory::State stateW = state.asWPILibState();
+  
+  // Run the modules 
   m_drive->SetModuleStates(m_drive->kDriveKinematics.ToSwerveModuleStates(
     m_drive->GetController().Calculate(m_drive->GetPose(), stateW, state.holonomicRotation)));
 }

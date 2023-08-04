@@ -29,6 +29,7 @@
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "utils/cams/Limelight.h"
+#include "commands/FollowPPPathCMD.h"
 
 
 using namespace DriveConstants;
@@ -42,7 +43,10 @@ RobotContainer::RobotContainer() {
    * Where auto has already been declared in RobotContainer.h
   */
 
-  // frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
+  m_chooser.AddOption("Test1", new FollowPPPathCMD(&m_drive, "Straight Line"));
+  m_chooser.AddOption("L Path", new FollowPPPathCMD(&m_drive, "BackForth"));
+
+  frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   frc::SmartDashboard::PutData("Swerve", &m_drive);
   frc::SmartDashboard::PutData("Arm", &m_arm);
   frc::SmartDashboard::PutData("Claw", &m_claw);
@@ -85,6 +89,8 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.2);})
     .WhenReleased([this] {m_claw.Run(0);});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.gyro.SetPosition(180_deg);}));
 
 }
 

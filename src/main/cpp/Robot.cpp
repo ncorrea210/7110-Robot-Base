@@ -26,6 +26,8 @@ void Robot::RobotInit() {
   // // Ensures the LimeLight doesn't burn our eyes out upon startup
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
 
+  hb::limeLight::SetPipeline(hb::limeLight::Pipeline::kAprilTag);
+
 }
 
 /**
