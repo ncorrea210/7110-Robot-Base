@@ -11,7 +11,7 @@
 
 #define LAMBDA(x) [this] {return x;}
 
-#define EPSILON_EXTENSION 2
+#define EPSILON_EXTENSION 1.5
 #define EPSILON_ANGLE 2
 #define SWITCH_CHECK 75
 
@@ -38,7 +38,7 @@ m_target(m_stow)
 {
 
     m_extensionController.SetP(0.03);
-    m_extensionController.SetOutputRange(-0.5, 0.5);
+    m_extensionController.SetOutputRange(-0.5, 0.6);
     
 }
 
@@ -173,6 +173,22 @@ bool ArmSubsystem::SwitchHigh() const {
     if (m_extensionEncoder.GetPosition() > 75 && !m_limitSwitch.Get()) 
         return true;
     else return false;
+}
+
+frc2::CommandPtr ArmSubsystem::ConeMidCMD() {
+    return this->RunOnce([this] {Stow();});
+}
+
+frc2::CommandPtr ArmSubsystem::ConePickCubeMidCMD() {
+    return this->RunOnce([this] {MidCubeConePickup();});
+}
+
+frc2::CommandPtr ArmSubsystem::CubePickCMD() {
+    return this->RunOnce([this] {CubePickup();});
+}
+
+frc2::CommandPtr ArmSubsystem::StowCMD() {
+    return this->RunOnce([this] {Stow();});
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {

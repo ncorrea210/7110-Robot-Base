@@ -13,6 +13,7 @@
 #include <frc/apriltag/AprilTagFields.h>
 #include <frc/apriltag/AprilTagFieldLayout.h>
 #include <frc/smartdashboard/Field2d.h>
+#include <frc/filter/LinearFilter.h>
 
 #include <wpi/sendable/SendableBuilder.h>
 
@@ -48,15 +49,18 @@ class VisionSubsystem : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
+  frc::Pose2d m_FilterPose(frc::Pose2d, bool);
+
   frc::AprilTagFieldLayout m_layout = frc::LoadAprilTagLayoutField(frc::AprilTagField::k2023ChargedUp);
 
-  // photonlib::PhotonCamera m_rightCam;
-  // photonlib::PhotonCamera m_leftCam;
 
   photonlib::PhotonPoseEstimator m_rightEst;
   photonlib::PhotonPoseEstimator m_leftEst;
 
   frc::Field2d m_field;
 
-  // photonlib::PhotonPipelineResult m_leftResult;
+  frc::LinearFilter<units::meter_t> m_xFilter;
+  frc::LinearFilter<units::meter_t> m_yFilter;
+  // frc::LinearFilter<frc::Rotation2d> m_rotFilter;
+
 };

@@ -63,7 +63,7 @@ std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> limeLight:
   } else {
     results = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray("botpose_wpired", std::span<const double>());
   }
-  if (results[6] == 0) {
+  if (!HasTarget()) {
     return std::make_pair(std::nullopt, std::nullopt);
   }
   frc::Translation2d translation{units::meter_t(results[0]), units::meter_t(results[1])};

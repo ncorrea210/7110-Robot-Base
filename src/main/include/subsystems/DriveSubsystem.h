@@ -32,7 +32,7 @@
 #include "utils/swerve/SwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
 #include "utils/subsystems/Subsystem.h"
-// #include "subsystems/VisionSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 
 
 class DriveSubsystem : public frc2::SubsystemBase {
@@ -155,20 +155,11 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // 4 defines the number of modules
   frc::SwerveDriveOdometry<4> m_odometry;
 
-  std::unordered_map<std::string, std::function<double()>> m_telemetry;
-
   frc::Field2d m_field;
+
+  VisionSubsystem& m_visionSystem;
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
-  frc::Translation2d m_visionPoseRaw;
-
-  frc::Pose2d m_calcVisionPose;
-
-  frc::LinearFilter<units::meter_t> m_xFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
-  frc::LinearFilter<units::meter_t> m_yFilter = frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s);
-
-  // VisionSubsystem& m_visionSystem;
-  // photonlib::PhotonCamera m_rightCam;
 
 };

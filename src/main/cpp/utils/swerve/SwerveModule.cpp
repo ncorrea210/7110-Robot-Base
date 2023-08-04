@@ -60,8 +60,6 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_driveMotor.BurnFlash();
   m_turningMotor.BurnFlash();
 
-  m_requestedV = 0;
-
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {
@@ -70,36 +68,16 @@ frc::SwerveModuleState SwerveModule::GetState() {
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
-    return {units::meter_t(-m_sparkDriveEncoder.GetPosition()), units::radian_t(-m_turningEncoder.Get())};
+    return {units::meter_t(m_sparkDriveEncoder.GetPosition()), units::radian_t(m_turningEncoder.Get())};
 }
 
 void SwerveModule::SetDesiredState(
     const frc::SwerveModuleState& referenceState) {
 
-  // m_turningPIDController.SetD(
-  // frc::SmartDashboard::GetNumber("DModVal", 0)
-  // );
-
   // Optimize the reference state to avoid spinning further than 90 degrees
   const auto state = frc::SwerveModuleState::Optimize(
       referenceState, units::radian_t(m_turningEncoder.Get()));
 
-  m_requestedV = state.speed.value();
-
-  // Calculate the drive output from the drive PID controller.
-  
-  // const auto driveOutput = m_drivePIDController.Calculate(
-  //     -m_driveMotor.GetRate(), state.speed.value());
-
-  // Calculate the turning motor output from the turning PID controller.
-  // auto turnOutput = m_turningPIDController.Calculate(
-  //     units::radian_t(m_turningEncoder.Get()), state.angle.Radians());
-
-  // auto turnOutput = m_turningController.Calculate(
-  //   m_sparkTurnEncoder.GetPosition(), state.angle.Radians().value());
-  
-
-  // units::volt_t driveFF = m_driveFeedforward.Calculate(state.speed);
 
   if (fabs(state.speed.value()) < 0.01) {
     StopMotors();

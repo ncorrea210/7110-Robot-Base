@@ -5,6 +5,8 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/CommandPtr.h>
+
 #include <frc/motorcontrol/VictorSP.h>
 #include <frc/AnalogEncoder.h>
 #include <frc/controller/PIDController.h>
@@ -76,6 +78,14 @@ class ArmSubsystem : public frc2::SubsystemBase {
     bool SwitchLow() const;
 
     bool SwitchHigh() const;
+
+    frc2::CommandPtr ConeMidCMD();
+
+    frc2::CommandPtr ConePickCubeMidCMD();
+
+    frc2::CommandPtr CubePickCMD();
+
+    frc2::CommandPtr StowCMD();
 
     void InitSendable(wpi::SendableBuilder& builder) override;
 

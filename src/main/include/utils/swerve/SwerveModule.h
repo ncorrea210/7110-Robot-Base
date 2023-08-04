@@ -54,9 +54,6 @@ class SwerveModule {
   */
   std::pair<double, double> GetAppliedOut();
 
-  inline double RequestedV() {
-    return m_requestedV;
-  }
 
  private:
   // We have to use meters here instead of radians due to the fact that
@@ -84,7 +81,6 @@ class SwerveModule {
   
   int m_id;
 
-  double m_requestedV;
 
   double kP = 0.175;
   double kI = 0;
@@ -109,7 +105,7 @@ class SwerveModule {
       /*0.011*/0.004,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
 
-    frc2::PIDController m_turningController {1, 0.0, 0};
+    frc2::PIDController m_turningController {1.0, 0.0, 0};
 
     
 };
