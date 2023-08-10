@@ -30,6 +30,10 @@
 #include "subsystems/DriveSubsystem.h"
 #include "utils/cams/Limelight.h"
 #include "commands/FollowPPPathCMD.h"
+#include "commands/autos/TestAutoDWT.h"
+#include "commands/autos/CubeAndBalance.h"
+#include "commands/autos/ConeAndBalance.h"
+#include "commands/DriveWithTime.h"
 
 
 using namespace DriveConstants;
@@ -43,8 +47,12 @@ RobotContainer::RobotContainer() {
    * Where auto has already been declared in RobotContainer.h
   */
 
-  m_chooser.AddOption("Test1", new FollowPPPathCMD(&m_drive, "Straight Line"));
-  m_chooser.AddOption("L Path", new FollowPPPathCMD(&m_drive, "BackForth"));
+  // m_chooser.AddOption("Test1", new FollowPPPathCMD(&m_drive, "Straight Line"));
+  // m_chooser.AddOption("L Path", new FollowPPPathCMD(&m_drive, "BackForth"));
+  // m_chooser.AddOption("T Drive With Time", new TestAutoDWT(&m_drive));
+  m_chooser.AddOption("CommOut", new DriveWithTime(&m_drive, -2_mps, 0_mps, 0_rad_per_s, 1.25_s, false));
+  m_chooser.AddOption("CubeNBalance", new CubeAndBalance(&m_drive, &m_arm, &m_claw));
+  m_chooser.AddOption("ConeNBalance", new ConeAndBalance(&m_drive, &m_arm, &m_claw));
 
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
   frc::SmartDashboard::PutData("Swerve", &m_drive);
@@ -84,13 +92,19 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.CubePickup();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_claw.Run(0.2);})
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_claw.Run(0.5);})
     .WhenReleased([this] {m_claw.Run(0);});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.2);})
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.5);})
     .WhenReleased([this] {m_claw.Run(0);});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.gyro.SetPosition(180_deg);}));
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.gyro.SetPosition(180_deg);}));
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
+      ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
+      hb::limeLight::Pipeline::kRetroReflective : hb::limeLight::Pipeline::kAprilTag);}));
 
 }
 

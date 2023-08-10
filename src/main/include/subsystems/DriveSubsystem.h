@@ -37,6 +37,12 @@
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
+
+  // enum Mode {
+  //   kCone,
+  //   kCube
+  // };
+
   DriveSubsystem();
 
   /**
@@ -169,5 +175,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
   bool m_vision;
+
 
 };

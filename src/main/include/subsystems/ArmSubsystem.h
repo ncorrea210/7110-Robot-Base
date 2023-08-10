@@ -39,7 +39,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
       kMidCone, 
       kMidCubeConePickup, 
       kCubePickup, 
-      kRunning 
+      kMsMaiCar,
+      kRunning
     };
 
     /**
@@ -60,6 +61,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
     void MidCubeConePickup();
 
     void CubePickup();
+
+    void MsMaiCar();
 
     State GetState() const;
 
@@ -109,6 +112,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
     const ArmPosition m_cubeMidconePickup;
     // const ArmPosition m_conePickup;
     const ArmPosition m_cubePickup;
+    const ArmPosition m_MsMaiCar;
 
     ArmPosition m_target;
 

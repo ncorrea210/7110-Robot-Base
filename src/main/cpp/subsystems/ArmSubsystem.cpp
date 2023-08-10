@@ -34,6 +34,7 @@ m_coneMid(160, 2),
 m_cubeMidconePickup(100, 2),
 // m_conePickup(100, 2),
 m_cubePickup(50, 2),
+m_MsMaiCar(0, 2),
 m_target(m_stow)
 {
 
@@ -71,6 +72,10 @@ void ArmSubsystem::Periodic() {
 
         case State::kCubePickup:
         m_target = m_cubePickup;
+        break;
+
+        case State::kMsMaiCar:
+        m_target = m_MsMaiCar;
         break;
 
         case State::kRunning:
@@ -120,6 +125,11 @@ void ArmSubsystem::CheckState() {
         return;
     }
 
+    if (InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && InRange(GetAngle(), m_MsMaiCar.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kMsMaiCar;
+        return;
+    }
+
     m_actualState = State::kRunning;
 
         
@@ -149,6 +159,10 @@ void ArmSubsystem::MidCubeConePickup() {
 
 void ArmSubsystem::CubePickup() {
     m_targetState = State::kCubePickup;
+}
+
+void ArmSubsystem::MsMaiCar() {
+    m_targetState = State::kMsMaiCar;
 }
 
 ArmSubsystem::State ArmSubsystem::GetState() const {

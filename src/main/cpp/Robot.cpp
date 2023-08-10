@@ -80,6 +80,9 @@ void Robot::TeleopInit() {
     m_autonomousCommand = nullptr;
   }
 
+
+  hb::limeLight::SetPipeline(hb::limeLight::Pipeline::kAprilTag);
+
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 }
 

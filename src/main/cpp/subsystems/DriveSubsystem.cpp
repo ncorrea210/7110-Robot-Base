@@ -117,10 +117,10 @@ void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
   kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,
                                          AutoConstants::kMaxSpeed);
-  // desiredStates[0].angle = ((desiredStates[0].angle * -1.0));
-  // desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
-  // desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
-  // desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
+  desiredStates[0].angle = ((desiredStates[0].angle * -1.0));
+  desiredStates[1].angle = ((desiredStates[1].angle * -1.0));
+  desiredStates[2].angle = ((desiredStates[2].angle * -1.0));
+  desiredStates[3].angle = ((desiredStates[3].angle * -1.0));
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
