@@ -35,7 +35,7 @@ class Balance
 
     DriveSubsystem* m_drive;
 
-    frc::PIDController m_controller{0.4, 0, 0.003};
+    frc::PIDController m_controller{0.03, 0, 0.007};
 
 
 };

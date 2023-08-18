@@ -17,7 +17,7 @@ void Balance::Initialize() {}
 void Balance::Execute() {
   double angle = m_drive->gyro.GetRoll();
   double calc = m_controller.Calculate(angle, 0.0);
-  printf("Gyro Calc: %5.2f\n", calc);
+  // printf("Gyro Calc: %5.2f\n", calc);
   if (fabs(angle) < 1.5) 
   m_drive->Drive(
     0_mps,
@@ -27,7 +27,7 @@ void Balance::Execute() {
   );
   else
   m_drive->Drive(
-    units::meters_per_second_t(std::clamp(calc, -0.5, 0.5)),
+    units::meters_per_second_t(std::clamp(-calc, -0.25, 0.25)),
     0_mps,
     units::radians_per_second_t(0),
     false

@@ -34,6 +34,7 @@
 #include "commands/autos/CubeAndBalance.h"
 #include "commands/autos/ConeAndBalance.h"
 #include "commands/DriveWithTime.h"
+#include "commands/Balance.h"
 
 
 using namespace DriveConstants;
@@ -100,7 +101,10 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.gyro.SetPosition(180_deg);}));
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
+
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
