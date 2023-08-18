@@ -54,6 +54,8 @@ namespace hb {
 
     virtual void SetPosition(units::degree_t);
 
+    double GetCompassHeading() const;
+
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;

@@ -75,6 +75,13 @@ void DriveSubsystem::Periodic() {
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
 
+  // printf("Gyro H: %5.2f Gyro C: %5.2f\n", gyro.GetRot2d().Degrees().value(), gyro.GetCompassHeading());
+
+  frc::SmartDashboard::PutNumber("Gyro", gyro.GetCompassHeading());
+
+  // printf("gyro: %5.2f\n", gyro.GetCompassHeading());
+
+
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -94,6 +101,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
   m_rearRight.SetDesiredState(br);
+
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading) {
@@ -111,6 +119,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
   m_rearRight.SetDesiredState(br);
+
 }
 
 void DriveSubsystem::SetModuleStates(
@@ -166,7 +175,8 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetPosition().angle.Radians().value()), nullptr);
   builder.AddBooleanProperty("Vision", LAMBDA(m_vision), nullptr);
 
-  // builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
+  // builder.AddDoubleProperty("Compass", LAMBDA(gyro.GetCompassHeading()), nullptr);
+  builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
   
   // builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
   // builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);

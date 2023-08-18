@@ -1,12 +1,18 @@
 #include "utils/swerve/PigeonGyro.h"
 
+#include <frc/Timer.h>
+
+
 #include <cmath>
 #include <utility>
-#include <frc/Timer.h>
 #include <numbers>
 
 using namespace ctre::phoenix::sensors;
 using namespace hb;
+
+static int sgn(double v) {
+  return v >= 0 ? 1 : -1;
+}
 
 pigeonGyro::pigeonGyro(int ID) {
   pigeon = new ctre::phoenix::sensors::PigeonIMU(ID);
@@ -60,4 +66,32 @@ void pigeonGyro::SetPosition(units::degree_t angle) {
   // actual - angle = offset
   m_offset;
   m_offset = GetAngle() - angle.value();
+}
+
+double pigeonGyro::GetCompassHeading() const {
+
+  double angle = GetAngle();
+  bool signChange = false;
+  int initSign = sgn(angle);
+
+  if (fabs(angle) < 180) return angle;
+
+  // add or subtract until the angle switches sign
+  int i = 0;
+  for (i; i < 30; i++) {
+    angle -= initSign * 360;
+    if (fabs(angle) <= 180) {
+      break;
+    }
+    // signChange = sgn(angle) != initSign ? true : false;
+    // if (signChange) {
+    //   break;
+    // }
+  }
+
+  // When sign change is true, add back the value that was last removed to get the true heading
+  // angle += initSign * 360;
+
+  return angle;
+
 }

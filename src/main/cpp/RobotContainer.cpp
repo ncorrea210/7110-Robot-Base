@@ -20,6 +20,7 @@
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/button/POVButton.h>
 #include <units/angle.h>
 #include <units/velocity.h>
 #include <frc/filter/SlewRateLimiter.h>
@@ -35,7 +36,7 @@
 #include "commands/autos/ConeAndBalance.h"
 #include "commands/DriveWithTime.h"
 #include "commands/Balance.h"
-
+#include "commands/DriveWithHeading.h"
 
 using namespace DriveConstants;
 
@@ -105,6 +106,11 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
 
+  frc2::POVButton(&m_driverController, 180).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
+    [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
+    180_deg));
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
