@@ -102,6 +102,10 @@ namespace ArmConstants {
     constexpr double kPActuator = 1;
 }
 
+namespace ClawConstants {
+    constexpr int kClawID = 0;
+}
+
 namespace AutoConstants {
 using radians_per_second_squared_t =
     units::compound_unit<units::radians,

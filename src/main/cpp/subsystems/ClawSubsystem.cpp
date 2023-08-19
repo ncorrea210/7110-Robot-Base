@@ -4,8 +4,10 @@
 
 #include "subsystems/ClawSubsystem.h"
 
+#include "Constants.h"
+
 ClawSubsystem::ClawSubsystem(frc::PowerDistribution* pdp) : 
-m_motor(0), 
+m_motor(ClawConstants::kClawID), 
 m_pdp(pdp)
 {}
 

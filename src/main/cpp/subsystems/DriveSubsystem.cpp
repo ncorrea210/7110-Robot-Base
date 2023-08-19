@@ -52,7 +52,7 @@ DriveSubsystem::DriveSubsystem()
                     m_rearRight.GetPosition()}, frc::Pose2d()),
                     m_vision(true)
                      {
-                      frc::SmartDashboard::PutData("Field2", &m_field);
+                      frc::SmartDashboard::PutData("Field", &m_field);
                     }
 
 void DriveSubsystem::Periodic() {
