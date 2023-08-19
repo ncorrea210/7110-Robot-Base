@@ -30,7 +30,6 @@
 #include <units/velocity.h>
 
 #include "commands/FollowPPPathCMD.h"
-#include "commands/autos/TestAutoDWT.h"
 #include "commands/autos/CubeAndBalance.h"
 #include "commands/autos/ConeAndBalance.h"
 #include "commands/DriveWithTime.h"

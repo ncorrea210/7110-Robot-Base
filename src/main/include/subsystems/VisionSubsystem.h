@@ -33,15 +33,15 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   static VisionSubsystem& GetInstance();
 
-  // photonlib::PhotonCamera& GetRightCam();
+  photonlib::PhotonCamera& GetLeftCam();
 
-  // static photonlib::PhotonCamera& GetLeftCam();
+  photonlib::PhotonCamera& GetRightCam();
+
+  photonlib::PhotonPipelineResult GetLeftFrame();
+
+  photonlib::PhotonPipelineResult GetRightFrame();
 
   std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> GetPose();
-
-  // double GetLeftX();
-
-  // double GetLeftY();
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 
@@ -61,6 +61,5 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   frc::LinearFilter<units::meter_t> m_xFilter;
   frc::LinearFilter<units::meter_t> m_yFilter;
-  // frc::LinearFilter<frc::Rotation2d> m_rotFilter;
 
 };

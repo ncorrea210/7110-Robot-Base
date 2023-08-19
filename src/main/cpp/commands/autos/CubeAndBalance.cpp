@@ -27,8 +27,6 @@ CubeAndBalance::CubeAndBalance(DriveSubsystem* drive, ArmSubsystem* arm, ClawSub
     DriveWithTime(drive, 2_mps, 0_mps, units::radians_per_second_t(0), 4.5_s, false),
     frc2::WaitCommand(0.1_s),
     DriveWithTime(drive, -2_mps, 0_mps, units::radians_per_second_t(0), 3_s, false),
-    frc2::InstantCommand([] {printf("Marker\n");}),
-    // DriveWithTime(drive, 0_mps, 0_mps, 0.1_rad_per_s, 0.1_s, false),
     Balance(drive)
   );
 }

@@ -19,44 +19,34 @@ m_leftEst(m_layout, photonlib::PoseStrategy::MULTI_TAG_PNP, std::move(photonlib:
 m_field(),
 m_xFilter(frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s)),
 m_yFilter(frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s))
-// m_rotFilter(frc::LinearFilter<frc::Rotation2d>::SinglePoleIIR(0.1, 0.02_s))
 {
     m_leftEst.SetMultiTagFallbackStrategy(photonlib::PoseStrategy::LOWEST_AMBIGUITY);
     m_rightEst.SetMultiTagFallbackStrategy(photonlib::PoseStrategy::LOWEST_AMBIGUITY);
-    // frc::SmartDashboard::PutData("Field", &m_field);
-
 }
 
 // This method will be called once per scheduler run
-void VisionSubsystem::Periodic() {
-    // m_leftResult = m_leftCam.GetLatestResult();
-
-    // if (GetPose().first.has_value()) {
-    //     m_field.SetRobotPose(GetPose().second.value());
-    // }
-
-    // if (hb::limeLight::GetPose().second.has_value()) {
-    //     m_field.SetRobotPose(hb::limeLight::GetPose().first.value());
-    // }
-
-    // std::optional<frc::Pose2d> pose = GetPose().second;
-    // if (pose.has_value()) {
-    //     m_field.SetRobotPose(pose.value());
-    // }
-
-
-    // frc::SmartDashboard::PutBoolean("Has Targets", m_leftCam.GetLatestResult().HasTargets());
-
-}
+void VisionSubsystem::Periodic() {}
 
 VisionSubsystem& VisionSubsystem::GetInstance() {
     static VisionSubsystem inst;
     return inst;
 }
 
-// photonlib::PhotonCamera& VisionSubsystem::GetRightCam() {
-//     return m_rightCam;
-// }
+photonlib::PhotonCamera& VisionSubsystem::GetLeftCam() {
+    return m_leftEst.GetCamera();
+}
+
+photonlib::PhotonCamera& VisionSubsystem::GetRightCam() {
+    return m_rightEst.GetCamera();
+}
+
+photonlib::PhotonPipelineResult VisionSubsystem::GetLeftFrame() {
+    return GetLeftCam().GetLatestResult();
+}
+
+photonlib::PhotonPipelineResult VisionSubsystem::GetRightFrame() {
+    return GetRightCam().GetLatestResult();
+}
 
 std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> VisionSubsystem::GetPose() {
     std::optional<photonlib::EstimatedRobotPose> estl = m_leftEst.Update();
@@ -96,24 +86,15 @@ std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> VisionSubs
 
 }
 
-// double VisionSubsystem::GetLeftX() {
-//     auto result = m_leftCam.GetLatestResult();
-//     if (!result.HasTargets()) return 0;
-//     else return result.GetBestTarget().GetYaw();
-// }
 
 void VisionSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Vision");
 
-    
-    // builder.AddDoubleProperty("dX", [this] {return GetLeftX();}, nullptr);
-    // builder.AddDoubleProperty("dY", [this] {return m_leftCam.GetLatestResult().GetBestTarget().GetPitch();}, nullptr);
 }
 
 frc::Pose2d VisionSubsystem::m_FilterPose(frc::Pose2d pose, bool enabled) {
     units::meter_t x = m_xFilter.Calculate(pose.X());
     units::meter_t y = m_yFilter.Calculate(pose.Y());
-    // // frc::Rotation2d rot = m_rotFilter.Calculate(pose.Rotation());
     if (enabled)
     return frc::Pose2d(x, y, pose.Rotation());
     else 
