@@ -88,7 +88,7 @@ RobotContainer::RobotContainer() {
     Y_OUT, 
     ROT_OUT,
     LAMBDA(true),
-    LAMBDA(m_driverController.GetRightTriggerAxis() * 0.6 + 0.4)
+    LAMBDA(DriveConstants::kMaxSpeed.value() * (m_driverController.GetRightTriggerAxis() * 0.6 + 0.4))
   )); 
 
 }
@@ -119,8 +119,6 @@ void RobotContainer::ConfigureDriverButtons() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.5);})
     .WhenReleased([this] {m_claw.Run(0);});
-
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.gyro.SetPosition(180_deg);}));
 
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
 
