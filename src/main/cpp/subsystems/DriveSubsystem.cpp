@@ -43,8 +43,6 @@ DriveSubsystem::DriveSubsystem()
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightTurningEncoderPorts,  kRearRightOffset},
 
-      m_speed(DriveConstants::kMaxSpeed.value()), 
-
       m_odometry(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()}, frc::Pose2d()),
@@ -76,12 +74,7 @@ void DriveSubsystem::Periodic() {
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
 
-  // printf("Gyro H: %5.2f Gyro C: %5.2f\n", gyro.GetRot2d().Degrees().value(), gyro.GetCompassHeading());
-
   frc::SmartDashboard::PutNumber("Gyro", gyro.GetCompassHeading());
-
-  // printf("gyro: %5.2f\n", gyro.GetCompassHeading());
-
 
 }
 
@@ -98,24 +91,6 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
 
   auto [fl, fr, bl, br] = states;
 
-  m_frontLeft.SetDesiredState(fl);
-  m_frontRight.SetDesiredState(fr);
-  m_rearLeft.SetDesiredState(bl);
-  m_rearRight.SetDesiredState(br);
-
-}
-
-void DriveSubsystem::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading) {
-    units::radians_per_second_t rot = units::radians_per_second_t(m_turnController.Calculate(gyro.GetRad(), heading));
-
-    auto states = kDriveKinematics.ToSwerveModuleStates(
-    frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-      xSpeed, ySpeed, rot, gyro.GetRotation2d()
-    ));
-
-  kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
-
-  auto [fl, fr, bl, br] = states;
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
@@ -172,33 +147,20 @@ void DriveSubsystem::ResetEncoders() {
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Swerve Drive");
 
-  builder.AddDoubleProperty("FL D", LAMBDA(m_frontLeft.GetPosition().distance.value()), nullptr);
-  builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetPosition().angle.Radians().value()), nullptr);
   builder.AddBooleanProperty("Vision", LAMBDA(m_vision), nullptr);
 
-  // builder.AddDoubleProperty("Compass", LAMBDA(gyro.GetCompassHeading()), nullptr);
-  builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
-  
-  // builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetCompassHeading()), nullptr);
 
-  // builder.AddDoubleProperty("FR V", LAMBDA(m_frontRight.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("FR A", LAMBDA(m_frontRight.GetState().angle.Radians().value()), nullptr);  
+  builder.AddDoubleProperty("FL V", LAMBDA(m_frontLeft.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("FL A", LAMBDA(m_frontLeft.GetState().angle.Radians().value()), nullptr);
 
-  // builder.AddDoubleProperty("RL V", LAMBDA(m_rearLeft.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("RL A", LAMBDA(m_rearLeft.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("FR V", LAMBDA(m_frontRight.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("FR A", LAMBDA(m_frontRight.GetState().angle.Radians().value()), nullptr);  
 
-  // builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
-  // builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
+  builder.AddDoubleProperty("RL V", LAMBDA(m_rearLeft.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("RL A", LAMBDA(m_rearLeft.GetState().angle.Radians().value()), nullptr);
 
-  // builder.AddDoubleProperty("Battery", LAMBDA(frc::DriverStation::GetBatteryVoltage()), nullptr);
-
-  // builder.AddDoubleProperty("FL DS", LAMBDA(m_frontLeft.GetDSetpoint()), nullptr);
-
-  // builder.AddDoubleProperty("FL AO", LAMBDA(m_frontLeft.GetAppliedOut().first), nullptr);
-
-  // builder.AddDoubleProperty("FL RV", LAMBDA(m_frontLeft.RequestedV()), nullptr);
-
-  // builder.AddDoubleProperty("RCam X", LAMBDA(m_rightCam.GetLatestResult().GetBestTarget().GetYaw()), nullptr);
+  builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
+  builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
 
 }

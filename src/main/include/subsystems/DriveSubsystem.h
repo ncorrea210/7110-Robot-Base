@@ -67,8 +67,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative);
-  
-  void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed, units::radian_t heading);
+
 
   /**
    * Resets the drive encoders to currently read a position of 0.
@@ -119,13 +118,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
       }};
   }
 
-  void SetSpeed(const double& speed) {
-    m_speed = speed;
-  }
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
-  units::meters_per_second_t GetSpeed() {
-    return m_speed > DriveConstants::kMaxSpeed.value() ? 
-    DriveConstants::kMaxSpeed : units::meters_per_second_t(m_speed);
+  inline void ToggleVision() {
+    m_vision ? m_vision = false : m_vision = true;
   }
 
   units::meter_t kTrackWidth =
@@ -145,11 +141,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
 
   hb::PigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
 
-  void InitSendable(wpi::SendableBuilder& builder) override;
-
-  inline void ToggleVision() {
-    m_vision ? m_vision = false : m_vision = true;
-  }
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -159,8 +150,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_rearLeft;
   SwerveModule m_frontRight;
   SwerveModule m_rearRight;
-
-  double m_speed;
 
   frc::ProfiledPIDController<units::radians> m_turnController{7.5, 0, 0,
    {DriveConstants::kMaxAngularSpeed, DriveConstants::kMaxAngularAcceleration}};
@@ -176,6 +165,5 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
   bool m_vision;
-
 
 };
