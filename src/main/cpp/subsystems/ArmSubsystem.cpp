@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "utils/Util.h"
+#include "Constants.h"
 
 #define EPSILON_EXTENSION 1.5
 #define EPSILON_ANGLE 2
@@ -18,12 +19,12 @@
 ArmSubsystem::ArmSubsystem() : 
 m_targetState(State::kStow),
 m_actualState(State::kRunning), 
-m_extension(9, rev::CANSparkMax::MotorType::kBrushless),
+m_extension(ArmConstants::kExtensionID, rev::CANSparkMax::MotorType::kBrushless),
 m_extensionEncoder(m_extension.GetEncoder()),
 m_extensionController(m_extension.GetPIDController()),
-m_actuator(1),
-m_actuatorEncoder(0),
-m_actuatorController(1, 0, 0),
+m_actuator(ArmConstants::kActuatorID),
+m_actuatorEncoder(ArmConstants::kActuatorEncoderID),
+m_actuatorController(ArmConstants::kPActuator, 0, 0),
 m_limitSwitch(0),
 m_stow(0, 98), 
 m_coneMid(160, 2),
@@ -33,7 +34,7 @@ m_MsMaiCar(0, 2),
 m_target(m_stow)
 {
 
-    m_extensionController.SetP(0.03);
+    m_extensionController.SetP(ArmConstants::kPExtension);
     m_extensionController.SetOutputRange(-0.5, 0.6);
     
 }
@@ -215,6 +216,11 @@ std::string ArmSubsystem::StateToString(State state) {
 
         case State::kStow: 
             return "Stow";
+        break;
+
+        // This is not technically possible however if you see this, there is a problem
+        default: 
+        return "HOW???????";
         break;
     }
 }

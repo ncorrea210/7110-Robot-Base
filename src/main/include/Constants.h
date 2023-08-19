@@ -90,12 +90,16 @@ constexpr double kFFTurn = 0;
 }  // namespace ModuleConstants
 
 namespace VisionConstants {
-    // constexpr frc::Translation3d m_rightTranslation{-15_in, -7_in, 24_in};
-    // constexpr frc::Rotation3d m_rightRotation{0_deg, 0_deg, -165_deg}; 
     static frc::Transform3d RightTransform{frc::Translation3d(-15_in, -7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, -150_deg}};
     static frc::Transform3d LeftTransform{frc::Translation3d(-15_in, 7_in, 24_in), frc::Rotation3d{0_deg, 0_deg, 150_deg}};
+}
 
-
+namespace ArmConstants {
+    constexpr int kExtensionID = 9;
+    constexpr int kActuatorID = 1;
+    constexpr int kActuatorEncoderID = 0;
+    constexpr double kPExtension = 0.03;
+    constexpr double kPActuator = 1;
 }
 
 namespace AutoConstants {
