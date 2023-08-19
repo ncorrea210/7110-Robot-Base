@@ -11,15 +11,18 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/motorcontrol/Spark.h>
 #include <frc/trajectory/TrapezoidProfile.h>
-#include <numbers>
 #include <frc/controller/SimpleMotorFeedforward.h>
+#include <frc/kinematics/SwerveModulePosition.h>
+
+#include <rev/CANSparkMax.h>
+
 #include <units/length.h>
 #include <units/voltage.h>
 #include <units/velocity.h>
-#include <frc/kinematics/SwerveModulePosition.h>
+
+#include <numbers>
 
 #include "Constants.h"
-#include "utils/NeoMotors.h"
 #include "utils/swerve/CANCoder.h"
 
 class SwerveModule {
@@ -31,44 +34,42 @@ class SwerveModule {
   SwerveModule(int driveMotorChannel, int turningMotorChannel,
                 const int turningEncoderPorts, const double offset);
 
+  /**
+   * Both the velocity of the swerve module and the angle of it
+   * @returns frc::SwerveModuleState
+  */
   frc::SwerveModuleState GetState();
 
+  /**
+   * Both the angle of the swerve module and the total distance of the drive motor
+   * @returns frc::SwerveModulePosition 
+  */
   frc::SwerveModulePosition GetPosition();
 
-  inline double GetDSetpoint() const {
-    return m_driveMotor.Get();
-  }
-
+  /**
+   * @param frc::SwerveModuleState the target state
+   * 
+  */
   void SetDesiredState(const frc::SwerveModuleState& state);
 
+  /**
+   * Resets the drive and turn encoder
+   * Turn encoder is zeroed with CANCoder
+   * @warning also zeros drive position encoder which may throw off pose estimation
+  */
   void ResetEncoders();
 
-  void StopMotors();
-
-  units::celsius_t GetDriveMotorTemp();
-
-  units::celsius_t GetTurnMotorTemp(); 
+  /**
+   * Zeros the turn encoder with the CANCoder
+  */
+  void ZeroTurnEncoder();
 
   /**
-   * @returns the applied output of the drive motor and the turn motor in order first to second respectively
+   * Stops all outputs to the motors
   */
-  std::pair<double, double> GetAppliedOut();
-
+  void StopMotors();
 
  private:
-  // We have to use meters here instead of radians due to the fact that
-  // ProfiledPIDController's constraints only take in meters per second and
-  // meters per second squared.
-
-  static constexpr units::radians_per_second_t kModuleMaxAngularVelocity =
-      units::radians_per_second_t(std::numbers::pi * 4);  // radians per second
-  static constexpr units::unit_t<radians_per_second_squared_t>
-      kModuleMaxAngularAcceleration =
-          units::unit_t<radians_per_second_squared_t>(
-              std::numbers::pi * 100.0);  // radians per second squared
-
-  // hb::NeoMotor m_driveMotor;
-  // hb::NeoMotor m_turningMotor;
 
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turningMotor;
@@ -80,32 +81,5 @@ class SwerveModule {
   hb::CANcode m_turningEncoder;
   
   int m_id;
-
-
-  double kP = 0.175;
-  double kI = 0;
-  double kD = 0.02;
-
-  frc2::PIDController m_drivePIDController{
-      0.825, 0.0, 0.03};
-//   frc::ProfiledPIDController<units::radians> m_turningPIDController{
-//       ModuleConstants::kPModuleTurningController,
-//       0.0,
-//       0.00,
-//       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
-
-    // units::compound_unit<units::volt_t, units::inverse<units::meters_per_second_t>> kV = 2.67_V / 1_mps;
-
-    double kV = 2.67;
-    frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0_V, units::volt_t(2.67) / 1_mps};
-
-      frc::ProfiledPIDController<units::radians> m_turningPIDController{
-      0.75,
-      0.0,
-      /*0.011*/0.004,
-      {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
-
-    frc2::PIDController m_turningController {1.25, 0.0, 0};
-
     
 };

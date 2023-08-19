@@ -80,14 +80,14 @@ constexpr double kTurnEncoderRatio = kTurnRatio * 2.0 * std::numbers::pi;
 constexpr double kPModuleTurningController = 1;
 constexpr double kPModuleDriveController = 0.75;
 
-constexpr double kPDrive = 1.0;
+constexpr double kPDrive = 0.175;
 constexpr double kIDrive = 0;
-constexpr double kDDrive = 0;
+constexpr double kDDrive = 0.02;
 constexpr double kFFDrive = 2.67;
 
-constexpr double kPTurn = 0.75;
+constexpr double kPTurn = 1.25;
 constexpr double kITurn = 0;
-constexpr double kDTurn = 0.004;
+constexpr double kDTurn = 0;
 constexpr double kFFTurn = 0;
 }  // namespace ModuleConstants
 

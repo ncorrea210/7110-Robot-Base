@@ -14,47 +14,41 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
                            const double offset)
     : m_driveMotor(driveMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
       m_turningMotor(turningMotorChannel, rev::CANSparkMax::MotorType::kBrushless),
-      m_turningEncoder(turningEncoderPorts, offset),
-      m_id(turningEncoderPorts),
       m_sparkDriveEncoder(m_driveMotor.GetEncoder()), 
       m_sparkTurnEncoder(m_turningMotor.GetEncoder()),
       m_tController(m_turningMotor.GetPIDController()), 
-      m_dController(m_driveMotor.GetPIDController()) {
-  // Set the distance per pulse for the drive encoder. We can simply use the
-  // distance traveled for one rotation of the wheel divided by the encoder
-  // resolution.
-  // m_driveMotor.SetRatio(
-  //     ModuleConstants::kDriveEncoderDistancePerPulse);
+      m_dController(m_driveMotor.GetPIDController()),
+      m_turningEncoder(turningEncoderPorts, offset),
+      m_id(turningEncoderPorts) 
+  {
 
-  // Limit the PID Controller's input range between -pi and pi and set the input
-  // to be continuous.
-  // m_turningPIDController.EnableContinuousInput(
-  //     units::radian_t(-std::numbers::pi), units::radian_t(std::numbers::pi));
-
+  // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
+  // set the turn conversion factors
   m_sparkTurnEncoder.SetPositionConversionFactor(ModuleConstants::kTurnEncoderRatio);
   m_sparkTurnEncoder.SetPosition(m_turningEncoder.Get());
 
+  // set the drive conversion factor
   m_sparkDriveEncoder.SetVelocityConversionFactor(ModuleConstants::kDriveEncoderDistancePerPulse/60);
   m_sparkDriveEncoder.SetPositionConversionFactor(ModuleConstants::kDriveEncoderDistancePerPulse);
 
-  m_driveMotor.SetClosedLoopRampRate(0);
-
-  // m_turningController.EnableContinuousInput(-std::numbers::pi, std::numbers::pi);
+  // init turning controller constants
   m_tController.SetPositionPIDWrappingEnabled(true);
   m_tController.SetPositionPIDWrappingMaxInput(std::numbers::pi);
   m_tController.SetPositionPIDWrappingMinInput(-std::numbers::pi);
-  m_tController.SetP(m_turningController.GetP());
-  m_tController.SetI(m_turningController.GetI());
-  m_tController.SetD(m_turningController.GetD());
+  m_tController.SetP(ModuleConstants::kPTurn);
+  m_tController.SetI(ModuleConstants::kITurn);
+  m_tController.SetD(ModuleConstants::kDTurn);
+  m_tController.SetFF(ModuleConstants::kFFTurn);
   m_tController.SetOutputRange(-1, 1);
 
-  m_dController.SetP(kP);
-  m_dController.SetI(kI);
-  m_dController.SetD(kD);
-  m_dController.SetFF(kV/12.0);
+  // init driving controller contants
+  m_dController.SetP(ModuleConstants::kPDrive);
+  m_dController.SetI(ModuleConstants::kIDrive);
+  m_dController.SetD(ModuleConstants::kDDrive);
+  m_dController.SetFF(ModuleConstants::kFFDrive * 1/12);
   m_dController.SetOutputRange(-1, 1);
 
   m_driveMotor.BurnFlash();
@@ -63,49 +57,44 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {
+  // This function is rarely called, it is essentially deprecated
   return {units::meters_per_second_t{m_sparkDriveEncoder.GetVelocity()},
           frc::Rotation2d(units::radian_t(m_turningEncoder.Get()))};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
+    // these both need to be negative to work
+    // do not ask why, we do not know
     return {units::meter_t(-m_sparkDriveEncoder.GetPosition()), units::radian_t(-m_sparkTurnEncoder.GetPosition())};
 }
 
-void SwerveModule::SetDesiredState(
-    const frc::SwerveModuleState& referenceState) {
+void SwerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
 
   // Optimize the reference state to avoid spinning further than 90 degrees
   const auto state = frc::SwerveModuleState::Optimize(
       referenceState, units::radian_t(m_turningEncoder.Get()));
 
-
   if (fabs(state.speed.value()) < 0.01) {
+  // Check to see if the input is very small, if it is, cancel all outputs
     StopMotors();
   } else {
-    // m_driveMotor.SetVoltage(units::volt_t(-driveOutput) - driveFF);
-    // m_turningMotor.Set(turnOutput);
+    // If the outputs are sufficient, apply them with the PID Controllers
     m_dController.SetReference(state.speed.value(), rev::CANSparkMax::ControlType::kVelocity);
     m_tController.SetReference(state.angle.Radians().value(), rev::CANSparkMax::ControlType::kPosition);
   }
 }
 
 void SwerveModule::ResetEncoders() {
-  // m_driveMotor.SetPosition(0);
+  m_sparkDriveEncoder.SetPosition(0);
+  m_sparkTurnEncoder.SetPosition(m_turningEncoder.Get());
+}
+
+void SwerveModule::ZeroTurnEncoder() {
+  // This is useful if you don't want to change the drive encoder reading 
+  m_sparkTurnEncoder.SetPosition(m_turningEncoder.Get());
 }
 
 void SwerveModule::StopMotors() {
   m_driveMotor.Set(0);
   m_turningMotor.Set(0);
-}
-
-units::celsius_t SwerveModule::GetDriveMotorTemp() {
-  return units::celsius_t(m_driveMotor.GetMotorTemperature());
-}
-
-units::celsius_t SwerveModule::GetTurnMotorTemp() {
-  return units::celsius_t(m_turningMotor.GetMotorTemperature());
-}
-
-std::pair<double, double> SwerveModule::GetAppliedOut() {
-  return std::pair<double, double>{m_driveMotor.GetAppliedOutput(), m_turningMotor.GetAppliedOutput()};
 }

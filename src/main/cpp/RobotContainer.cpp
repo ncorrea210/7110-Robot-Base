@@ -74,6 +74,8 @@ RobotContainer::RobotContainer() {
         [this] {return true;},
         [this] {return m_drive.GetSpeed().value();}));
 
+  
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -106,11 +108,15 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
 
+  /** @section POV Headings **/
+
   frc2::POVButton(&m_driverController, 180).WhenPressed(DriveWithHeading(
     &m_drive, 
     [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
     [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
     180_deg));
+  
+  /** @section endsection **/
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
