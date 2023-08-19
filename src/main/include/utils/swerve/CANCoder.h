@@ -7,9 +7,9 @@
 #include <numbers>
 
 namespace hb{
-  class CANcode : CANCoder{
+  class S_CANCoder : CANCoder{
     public:
-      explicit CANcode(const int& id, const double& offset);
+      explicit S_CANCoder(const int& id, const double& offset);
 
       /**
        * @brief gets the positon of the encoder from -pi to pi

@@ -78,7 +78,7 @@ class SwerveModule {
   rev::SparkMaxPIDController m_tController;
   rev::SparkMaxPIDController m_dController;
 
-  hb::CANcode m_turningEncoder;
+  hb::S_CANCoder m_turningEncoder;
   
   int m_id;
     
