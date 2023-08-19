@@ -3,11 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "commands/FollowPPPathCMD.h"
-#include "Constants.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+
 #include <pathplanner/lib/PathPlanner.h>
+
+#include "Constants.h"
 
 using namespace pathplanner;
 

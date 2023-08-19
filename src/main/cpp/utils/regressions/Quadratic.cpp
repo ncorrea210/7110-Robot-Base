@@ -1,6 +1,6 @@
 #include "utils/regressions/Quadratic.h"
 
-#include <math.h>
+#include <cmath>
 
 using namespace hb;
 

@@ -4,7 +4,6 @@
 
 #include "commands/Balance.h"
 
-
 Balance::Balance(DriveSubsystem* drive) : m_drive(drive) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);

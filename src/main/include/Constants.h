@@ -16,9 +16,7 @@
 #include <units/voltage.h>
 #include <units/angular_acceleration.h>
 
-
 #include <numbers>
-
 
 #pragma once
 

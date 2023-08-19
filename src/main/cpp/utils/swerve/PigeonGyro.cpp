@@ -2,25 +2,23 @@
 
 #include <frc/Timer.h>
 
-
 #include <cmath>
 #include <utility>
 #include <numbers>
 
+#include "utils/Util.h"
+
 using namespace ctre::phoenix::sensors;
 using namespace hb;
 
-static int sgn(double v) {
-  return v >= 0 ? 1 : -1;
-}
 
-pigeonGyro::pigeonGyro(int ID) {
+PigeonGyro::PigeonGyro(int ID) {
   pigeon = new ctre::phoenix::sensors::PigeonIMU(ID);
   pigeon->ConfigFactoryDefault();
   m_offset = 0;
 }
 
-double pigeonGyro::GetAngle() const {
+double PigeonGyro::GetAngle() const {
   if (pigeon->GetState() == PigeonIMU::Ready) {
     PigeonIMU::FusionStatus stat;
     pigeon->GetFusedHeading(stat);
@@ -29,7 +27,7 @@ double pigeonGyro::GetAngle() const {
   return -m_angle - m_offset;
 }
 
-double pigeonGyro::GetRate() const {
+double PigeonGyro::GetRate() const {
   if (pigeon->GetState() == PigeonIMU::Ready) {
     double rate[3];
     pigeon->GetRawGyro(rate);
@@ -38,59 +36,50 @@ double pigeonGyro::GetRate() const {
   return m_rate;
 }
 
-void pigeonGyro::Reset() {
+void PigeonGyro::Reset() {
   pigeon->SetFusedHeading(0, 30);
   m_angle = m_rate = 0;
 }
 
-double pigeonGyro::GetPitch() {
+double PigeonGyro::GetPitch() {
   return pigeon->GetPitch();
 }
 
-double pigeonGyro::GetRoll() {
+double PigeonGyro::GetRoll() {
   return pigeon->GetRoll();
 }
 
-void pigeonGyro::Calibrate() {} // Gyro::Calibrate() is pure virtual
+void PigeonGyro::Calibrate() {} // Gyro::Calibrate() is pure virtual
 
-frc::Rotation2d pigeonGyro::GetRot2d() {
+frc::Rotation2d PigeonGyro::GetRot2d() {
   return frc::Rotation2d(units::degree_t(GetAngle()));
 }
 
-units::radian_t pigeonGyro::GetRad() const {
+units::radian_t PigeonGyro::GetRad() const {
   return units::radian_t((std::numbers::pi * GetAngle()) / 180);
 }
 
-void pigeonGyro::SetPosition(units::degree_t angle) {
-  // actual - offset = angle
-  // actual - angle = offset
-  m_offset;
+void PigeonGyro::SetPosition(units::degree_t angle) {
   m_offset = GetAngle() - angle.value();
 }
 
-double pigeonGyro::GetCompassHeading() const {
+double PigeonGyro::GetCompassHeading() const {
 
   double angle = GetAngle();
-  bool signChange = false;
-  int initSign = sgn(angle);
+  int initSign = hb::sgn(angle);
 
+  // Check if the angle is already in range
   if (fabs(angle) < 180) return angle;
 
   // add or subtract until the angle switches sign
-  int i = 0;
-  for (i; i < 30; i++) {
+  // for loop is used because while loop is not allowed
+  // 30 is the recursion maximum which translates to roughly 30 turn in one direction before breaking
+  for (int i = 0; i < 30; i++) {
     angle -= initSign * 360;
     if (fabs(angle) <= 180) {
       break;
     }
-    // signChange = sgn(angle) != initSign ? true : false;
-    // if (signChange) {
-    //   break;
-    // }
   }
-
-  // When sign change is true, add back the value that was last removed to get the true heading
-  // angle += initSign * 360;
 
   return angle;
 

@@ -4,10 +4,10 @@
 
 #include "commands/autos/ConeAndBalance.h"
 
-#include "commands/DriveWithTime.h"
-
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/WaitCommand.h>
+
+#include "commands/DriveWithTime.h"
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:

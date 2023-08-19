@@ -14,24 +14,25 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/motorcontrol/PWMSparkMax.h>
-#include <frc2/command/SubsystemBase.h>
-#include <wpi/array.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/DigitalInput.h>
-#include <units/angle.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/filter/LinearFilter.h>
 
-#include <array>
+#include <frc2/command/SubsystemBase.h>
 
+#include <wpi/array.h>
+
+#include <units/angle.h>
+
+#include <array>
 
 #include "Constants.h"
 #include "utils/swerve/SwerveModule.h"
 #include "utils/swerve/PigeonGyro.h"
-#include "utils/subsystems/Subsystem.h"
 #include "subsystems/VisionSubsystem.h"
 
 
@@ -142,7 +143,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
         gyro.Reset();
     }
 
-  hb::pigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
+  hb::PigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
 
   void InitSendable(wpi::SendableBuilder& builder) override;
 

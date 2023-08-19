@@ -1,12 +1,14 @@
 #pragma once
 
 #include <frc/interfaces/Gyro.h>
+
 #include <ctre/phoenix/sensors/PigeonIMU.h>
+
 #include <units/angle.h>
 
 namespace hb {
 
-  class pigeonGyro : public frc::Gyro {
+  class PigeonGyro : public frc::Gyro {
   public:
 
     /**
@@ -14,7 +16,7 @@ namespace hb {
      * 
      * @param ID the CAN ID
      */
-    explicit pigeonGyro(int ID);
+    explicit PigeonGyro(int ID);
 
     /**
      * @brief Gets the angle the pigeon gyro is reading
@@ -40,6 +42,7 @@ namespace hb {
      * frc::Gyro
      */
     void Calibrate() override;
+
 
     virtual double GetPitch();
 

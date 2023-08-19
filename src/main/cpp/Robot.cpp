@@ -5,9 +5,10 @@
 #include "Robot.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc2/command/CommandScheduler.h>
 #include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
+
+#include <frc2/command/CommandScheduler.h>
 
 #include "utils/cams/Limelight.h"
 

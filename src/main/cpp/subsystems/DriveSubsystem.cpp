@@ -5,21 +5,22 @@
 #include "subsystems/DriveSubsystem.h"
 
 #include <frc/geometry/Rotation2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/DriverStation.h>
+#include <frc/filter/MedianFilter.h>
+
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
-#include <math.h>
-#include <cmath>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/smartdashboard/Field2d.h>
+
 #include <wpi/sendable/SendableBuilder.h>
-#include <frc/DriverStation.h>
-#include <frc/filter/MedianFilter.h>
+
+#include <cmath>
+
 #include "utils/cams/Limelight.h"
-
 #include "Constants.h"
-
-#define LAMBDA(x) [this] {return x;}
+#include "utils/Util.h"
 
 using namespace DriveConstants;
 using namespace DriveConstants::CanIds;

@@ -3,14 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/VisionSubsystem.h"
-#include "Constants.h"
-#include "utils/cams/Limelight.h"
 
 #include <units/length.h>
 #include <units/angle.h>
 
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include "Constants.h"
+#include "utils/cams/Limelight.h"
 
 VisionSubsystem::VisionSubsystem() : 
 m_rightEst(m_layout, photonlib::PoseStrategy::MULTI_TAG_PNP, std::move(photonlib::PhotonCamera("Arducam_OV9281_USB_Camera_Right")), VisionConstants::RightTransform),

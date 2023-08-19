@@ -1,5 +1,8 @@
+#include "utils/cams/Limelight.h"
+
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
+
 #include <cmath>
 #include <numbers>
 #include <string>
@@ -7,14 +10,11 @@
 
 #include <frc/DriverStation.h>
 
-#include "utils/cams/Limelight.h"
-
 #define GETVAL(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber(x , 0.0)
 #define GET_ARRAY_VAL(x) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray(x, std::span<const double>(6))
 #define SETVAL(x , y) nt::NetworkTableInstance::GetDefault().GetTable("limelight")->PutNumber(x , y)
 
 using namespace hb;
-
 
 bool limeLight::HasTarget() {
   return (bool)GETVAL("tv");

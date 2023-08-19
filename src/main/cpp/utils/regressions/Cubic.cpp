@@ -1,6 +1,6 @@
 #include "utils/regressions/Cubic.h"
 
-#include <math.h>
+#include <cmath>
 
 using namespace hb;
 

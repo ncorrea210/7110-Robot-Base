@@ -4,9 +4,7 @@
 
 #include "commands/DriveWithHeading.h"
 
-static bool InRange(double val, double target, double epsilon) {
-    return (val > (target - epsilon) && val < (target + epsilon));
-}
+#include "utils/Util.h"
 
 DriveWithHeading::DriveWithHeading(DriveSubsystem* drive, std::function<double()> x, std::function<double()> y, units::degree_t heading) : 
 m_drive(drive), m_x(std::move(x)), m_y(std::move(y)), m_heading(heading) {
@@ -28,8 +26,6 @@ void DriveWithHeading::Execute() {
     -rot, true
   );
 
-
-
 }
 
 // Called once the command ends or is interrupted.
@@ -37,6 +33,6 @@ void DriveWithHeading::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool DriveWithHeading::IsFinished() {
-  if (InRange(m_drive->gyro.GetCompassHeading(), m_heading.value(), 3)) return true;
+  if (hb::InRange(m_drive->gyro.GetCompassHeading(), m_heading.value(), 3)) return true;
   else return false;
 }

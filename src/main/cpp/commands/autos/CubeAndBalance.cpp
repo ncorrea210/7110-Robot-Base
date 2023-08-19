@@ -4,13 +4,12 @@
 
 #include "commands/autos/CubeAndBalance.h"
 
-#include "commands/DriveWithTime.h"
-
-#include "commands/Balance.h"
-
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/InstantCommand.h>
+
+#include "commands/DriveWithTime.h"
+#include "commands/Balance.h"
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:

@@ -6,8 +6,11 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include <string>
+
 #include <frc/Timer.h>
+
+#include <string>
+
 #include <pathplanner/lib/PathPlannerTrajectory.h>
 
 #include "subsystems/DriveSubsystem.h"

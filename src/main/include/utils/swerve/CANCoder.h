@@ -1,7 +1,9 @@
 #pragma once 
 
 #include <ctre/phoenix.h>
+
 #include <units/angle.h>
+
 #include <numbers>
 
 namespace hb{

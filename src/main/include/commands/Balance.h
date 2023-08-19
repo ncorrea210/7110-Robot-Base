@@ -7,9 +7,9 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/DriveSubsystem.h"
-
 #include <frc/controller/PIDController.h>
+
+#include "subsystems/DriveSubsystem.h"
 
 /**
  * An example command.

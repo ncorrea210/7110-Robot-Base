@@ -3,8 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/geometry/Rotation2d.h>
-#include <numbers>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include <numbers>
 
 #include "utils/swerve/SwerveModule.h"
 #include "Constants.h"
