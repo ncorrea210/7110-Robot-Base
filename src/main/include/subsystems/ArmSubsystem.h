@@ -17,6 +17,7 @@
 
 #include <wpi/sendable/SendableBuilder.h>
 
+#include <string>
 
 struct ArmPosition{
 
@@ -48,8 +49,6 @@ class ArmSubsystem : public frc2::SubsystemBase {
     */
     void Periodic() override;
 
-    void CheckState();
-
     void StopMotors();
 
     void SetPosition(ArmPosition position);
@@ -70,29 +69,18 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
     int GetAngle() const;
 
-    inline void RunExtension(double speed) {
-      m_extension.Set(speed);
-    }
-
-    inline void RunActuator(double speed) {
-      m_actuator.Set(speed);
-    }
-
     bool SwitchLow() const;
 
     bool SwitchHigh() const;
 
-    frc2::CommandPtr ConeMidCMD();
-
-    frc2::CommandPtr ConePickCubeMidCMD();
-
-    frc2::CommandPtr CubePickCMD();
-
-    frc2::CommandPtr StowCMD();
-
     void InitSendable(wpi::SendableBuilder& builder) override;
 
   private:
+
+    // Function meant to keep the periodic function less cluttered, simply checks the position of the arm and updates this
+    void CheckState();
+
+    std::string StateToString(State state);
 
     State m_targetState;
     State m_actualState;
@@ -110,12 +98,9 @@ class ArmSubsystem : public frc2::SubsystemBase {
     const ArmPosition m_stow;
     const ArmPosition m_coneMid;
     const ArmPosition m_cubeMidconePickup;
-    // const ArmPosition m_conePickup;
     const ArmPosition m_cubePickup;
     const ArmPosition m_MsMaiCar;
 
     ArmPosition m_target;
 
-    // Components (e.g. motor controllers and sensors) should generally be
-    // declared private and exposed only through public methods.
 };

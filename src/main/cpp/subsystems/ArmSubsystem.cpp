@@ -28,7 +28,6 @@ m_limitSwitch(0),
 m_stow(0, 98), 
 m_coneMid(160, 2),
 m_cubeMidconePickup(100, 2),
-// m_conePickup(100, 2),
 m_cubePickup(50, 2),
 m_MsMaiCar(0, 2),
 m_target(m_stow)
@@ -51,7 +50,6 @@ void ArmSubsystem::Periodic() {
     }
 
     CheckState();
-
 
     switch (m_targetState) {
         case State::kStow:
@@ -90,43 +88,6 @@ void ArmSubsystem::Periodic() {
     if (!hb::InRange(GetAngle(), m_target.angle, EPSILON_ANGLE)) {
         m_actuator.Set(m_actuatorController.Calculate(GetAngle(), m_target.angle));
     } else m_actuator.Set(0);
-    
-}
-
-void ArmSubsystem::CheckState() {
-    double extension = m_extensionEncoder.GetPosition();
-    
-    // Check Stow
-    if (hb::InRange(extension, m_stow.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_stow.angle, EPSILON_ANGLE)) {
-        m_actualState = State::kStow;
-        return;
-    }
-    
-    // Check Mid Cone
-    if (hb::InRange(extension, m_coneMid.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_coneMid.angle, EPSILON_ANGLE)) {
-        m_actualState = State::kMidCone;
-        return;
-    }
-
-    // Check Mid Cube Cone Pickup
-    if (hb::InRange(extension, m_cubeMidconePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubeMidconePickup.angle, EPSILON_ANGLE)) {
-        m_actualState = State::kMidCubeConePickup;
-        return;
-    }
-
-
-    //Check Cube Pickup
-    if (hb::InRange(extension, m_cubePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubePickup.angle, EPSILON_ANGLE)) {
-        m_actualState = State::kCubePickup;
-        return;
-    }
-
-    if (hb::InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_MsMaiCar.angle, EPSILON_ANGLE)) {
-        m_actualState = State::kMsMaiCar;
-        return;
-    }
-
-    m_actualState = State::kRunning;
     
 }
 
@@ -183,28 +144,77 @@ bool ArmSubsystem::SwitchHigh() const {
     else return false;
 }
 
-frc2::CommandPtr ArmSubsystem::ConeMidCMD() {
-    return this->RunOnce([this] {Stow();});
-}
-
-frc2::CommandPtr ArmSubsystem::ConePickCubeMidCMD() {
-    return this->RunOnce([this] {MidCubeConePickup();});
-}
-
-frc2::CommandPtr ArmSubsystem::CubePickCMD() {
-    return this->RunOnce([this] {CubePickup();});
-}
-
-frc2::CommandPtr ArmSubsystem::StowCMD() {
-    return this->RunOnce([this] {Stow();});
-}
-
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Arm");
 
     builder.AddDoubleProperty("ArmPosition", LAMBDA(m_extensionEncoder.GetPosition()), nullptr);
     builder.AddIntegerProperty("ArmAngle", LAMBDA(GetAngle()), nullptr);
 
-    builder.AddIntegerProperty("State", LAMBDA((int)GetState()), nullptr);
-    builder.AddIntegerProperty("Target State", LAMBDA((int)GetTarget()), nullptr);
+    builder.AddStringProperty("Actual State", LAMBDA(StateToString(GetState())), nullptr);
+    builder.AddStringProperty("Target State", LAMBDA(StateToString(GetTarget())), nullptr);
+}
+
+void ArmSubsystem::CheckState() {
+    double extension = m_extensionEncoder.GetPosition();
+    
+    // Check Stow
+    if (hb::InRange(extension, m_stow.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_stow.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kStow;
+        return;
+    }
+    
+    // Check Mid Cone
+    if (hb::InRange(extension, m_coneMid.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_coneMid.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kMidCone;
+        return;
+    }
+
+    // Check Mid Cube Cone Pickup
+    if (hb::InRange(extension, m_cubeMidconePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubeMidconePickup.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kMidCubeConePickup;
+        return;
+    }
+
+
+    //Check Cube Pickup
+    if (hb::InRange(extension, m_cubePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubePickup.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kCubePickup;
+        return;
+    }
+
+    if (hb::InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_MsMaiCar.angle, EPSILON_ANGLE)) {
+        m_actualState = State::kMsMaiCar;
+        return;
+    }
+
+    m_actualState = State::kRunning;
+    
+}
+
+std::string ArmSubsystem::StateToString(State state) {
+    switch (state) {
+        case State::kCubePickup: 
+            return "Cube Pickup";
+        break;
+
+        case State::kMidCone: 
+            return "Mid Code";
+        break;
+
+        case State::kMidCubeConePickup: 
+            return "Mid Cube or Cone Pickup";
+        break;
+
+        case State::kMsMaiCar: 
+            return "Ms Mai Car";
+        break;
+
+        case State::kRunning: 
+            return "Running";
+        break;
+
+        case State::kStow: 
+            return "Stow";
+        break;
+    }
 }
