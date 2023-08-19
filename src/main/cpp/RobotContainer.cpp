@@ -39,9 +39,14 @@
 #include "utils/cams/Limelight.h"
 #include "subsystems/DriveSubsystem.h"
 #include "Constants.h"
+#include "utils/Util.h"
 
 using namespace DriveConstants;
 
+// Drive macros ensure that all outputs stay the same
+#define X_OUT [this] {return m_speedLimitx.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftY()) * pow(m_driverController.GetLeftY(), 2), 0.01));}
+#define Y_OUT [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftX()) * pow(m_driverController.GetLeftX(), 2), 0.01));}
+#define ROT_OUT [this] {return -frc::ApplyDeadband(hb::sgn(m_driverController.GetRightX()) * pow(m_driverController.GetRightX(), 2), 0.025) * DriveConstants::kMaxAngularSpeed.value();}
 
 RobotContainer::RobotContainer() {
 
@@ -69,14 +74,22 @@ RobotContainer::RobotContainer() {
   ConfigureButtonBindings();
 
   //Default subsystem commands are defined in this section
-  m_drive.SetDefaultCommand(DefaultDriveCMD(&m_drive, 
-        [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
-        [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
-        [this] {return -(frc::ApplyDeadband(m_driverController.GetRightX() < 0 ? -(m_driverController.GetRightX() * m_driverController.GetRightX()) : (m_driverController.GetRightX() * m_driverController.GetRightX()), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
-        [this] {return true;},
-        [this] {return m_drive.GetSpeed().value();}));
+  // m_drive.SetDefaultCommand(DefaultDriveCMD(&m_drive, 
+  //       [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
+  //       [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
+  //       [this] {return -(frc::ApplyDeadband(m_driverController.GetRightX() < 0 ? -(m_driverController.GetRightX() * m_driverController.GetRightX()) : (m_driverController.GetRightX() * m_driverController.GetRightX()), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
+  //       [this] {return true;},
+  //       [this] {return m_drive.GetSpeed().value();}));
 
-  
+  // New version with macros to test
+  m_drive.SetDefaultCommand(DefaultDriveCMD(
+    &m_drive, 
+    X_OUT, 
+    Y_OUT, 
+    ROT_OUT,
+    LAMBDA(true),
+    LAMBDA(m_driverController.GetRightTriggerAxis() * 0.6 + 0.4)
+  )); 
 
 }
 
@@ -86,10 +99,13 @@ void RobotContainer::ConfigureButtonBindings() {
    *  frc::JoystickButton(&m_controller, frc::XboxController::Button::kButton).WhenPressed(Command);
    *  TODO: test command xbox controller implementation(found below) and see if it works
   */
-  // m_driver.A().WhenActive(frc2::InstantCommand([this] {m_drive.ZeroHeading();}));
-  // m_driverController.A().WhenActive(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);}));
 
+  ConfigureDriverButtons();
+  ConfigureOperatorButtons();
+
+}
+
+void RobotContainer::ConfigureDriverButtons() {
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.MidCone();});
   
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.Stow();});
@@ -110,20 +126,76 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
 
-  /** @section POV Headings **/
-
-  frc2::POVButton(&m_driverController, 180).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
-    [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
-    180_deg));
-  
-  /** @section endsection **/
-
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
       hb::limeLight::Pipeline::kRetroReflective : hb::limeLight::Pipeline::kAprilTag);}));
+  
+  /** @section POV Headings **/
 
+  frc2::POVButton(&m_driverController, 0).WhenPressed(DriveWithHeading(
+    &m_drive,
+    X_OUT, 
+    Y_OUT,
+    0_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 45).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    45_deg
+  ));  
+
+  frc2::POVButton(&m_driverController, 90).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    90_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 135).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    135_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 180).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    180_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 225).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    225_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 270).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    270_deg
+  ));
+
+  frc2::POVButton(&m_driverController, 315).WhenPressed(DriveWithHeading(
+    &m_drive, 
+    X_OUT,
+    Y_OUT, 
+    315_deg
+  ));
+  
+  /** @section endsection **/
+
+}
+
+void RobotContainer::ConfigureOperatorButtons() {
+  #ifdef OPERATORCONTROLLER
+
+  #endif
 }
 
 

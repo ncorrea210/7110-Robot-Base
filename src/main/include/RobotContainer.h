@@ -48,8 +48,10 @@ class RobotContainer {
  private:
   // The driver's controller
   frc::XboxController m_driverController{0};
+
+  // The operator's controller
+  // #define OPERATORCONTROLLER
   // frc::XboxController m_operatorController{1};
-  // frc2::CommandXboxController m_driverController{0};
 
   // The robot's subsystems and commands are defined here...
 
@@ -71,4 +73,8 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command*> m_chooser;
 
   void ConfigureButtonBindings();
+
+  void ConfigureDriverButtons();
+  
+  void ConfigureOperatorButtons();
 };
