@@ -11,11 +11,11 @@
 
 namespace hb {
   
-  class limeLight {
+  class LimeLight {
     
     public:
 
-      explicit limeLight() = delete;
+      explicit LimeLight() = delete;
 
       enum class LEDMode {
         kPipeline = 0,

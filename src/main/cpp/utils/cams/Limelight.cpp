@@ -16,47 +16,47 @@
 
 using namespace hb;
 
-bool limeLight::HasTarget() {
+bool LimeLight::HasTarget() {
   return (bool)GETVAL("tv");
 }
 
-double limeLight::GetX() {
+double LimeLight::GetX() {
   return GETVAL("tx");
 };
 
-double limeLight::GetY() {
+double LimeLight::GetY() {
   return GETVAL("ty");
 }
 
-double limeLight::GetA() {
+double LimeLight::GetA() {
   return GETVAL("tx");
 }
 
-void limeLight::SetLED(LEDMode Mode) {
+void LimeLight::SetLED(LEDMode Mode) {
   SETVAL("ledMode", (int)Mode);
 }
 
-void limeLight::SetMode(CamMode Mode) {
+void LimeLight::SetMode(CamMode Mode) {
   SETVAL("camMode", (int)Mode);
 }
 
-void limeLight::SetPipeline(Pipeline Pipe) {
+void LimeLight::SetPipeline(Pipeline Pipe) {
   SETVAL("pipeline", (int)Pipe);
 }
 
-limeLight::Pipeline limeLight::GetPipeline() {
-  return limeLight::Pipeline(GETVAL("pipeline"));
+LimeLight::Pipeline LimeLight::GetPipeline() {
+  return LimeLight::Pipeline(GETVAL("pipeline"));
 }
 
-limeLight::CamMode limeLight::GetMode() {
-  return limeLight::CamMode(GETVAL("camMode"));
+LimeLight::CamMode LimeLight::GetMode() {
+  return LimeLight::CamMode(GETVAL("camMode"));
 }
 
-limeLight::LEDMode limeLight::GetLED() {
-  return limeLight::LEDMode(GETVAL("ledMode"));
+LimeLight::LEDMode LimeLight::GetLED() {
+  return LimeLight::LEDMode(GETVAL("ledMode"));
 }
 
-std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> limeLight::GetPose() {
+std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> LimeLight::GetPose() {
   static std::vector<double> results;
   if (frc::DriverStation::GetAlliance() != frc::DriverStation::Alliance::kBlue) {
     results = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray("botpose_wpiblue", std::span<const double>());

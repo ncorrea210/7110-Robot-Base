@@ -127,8 +127,8 @@ void RobotContainer::ConfigureDriverButtons() {
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
-      ([] {hb::limeLight::SetPipeline(hb::limeLight::GetPipeline() == hb::limeLight::Pipeline::kAprilTag ? 
-      hb::limeLight::Pipeline::kRetroReflective : hb::limeLight::Pipeline::kAprilTag);}));
+      ([] {hb::LimeLight::SetPipeline(hb::LimeLight::GetPipeline() == hb::LimeLight::Pipeline::kAprilTag ? 
+      hb::LimeLight::Pipeline::kRetroReflective : hb::LimeLight::Pipeline::kAprilTag);}));
   
   /** @section POV Headings **/
 

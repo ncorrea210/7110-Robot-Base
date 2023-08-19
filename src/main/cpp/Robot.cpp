@@ -27,7 +27,7 @@ void Robot::RobotInit() {
   // // Ensures the LimeLight doesn't burn our eyes out upon startup
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
 
-  hb::limeLight::SetPipeline(hb::limeLight::Pipeline::kAprilTag);
+  hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);
 
 }
 
@@ -82,7 +82,7 @@ void Robot::TeleopInit() {
   }
 
 
-  hb::limeLight::SetPipeline(hb::limeLight::Pipeline::kAprilTag);
+  hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);
 
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 }

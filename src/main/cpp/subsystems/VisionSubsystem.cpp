@@ -61,7 +61,7 @@ VisionSubsystem& VisionSubsystem::GetInstance() {
 std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> VisionSubsystem::GetPose() {
     std::optional<photonlib::EstimatedRobotPose> estl = m_leftEst.Update();
     std::optional<photonlib::EstimatedRobotPose> estr = m_rightEst.Update();
-    std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> estll = hb::limeLight::GetPose();
+    std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> estll = hb::LimeLight::GetPose();
 
     if (estll.first.has_value()) {
         return std::make_pair(estll.second, estll.first);
