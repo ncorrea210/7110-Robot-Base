@@ -1,6 +1,6 @@
 [Back](/docs/subsystems/Subsystems.md)
 
-### [ArmSubsystem.h](/src/main/include/subsystems/ArmSubsystem.h) [ArmSubsystem.h](/src/main/cpp/subsystems/ArmSubsystem.cpp)
+### [ArmSubsystem.h](/src/main/include/subsystems/ArmSubsystem.h) [ArmSubsystem.cpp](/src/main/cpp/subsystems/ArmSubsystem.cpp)
 
 ## Methods:
 
