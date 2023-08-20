@@ -1,19 +1,14 @@
 # 7110-Robot-Base
 
-Robot Base For Swerve Robot
+# Docs
+- [Overview] (/docs/Overview.md)
+- [Subsystem Docs](/docs/subsystems/Subsystems.md)
+- [Command Docs](/docs/commands/Commands.md)
+- [Util Docs](/docs/utils/Util.md)
 
-Includes
-
-* Swerve Drive With Controls
-* Limelight Code
-* Neo Motor Code
-* PathPlanner Implentation
-* Maybe More in the Future
-
-# TODO
-
-- Set gyro heading capability 
-- PathPlanner fully implemented
-- Methods to create advanced autonomous routines
-- Test telemetry to Shuffleboard
-- Implement 2d constantly calculated position
+# Dependencies 
+- [WPILib](https://github.wpilib.org/allwpilib/docs/release/cpp/index.html)
+- [RevLib](https://codedocs.revrobotics.com/cpp/namespacerev.html)
+- [Phoenix5](https://api.ctr-electronics.com/phoenix/release/cpp/)
+- [Path Planner](https://github.com/mjansen4857/pathplanner)
+- [Photon Lib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/index.html)
