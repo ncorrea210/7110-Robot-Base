@@ -1,3 +1,9 @@
+/**
+ * @file Exponential.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
+
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,6 +22,14 @@ namespace hb {
 
     public:
 
+      /**
+       * @brief Construct a new Exponential regression object
+       * coefficents should be entered according to
+       * a*b^x
+       * 
+       * @param a 
+       * @param b 
+       */
       explicit Exponential(double a, double b);
 
       double Calculate(double x) const override;
@@ -25,4 +39,4 @@ namespace hb {
       double m_a, m_b;
 
   };
-}
+} // namespace hb

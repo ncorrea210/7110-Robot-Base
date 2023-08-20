@@ -1,3 +1,10 @@
+/**
+ * @file SquareRoot.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ * 
+ */
+
 #pragma once 
 
 #include "RegressionBase.h"
@@ -16,6 +23,16 @@ namespace hb {
 
     public:
 
+      /**
+       * @brief Construct a new Square Root regression object
+       * the coefficients should be entered according to the equation
+       * a*sqrt(b*x-h) + k
+       * 
+       * @param a 
+       * @param b 
+       * @param h 
+       * @param k 
+       */
       SquareRoot(double a, double b, double h, double k);
 
       double Calculate(double x) const override;
@@ -24,4 +41,4 @@ namespace hb {
 
       double m_a, m_b, m_h, m_k;
   };
-}
+} // namespace hb

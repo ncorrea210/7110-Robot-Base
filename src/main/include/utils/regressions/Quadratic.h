@@ -1,3 +1,8 @@
+/**
+ * @file Quadratic.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,6 +21,15 @@ namespace hb {
 
     public:
 
+      /**
+       * @brief Construct a new Quadratic regression object
+       * the coeffients should be entered according to 
+       * ax^2 + bx + c
+       * 
+       * @param a 
+       * @param b 
+       * @param c 
+       */
       explicit Quadratic(double a, double b, double c);
 
       double Calculate(double x) const override;
@@ -25,4 +39,4 @@ namespace hb {
       double m_a, m_b, m_c;
 
   };
-}
+} // namespace hb

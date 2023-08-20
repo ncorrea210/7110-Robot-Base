@@ -1,3 +1,8 @@
+/**
+ * @file Logarithmic.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,6 +21,14 @@ namespace hb {
     
     public: 
 
+      /**
+       * @brief Construct a new Logarithmic regression object
+       * coefficients should be entered according to 
+       * a+(b)lnx
+       * 
+       * @param a 
+       * @param b 
+       */
       explicit Logarithmic(double a, double b);
 
       double Calculate(double x) const override;
@@ -24,4 +37,4 @@ namespace hb {
 
       double m_a, m_b;
   };
-}
+} // namespace hb

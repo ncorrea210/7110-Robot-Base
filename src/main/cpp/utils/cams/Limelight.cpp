@@ -73,15 +73,3 @@ std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> LimeLight:
 
   return std::make_pair(pose, timestamp);
 }
-
-// std::array<double, 6> limeLight::GetBotpose() {
-//   static std::array<double, 6> arr;
-//   for (int i = 0; i < 6; i++) {
-//     arr[i] = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetValue("botpose").GetDoubleArray()[i];
-//   }
-//   return arr;
-// }
-
-// frc::Translation2d limeLight::GetBotPose2D() {
-//   return frc::Translation2d(units::meter_t(GetBotpose()[0]), -units::meter_t(GetBotpose()[1]));
-// }

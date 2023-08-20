@@ -1,3 +1,10 @@
+/**
+ * @file Limelight.h
+ * @author Nathan Correa
+ * @brief 
+ * @date 2023-08-19
+ */
+
 #pragma once
 
 #include <array>
@@ -11,12 +18,22 @@
 
 namespace hb {
   
+  /**
+   * @brief singleton util class for the one limelight on the robot
+   */
   class LimeLight {
     
     public:
 
+      /**
+       * @brief Constructor is deleted as class will be static only 
+       */
       explicit LimeLight() = delete;
 
+      /**
+       * @brief Enum for all LED modes
+       * 
+       */
       enum class LEDMode {
         kPipeline = 0,
         kOff = 1,
@@ -24,13 +41,17 @@ namespace hb {
         kOn = 3
       };
 
+      /**
+       * @brief Enum for Camera Modes
+       * 
+       */
       enum class CamMode {
         kProcessed = 0,
         kUnprocessed = 1
       };
       
       /**
-       * enum class for easier naming for pipelines
+       * @brief enum for easier naming for pipelines
       */
       enum class Pipeline {
         kRetroReflective = 0,
@@ -75,18 +96,36 @@ namespace hb {
       */
       static void SetPipeline(Pipeline);
 
+      /**
+       * @brief Get the current Pipeline
+       * 
+       * @return Pipeline 
+       */
       static Pipeline GetPipeline();
 
+      /**
+       * @brief Get the current Mode
+       * 
+       * @return CamMode 
+       */
       static CamMode GetMode();
 
+      /**
+       * @brief Get the current LED state
+       * 
+       * @return LEDMode 
+       */
       static LEDMode GetLED();
 
+      /**
+       * @brief Get the pose of the robot (If it exists). If one option is null, they both are
+       * 
+       * @return std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> 
+       * 
+       * @warning you will need to handle nullopt
+       */
       static std::pair<std::optional<frc::Pose2d>, std::optional<units::second_t>> GetPose();
 
-      // static std::array<double, 6> GetBotpose(); 
-
-      // static frc::Translation2d GetBotPose2D();
-
   };
-}
+} // namespace hb
 

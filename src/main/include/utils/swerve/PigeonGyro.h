@@ -1,3 +1,10 @@
+/**
+ * @file PigeonGyro.h
+ * @author Nathan Correa
+ * @brief Pigeon gyro for swerve drive
+ * @date 2023-08-19
+ */
+
 #pragma once
 
 #include <frc/interfaces/Gyro.h>
@@ -8,6 +15,9 @@
 
 namespace hb {
 
+  /**
+   * @brief Class for pigeon gyro inheriting the frc::Gyro class to ensure it interfaces withn the swerve drive
+   */
   class PigeonGyro : public frc::Gyro {
   public:
 
@@ -43,8 +53,18 @@ namespace hb {
      */
     void Calibrate() override;
 
+    /**
+     * @brief Get the pitch of the gyro
+     * 
+     * @return double 
+     */
     virtual double GetPitch();
 
+    /**
+     * @brief Get the roll of the gyro
+     * 
+     * @return double 
+     */
     virtual double GetRoll();
 
     /**
@@ -52,10 +72,25 @@ namespace hb {
     */
     virtual frc::Rotation2d GetRot2d();
 
+    /**
+     * @brief Get the rotation of the gyro in radians
+     * 
+     * @return units::radian_t 
+     */
     virtual units::radian_t GetRad() const;
 
+    /**
+     * @brief Set the angle of the gyro
+     * 
+     * @param units::degree_t
+     */
     virtual void SetPosition(units::degree_t);
 
+    /**
+     * @brief Get the compass heading of the gyro from [-180, 180]
+     * 
+     * @return double 
+     */
     double GetCompassHeading() const;
 
   private:

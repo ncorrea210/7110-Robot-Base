@@ -1,3 +1,8 @@
+/**
+ * @file Linear.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,6 +21,14 @@ namespace hb {
     
     public:
 
+      /**
+       * @brief Construct a new Linear regression object
+       * coefficents should be entered according to 
+       * ax+b
+       * 
+       * @param a 
+       * @param b 
+       */
       explicit Linear(double a, double b);
 
       double Calculate(double x) const override;
@@ -24,5 +37,5 @@ namespace hb {
 
       double m_a, m_b;
   };
-}
+} // namespace hb
 

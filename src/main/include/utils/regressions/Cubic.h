@@ -1,3 +1,9 @@
+/**
+ * @file Cubic.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
+
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,6 +22,16 @@ namespace hb {
 
     public:
 
+      /**
+       * @brief Construct a new Cubic regression object
+       * coefficients should be entered accoding to 
+       * ax^3 + bx^2 + cx + d
+       * 
+       * @param a 
+       * @param b 
+       * @param c 
+       * @param d 
+       */
       Cubic(double a, double b, double c, double d);
 
       double Calculate(double x) const override;
@@ -24,4 +40,4 @@ namespace hb {
 
       double m_a, m_b, m_c, m_d;
   };
-}
+} // namespace hb

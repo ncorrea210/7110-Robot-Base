@@ -1,3 +1,8 @@
+/**
+ * @file Sinusoidal.h
+ * @author Nathan Correa
+ * @date 2023-08-19
+ */
 #pragma once
 
 #include "RegressionBase.h"
@@ -16,13 +21,18 @@ namespace hb {
   class Sinusoidal : public RegressionBase {
     public:
 
+      /**
+       * @brief Construct a new Sinusoidal regression object
+       * the coefficents should be entered according to the equation
+       * a*sin(b(x-c))+d
+       * 
+       * @param a 
+       * @param b 
+       * @param c 
+       * @param d 
+       */
       explicit Sinusoidal(double a, double b, double c, double d);
 
-      /**
-       * @brief Calculates the value of this Sinusoidal regression
-       * 
-       * @returns The calculated value
-      */
       double Calculate(double x) const override;
 
     private:
@@ -30,4 +40,4 @@ namespace hb {
       double m_a, m_b, m_c, m_d;
     
   };
-}
+} // namespace hb
