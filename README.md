@@ -1,7 +1,7 @@
 # 7110-Robot-Base
 
 # Docs
-- [Overview] (/docs/Overview.md)
+- [Overview](/docs/Overview.md)
 - [Subsystem Docs](/docs/subsystems/Subsystems.md)
 - [Command Docs](/docs/commands/Commands.md)
 - [Util Docs](/docs/utils/Util.md)
