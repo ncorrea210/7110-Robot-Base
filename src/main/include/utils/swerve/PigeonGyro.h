@@ -43,7 +43,6 @@ namespace hb {
      */
     void Calibrate() override;
 
-
     virtual double GetPitch();
 
     virtual double GetRoll();

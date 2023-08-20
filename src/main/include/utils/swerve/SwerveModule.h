@@ -73,8 +73,10 @@ class SwerveModule {
 
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turningMotor;
+
   rev::SparkMaxRelativeEncoder m_sparkDriveEncoder;
   rev::SparkMaxRelativeEncoder m_sparkTurnEncoder;
+  
   rev::SparkMaxPIDController m_tController;
   rev::SparkMaxPIDController m_dController;
 
