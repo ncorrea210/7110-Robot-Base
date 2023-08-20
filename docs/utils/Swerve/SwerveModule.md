@@ -5,10 +5,10 @@
 ## Methods:
 
 ### SwerveModule(int driveMotorID, int turnMotorID, int turnEncoderID, double offset)
-driveMotorID: CAN ID of the driving Neo Motor
-turnMotorID: CAN ID of the turning Neo Motor
-turnEncoderID: CAN ID of the CANCoder
-offset: The offset in degrees needed to have the module face forwards
+* driveMotorID: CAN ID of the driving Neo Motor
+* turnMotorID: CAN ID of the turning Neo Motor
+* turnEncoderID: CAN ID of the CANCoder
+* offset: The offset in degrees needed to have the module face forwards
 
 ### frc::SwerveModuleState GetState()
 Returns a SwerveModuleState object that contains the velocity and angle of a module. (velocity in M/S and angle in radians)

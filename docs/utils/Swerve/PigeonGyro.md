@@ -5,7 +5,7 @@
 ## Methods: 
 
 ### PigeonGyro(int ID)
-ID - The CAN ID of the pigeon gyro
+* ID - The CAN ID of the pigeon gyro
 
 ### double GetAngle()
 Returns the cummulative angle of the gyro. This does not wrap arround, it will continue past -180 and +180. For example it could read 720 which would be the same as 0 
