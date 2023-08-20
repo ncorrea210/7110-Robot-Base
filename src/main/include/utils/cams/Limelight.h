@@ -37,8 +37,7 @@ namespace hb {
       enum class LEDMode {
         kPipeline = 0,
         kOff = 1,
-        kBlink = 2,
-        kOn = 3
+        kOn = 2
       };
 
       /**

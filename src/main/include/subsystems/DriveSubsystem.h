@@ -45,11 +45,6 @@
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
 
-  // enum Mode {
-  //   kCone,
-  //   kCube
-  // };
-
   DriveSubsystem();
 
   /**
