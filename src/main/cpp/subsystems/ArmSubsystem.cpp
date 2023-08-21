@@ -16,6 +16,13 @@
 #define EPSILON_ANGLE 2
 #define SWITCH_CHECK 75
 
+#define MIN_ANGLE 2
+#define MAX_ANGLE 98
+#define MIN_EXTEND 0
+#define MAX_EXTEND 160
+#define CUBE_SCORE_CONE_PICKUP_EXTEND 100
+#define CUBE_PICKUP 50
+
 ArmSubsystem::ArmSubsystem() : 
 m_targetState(State::kStow),
 m_actualState(State::kRunning), 
@@ -26,15 +33,17 @@ m_actuator(ArmConstants::kActuatorID),
 m_actuatorEncoder(ArmConstants::kActuatorEncoderID),
 m_actuatorController(ArmConstants::kPActuator, 0, 0),
 m_limitSwitch(0),
-m_stow(0, 98), 
-m_coneMid(160, 2),
-m_cubeMidconePickup(100, 2),
-m_cubePickup(50, 2),
-m_MsMaiCar(0, 2),
+m_stow(MIN_EXTEND, MAX_ANGLE), 
+m_coneMid(MAX_EXTEND, MIN_ANGLE),
+m_cubeMidconePickup(CUBE_SCORE_CONE_PICKUP_EXTEND, MIN_ANGLE),
+m_cubePickup(CUBE_PICKUP, MIN_ANGLE),
+m_MsMaiCar(MIN_EXTEND, MIN_ANGLE),
 m_target(m_stow)
 {
 
     m_extensionController.SetP(ArmConstants::kPExtension);
+    
+    // Output bounded from [-0.5,0.6] on the motor. Upper bound is higher to counteract gravity
     m_extensionController.SetOutputRange(-0.5, 0.6);
     
 }
@@ -43,11 +52,11 @@ m_target(m_stow)
 void ArmSubsystem::Periodic() {
 
     if (SwitchHigh()) {
-        m_extensionEncoder.SetPosition(160);
+        m_extensionEncoder.SetPosition(MAX_EXTEND);
     }
 
     if (SwitchLow()) {
-        m_extensionEncoder.SetPosition(0);
+        m_extensionEncoder.SetPosition(MIN_EXTEND);
     }
 
     CheckState();
@@ -130,17 +139,18 @@ ArmSubsystem::State ArmSubsystem::GetTarget() const {
 }
 
 int ArmSubsystem::GetAngle() const {
+    // This formula bounds the pot to [0,100] and rounds it to an integer
     return std::lround(100 * (((100 * m_actuatorEncoder.Get().value()) - 3) / 45));
 }
 
 bool ArmSubsystem::SwitchLow() const {
-    if (m_extensionEncoder.GetPosition() < 75 && !m_limitSwitch.Get()) 
+    if (m_extensionEncoder.GetPosition() < SWITCH_CHECK && !m_limitSwitch.Get()) 
         return true;
     else return false;
 }
 
 bool ArmSubsystem::SwitchHigh() const {
-    if (m_extensionEncoder.GetPosition() > 75 && !m_limitSwitch.Get()) 
+    if (m_extensionEncoder.GetPosition() > SWITCH_CHECK && !m_limitSwitch.Get()) 
         return true;
     else return false;
 }
@@ -157,33 +167,35 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
 void ArmSubsystem::CheckState() {
     double extension = m_extensionEncoder.GetPosition();
+    int angle = GetAngle();
     
     // Check Stow
-    if (hb::InRange(extension, m_stow.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_stow.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, m_stow.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_stow.angle, EPSILON_ANGLE)) {
         m_actualState = State::kStow;
         return;
     }
     
     // Check Mid Cone
-    if (hb::InRange(extension, m_coneMid.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_coneMid.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, m_coneMid.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_coneMid.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMidCone;
         return;
     }
 
     // Check Mid Cube Cone Pickup
-    if (hb::InRange(extension, m_cubeMidconePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubeMidconePickup.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, m_cubeMidconePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_cubeMidconePickup.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMidCubeConePickup;
         return;
     }
 
 
-    //Check Cube Pickup
-    if (hb::InRange(extension, m_cubePickup.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_cubePickup.angle, EPSILON_ANGLE)) {
+    // Check Cube Pickup
+    if (hb::InRange(extension, m_cubePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_cubePickup.angle, EPSILON_ANGLE)) {
         m_actualState = State::kCubePickup;
         return;
     }
 
-    if (hb::InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(GetAngle(), m_MsMaiCar.angle, EPSILON_ANGLE)) {
+    // Check Ms Mai Car
+    if (hb::InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_MsMaiCar.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMsMaiCar;
         return;
     }

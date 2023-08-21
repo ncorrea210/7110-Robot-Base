@@ -109,6 +109,7 @@ namespace ArmConstants {
 
 namespace ClawConstants {
     constexpr int kClawID = 0;
+    constexpr int kClawPDPPole = 9;
 }
 
 namespace AutoConstants {

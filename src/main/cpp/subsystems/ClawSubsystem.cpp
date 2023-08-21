@@ -5,6 +5,7 @@
 #include "subsystems/ClawSubsystem.h"
 
 #include "Constants.h"
+#include "utils/Util.h"
 
 ClawSubsystem::ClawSubsystem(frc::PowerDistribution* pdp) : 
 m_motor(ClawConstants::kClawID), 
@@ -17,8 +18,9 @@ void ClawSubsystem::Periodic() {}
 void ClawSubsystem::Run(double val) {
     m_motor.Set(val);
 }
+
 void ClawSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Claw");
 
-    builder.AddDoubleProperty("CurrentDraw", [this] {return m_pdp->GetCurrent(9);}, nullptr);
+    builder.AddDoubleProperty("CurrentDraw", LAMBDA(m_pdp->GetCurrent(ClawConstants::kClawPDPPole)), nullptr);
 }
