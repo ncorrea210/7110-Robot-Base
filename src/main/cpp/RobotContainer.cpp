@@ -87,7 +87,7 @@ RobotContainer::RobotContainer() {
     Y_OUT, 
     ROT_OUT,
     LAMBDA(true),
-    LAMBDA(DriveConstants::kMaxSpeed.value() * (m_driverController.GetRightTriggerAxis() * 0.6 + 0.4))
+    LAMBDA(DriveConstants::kMaxSpeed.value() * (m_driverController.GetRightTriggerAxis() * 0.625 + 0.375))
   )); 
 
 }
