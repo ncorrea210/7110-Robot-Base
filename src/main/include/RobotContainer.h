@@ -62,7 +62,7 @@ class RobotContainer {
 
   frc::SlewRateLimiter<units::scalar> m_speedLimitx{3 / 1_s};
   frc::SlewRateLimiter<units::scalar> m_speedLimity{3 / 1_s};
-  frc::SlewRateLimiter<units::scalar> m_speedLimitz{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_triggerLimit{2 / 1_s};
 
   frc::PowerDistribution m_pdp{0, frc::PowerDistribution::ModuleType::kCTRE};
 

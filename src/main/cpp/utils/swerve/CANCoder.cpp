@@ -16,5 +16,5 @@ double S_CANCoder::Get() {
 
   double a = (std::numbers::pi * 2 * (rv / 360.0)) - (std::numbers::pi);
 
-  return -a;
+  return a;
 }

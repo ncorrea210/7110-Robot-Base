@@ -8,12 +8,13 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 
 #include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/auto/SwerveAutoBuilder.h>
 
 #include "Constants.h"
 
 using namespace pathplanner;
 
-FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_drive(drive) {
+FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path, bool vision) : m_drive(drive), m_visionEnabled(vision) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements(drive);
   m_traj = PathPlanner::loadPath(path, PathConstraints(AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration), false);
@@ -22,11 +23,14 @@ FollowPPPathCMD::FollowPPPathCMD(DriveSubsystem* drive, std::string path) : m_dr
 // Called when the command is initially scheduled.
 void FollowPPPathCMD::Initialize() {
   auto initState = m_traj.getInitialState();
-  auto initPose = initState.pose;
+  auto initPose = frc::Pose2d(initState.pose.Translation(), m_drive->gyro.GetRot2d());
+  initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), 180_deg));
+  frc::Rotation2d initAngle = initState.holonomicRotation - frc::Rotation2d(180_deg);
   printf("Init Rot: %5.2f\n", initPose.Rotation().Degrees().value());
-  m_drive->SetPose(initPose);
-  m_drive->gyro.SetPosition(initPose.Rotation().Degrees());
-  m_drive->ResetEncoders();
+  m_drive->VisionEnabled(m_visionEnabled);
+  // m_drive->ResetEncoders();
+  // m_drive->SetPose(initPose);
+  // m_drive->gyro.SetPosition(initPose.Rotation().Degrees());
   m_timer.Reset();
   m_timer.Start();
 }

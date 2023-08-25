@@ -26,6 +26,7 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   // make motors default to break mode
   m_driveMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   m_turningMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+  m_turningMotor.SetInverted(true);
 
   // set the turn conversion factors
   m_sparkTurnEncoder.SetPositionConversionFactor(ModuleConstants::kTurnEncoderRatio);
@@ -60,20 +61,20 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
 frc::SwerveModuleState SwerveModule::GetState() {
   // This function is rarely called, it is essentially deprecated
   return {units::meters_per_second_t{m_sparkDriveEncoder.GetVelocity()},
-          frc::Rotation2d(units::radian_t(m_turningEncoder.Get()))};
+          frc::Rotation2d(units::radian_t(m_sparkTurnEncoder.GetPosition()))};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
     // these both need to be negative to work
     // do not ask why, we do not know
-    return {units::meter_t(-m_sparkDriveEncoder.GetPosition()), units::radian_t(-m_sparkTurnEncoder.GetPosition())};
+    return {units::meter_t(m_sparkDriveEncoder.GetPosition()), units::radian_t(m_sparkTurnEncoder.GetPosition())};
 }
 
 void SwerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
 
   // Optimize the reference state to avoid spinning further than 90 degrees
   const auto state = frc::SwerveModuleState::Optimize(
-      referenceState, units::radian_t(m_turningEncoder.Get()));
+      referenceState, units::radian_t(m_sparkTurnEncoder.GetPosition()));
 
   if (fabs(state.speed.value()) < 0.01) {
   // Check to see if the input is very small, if it is, cancel all outputs

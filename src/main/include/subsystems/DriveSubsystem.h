@@ -15,6 +15,7 @@
 #include <frc/drive/MecanumDrive.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Translation2d.h>
 #include <frc/interfaces/Gyro.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
@@ -68,6 +69,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative);
+
+  void DriveFieldRelative(frc::ChassisSpeeds);
 
 
   /**
@@ -125,16 +128,21 @@ class DriveSubsystem : public frc2::SubsystemBase {
     m_vision ? m_vision = false : m_vision = true;
   }
 
+  inline void VisionEnabled(bool enabled) {
+    m_vision = enabled;
+  }
+
   units::meter_t kTrackWidth =
       0.31369_m;  // Distance between centers of right and left wheels on robot
   units::meter_t kWheelBase =
       0.31369_m;  // Distance between centers of front and back wheels on robot
 
+  // Forward is +x and left is +y
   frc::SwerveDriveKinematics<4> kDriveKinematics{
-      frc::Translation2d(kWheelBase, -kTrackWidth),
       frc::Translation2d(kWheelBase, kTrackWidth),
-      frc::Translation2d(-kWheelBase, -kTrackWidth),
-      frc::Translation2d(-kWheelBase, kTrackWidth)};
+      frc::Translation2d(kWheelBase, -kTrackWidth),
+      frc::Translation2d(-kWheelBase, kTrackWidth),
+      frc::Translation2d(-kWheelBase, -kTrackWidth)};
 
     void ResetGyro() {
         gyro.Reset();

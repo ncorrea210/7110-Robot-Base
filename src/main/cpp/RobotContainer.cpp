@@ -25,6 +25,8 @@
 #include <utility>
 #include <cmath>
 #include <numbers>
+#include <memory>
+#include <unordered_map>
 
 #include <units/angle.h>
 #include <units/velocity.h>
@@ -35,6 +37,7 @@
 #include "commands/DriveWithTime.h"
 #include "commands/Balance.h"
 #include "commands/DriveWithHeading.h"
+#include "commands/autos/TestCMD.h"
 #include "utils/cams/Limelight.h"
 #include "subsystems/DriveSubsystem.h"
 #include "Constants.h"
@@ -43,7 +46,7 @@
 using namespace DriveConstants;
 
 // Drive macros ensure that all outputs stay the same
-#define X_OUT [this] {return m_speedLimitx.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftY()) * pow(m_driverController.GetLeftY(), 2), 0.01));}
+#define X_OUT [this] {return -m_speedLimitx.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftY()) * pow(m_driverController.GetLeftY(), 2), 0.01));}
 #define Y_OUT [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(hb::sgn(m_driverController.GetLeftX()) * pow(m_driverController.GetLeftX(), 2), 0.01));}
 #define ROT_OUT [this] {return -frc::ApplyDeadband(hb::sgn(m_driverController.GetRightX()) * pow(m_driverController.GetRightX(), 2), 0.025) * DriveConstants::kMaxAngularSpeed.value();}
 
@@ -61,6 +64,10 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("CommOut", new DriveWithTime(&m_drive, -2_mps, 0_mps, 0_rad_per_s, 1.25_s, false));
   m_chooser.AddOption("CubeNBalance", new CubeAndBalance(&m_drive, &m_arm, &m_claw));
   m_chooser.AddOption("ConeNBalance", new ConeAndBalance(&m_drive, &m_arm, &m_claw));
+  m_chooser.AddOption("PathPlanner Test", new FollowPPPathCMD(&m_drive, "BackForth", false));
+  m_chooser.AddOption("RedPathTest", new FollowPPPathCMD(&m_drive, "Red", true));
+  m_chooser.AddOption("RedRotateBalance", new FollowPPPathCMD(&m_drive, "RotateBalance", true));
+  // m_chooser.AddOption("Test", new TestCMD(&m_drive));
 
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
 
@@ -88,7 +95,7 @@ RobotContainer::RobotContainer() {
     Y_OUT, 
     ROT_OUT,
     LAMBDA(true),
-    LAMBDA(DriveConstants::kMaxSpeed.value() * (m_driverController.GetRightTriggerAxis() * 0.625 + 0.375))
+    LAMBDA(DriveConstants::kMaxSpeed.value() * (m_triggerLimit.Calculate(m_driverController.GetRightTriggerAxis()) * 0.625 + 0.375))
   )); 
 
 }
@@ -122,7 +129,7 @@ void RobotContainer::ConfigureDriverButtons() {
 
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(Balance(&m_drive));
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_drive.ToggleVision();});
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::LimeLight::SetPipeline(hb::LimeLight::GetPipeline() == hb::LimeLight::Pipeline::kAprilTag ? 

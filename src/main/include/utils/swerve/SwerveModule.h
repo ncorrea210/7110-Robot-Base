@@ -76,6 +76,10 @@ class SwerveModule {
   */
   void StopMotors();
 
+  inline double GetCANCoderAngle() {
+    return m_turningEncoder.Get();
+  }
+
  private:
 
   rev::CANSparkMax m_driveMotor;
