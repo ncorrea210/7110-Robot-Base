@@ -63,8 +63,6 @@ class VisionSubsystem : public frc2::SubsystemBase {
   photonlib::PhotonPoseEstimator m_rightEst;
   photonlib::PhotonPoseEstimator m_leftEst;
 
-  frc::Field2d m_field;
-
   frc::LinearFilter<units::meter_t> m_xFilter;
   frc::LinearFilter<units::meter_t> m_yFilter;
 

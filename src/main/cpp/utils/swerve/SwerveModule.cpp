@@ -59,14 +59,11 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {
-  // This function is rarely called, it is essentially deprecated
   return {units::meters_per_second_t{m_sparkDriveEncoder.GetVelocity()},
           frc::Rotation2d(units::radian_t(m_sparkTurnEncoder.GetPosition()))};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
-    // these both need to be negative to work
-    // do not ask why, we do not know
     return {units::meter_t(m_sparkDriveEncoder.GetPosition()), units::radian_t(m_sparkTurnEncoder.GetPosition())};
 }
 

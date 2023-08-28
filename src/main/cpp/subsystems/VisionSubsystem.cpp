@@ -9,6 +9,7 @@
 
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/DriverStation.h>
 
 #include "Constants.h"
 #include "utils/cams/Limelight.h"
@@ -16,7 +17,6 @@
 VisionSubsystem::VisionSubsystem() : 
 m_rightEst(m_layout, photonlib::PoseStrategy::MULTI_TAG_PNP, std::move(photonlib::PhotonCamera("Arducam_OV9281_USB_Camera_Right")), VisionConstants::RightTransform),
 m_leftEst(m_layout, photonlib::PoseStrategy::MULTI_TAG_PNP, std::move(photonlib::PhotonCamera("Arducam_OV9281_USB_Camera_Left")), VisionConstants::LeftTransform),
-m_field(),
 m_xFilter(frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s)),
 m_yFilter(frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.1, 0.02_s))
 {
@@ -83,7 +83,6 @@ std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> VisionSubs
         units::second_t timestamp = estl.value().timestamp;
         return std::make_pair(timestamp, m_FilterPose(pose, filter));
     }
-
 }
 
 

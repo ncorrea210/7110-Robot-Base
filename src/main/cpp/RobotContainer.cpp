@@ -199,7 +199,7 @@ void RobotContainer::ConfigureDriverButtons() {
 
 void RobotContainer::ConfigureOperatorButtons() {
   #ifdef OPERATORCONTROLLER
-
+    
   #endif
 }
 
