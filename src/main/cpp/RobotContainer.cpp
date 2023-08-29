@@ -31,6 +31,9 @@
 #include <units/angle.h>
 #include <units/velocity.h>
 
+#include <pathplanner/lib/auto/SwerveAutoBuilder.h>
+#include <pathplanner/lib/PathPlanner.h>
+
 #include "commands/FollowPPPathCMD.h"
 #include "commands/autos/CubeAndBalance.h"
 #include "commands/autos/ConeAndBalance.h"
@@ -69,6 +72,9 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("RedRotateBalance", new FollowPPPathCMD(&m_drive, "RotateBalance", true));
   // m_chooser.AddOption("Test", new TestCMD(&m_drive));
 
+  m_autoChooser.AddOption("Pick and Place", "BackForth");
+
+  frc::SmartDashboard::PutData("Auto Options", &m_autoChooser);
   frc::SmartDashboard::PutData("Auto Chooser", &m_chooser);
 
   frc::SmartDashboard::PutData("Arm", &m_arm);
@@ -221,4 +227,25 @@ void RobotContainer::ConfigureOperatorButtons() {
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
   return m_chooser.GetSelected();
+}
+
+frc2::CommandPtr RobotContainer::GetAuto() {
+
+  auto traj = pathplanner::PathPlanner::loadPath(m_autoChooser.GetSelected(), AutoConstants::kMaxSpeed, AutoConstants::kMaxAcceleration);
+
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+
+  pathplanner::SwerveAutoBuilder builder{
+    [this] {return m_drive.GetPose();}, 
+    [this] (auto pose) {m_drive.SetPose(pose);},
+    pathplanner::PIDConstants(AutoConstants::kPXController, 0, 0), 
+    pathplanner::PIDConstants(AutoConstants::kPThetaController, 0, 0),
+    [this] (auto speeds) {m_drive.DriveFieldRelative(speeds);}, 
+    eventMap, 
+    {&m_drive},
+    true
+  };
+
+  return builder.fullAuto(traj);
+
 }

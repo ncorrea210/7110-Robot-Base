@@ -25,6 +25,8 @@
 #include <frc/DutyCycleEncoder.h>
 #include <frc/PowerDistribution.h>
 
+#include <vector>
+#include <pathplanner/lib/PathPlanner.h>
 
 //Subsystems
 #include "subsystems/DriveSubsystem.h"
@@ -49,6 +51,8 @@ class RobotContainer {
   RobotContainer();
 
   frc2::Command* GetAutonomousCommand();
+
+  frc2::CommandPtr GetAuto();
 
  private:
   // The driver's controller
@@ -76,6 +80,8 @@ class RobotContainer {
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
+
+  frc::SendableChooser<std::string> m_autoChooser;
 
   void ConfigureButtonBindings();
 

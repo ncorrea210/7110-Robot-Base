@@ -137,6 +137,7 @@ void DriveSubsystem::SetPose(frc::Pose2d pose) {
   m_poseEstimator.ResetPosition(gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()}, pose);
+  gyro.SetPosition(pose.Rotation().Degrees());
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {

@@ -62,11 +62,16 @@ void Robot::AutonomousInit() {
 
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 
-  m_autonomousCommand = m_container.GetAutonomousCommand();
+  // m_autonomousCommand = m_container.GetAutonomousCommand();
+  m_auto = m_container.GetAuto();
 
-  if (m_autonomousCommand != nullptr) {
-    m_autonomousCommand->Schedule();
+  if (m_auto.get() != nullptr) {
+    m_auto.Schedule();
   }
+
+  // if (m_autonomousCommand != nullptr) {
+  //   m_autonomousCommand->Schedule();
+  // }
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -76,10 +81,10 @@ void Robot::TeleopInit() {
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  if (m_autonomousCommand != nullptr) {
-    m_autonomousCommand->Cancel();
-    m_autonomousCommand = nullptr;
-  }
+  // if (m_autonomousCommand != nullptr) {
+  //   m_autonomousCommand->Cancel();
+  //   m_autonomousCommand = nullptr;
+  // }
 
 
   hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);
