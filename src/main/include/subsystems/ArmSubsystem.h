@@ -79,6 +79,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
     bool SwitchHigh() const;
 
+    void Homing(bool enabled);
+
     void InitSendable(wpi::SendableBuilder& builder) override;
 
   private:
@@ -108,5 +110,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
     const ArmPosition m_MsMaiCar;
 
     ArmPosition m_target;
+
+    bool m_homing;
 
 };

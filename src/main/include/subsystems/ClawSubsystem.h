@@ -28,6 +28,12 @@ class ClawSubsystem : public frc2::SubsystemBase {
 
   void Run(double val);
 
+  void StopMotors();
+
+  void Enable(bool enabled);
+
+  bool IsEnabled();
+
   void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
@@ -35,6 +41,8 @@ class ClawSubsystem : public frc2::SubsystemBase {
   frc::VictorSP m_motor;
 
   frc::PowerDistribution* m_pdp;
+
+  bool m_enabled;
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

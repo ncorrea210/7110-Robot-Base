@@ -9,18 +9,35 @@
 
 ClawSubsystem::ClawSubsystem(frc::PowerDistribution* pdp) : 
 m_motor(ClawConstants::kClawID), 
-m_pdp(pdp)
+m_pdp(pdp), 
+m_enabled(true)
 {}
 
 // This method will be called once per scheduler run
 void ClawSubsystem::Periodic() {}
 
 void ClawSubsystem::Run(double val) {
-    m_motor.Set(val);
+    if (m_enabled) 
+        m_motor.Set(val);
+    else StopMotors();
+}
+
+void ClawSubsystem::StopMotors() {
+    m_motor.SetVoltage(0_V);
+}
+
+void ClawSubsystem::Enable(bool enabled) {
+    m_enabled = enabled;
+}
+
+bool ClawSubsystem::IsEnabled() {
+    return m_enabled;
 }
 
 void ClawSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Claw");
 
     builder.AddDoubleProperty("CurrentDraw", LAMBDA(m_pdp->GetCurrent(ClawConstants::kClawPDPPole)), nullptr);
+
+    builder.AddBooleanProperty("Enabled", LAMBDA(m_enabled), nullptr);
 }

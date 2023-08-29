@@ -9,6 +9,8 @@
 
 #include <cmath>
 
+#include <units/voltage.h>
+
 #include "utils/Util.h"
 #include "Constants.h"
 
@@ -38,7 +40,8 @@ m_coneMid(MAX_EXTEND, MIN_ANGLE),
 m_cubeMidconePickup(CUBE_SCORE_CONE_PICKUP_EXTEND, MIN_ANGLE),
 m_cubePickup(CUBE_PICKUP, MIN_ANGLE),
 m_MsMaiCar(MIN_EXTEND, MIN_ANGLE),
-m_target(m_stow)
+m_target(m_stow), 
+m_homing(true)
 {
 
     m_extensionController.SetP(ArmConstants::kPExtension);
@@ -60,50 +63,53 @@ void ArmSubsystem::Periodic() {
     }
 
     CheckState();
-
-    switch (m_targetState) {
-        case State::kStow:
-        m_target = m_stow;
-        break;
-        
-        case State::kMidCone:
-        m_target = m_coneMid;
-        break;
-
-        case State::kMidCubeConePickup:
-        m_target = m_cubeMidconePickup;
-        break;
-
-        case State::kCubePickup:
-        m_target = m_cubePickup;
-        break;
-
-        case State::kMsMaiCar:
-        m_target = m_MsMaiCar;
-        break;
-
-        case State::kRunning:
-        break;
-    }
     
-    if (m_actualState == m_targetState) {
-        StopMotors();
-        return;
-    }
+    if (m_homing) {
 
-    if (!hb::InRange(m_extensionEncoder.GetPosition(), m_target.extension, EPSILON_EXTENSION)) {
-    m_extensionController.SetReference(m_target.extension, rev::CANSparkMax::ControlType::kPosition);
-    } else m_extension.Set(0);
+        switch (m_targetState) {
+            case State::kStow:
+            m_target = m_stow;
+            break;
 
-    if (!hb::InRange(GetAngle(), m_target.angle, EPSILON_ANGLE)) {
-        m_actuator.Set(m_actuatorController.Calculate(GetAngle(), m_target.angle));
-    } else m_actuator.Set(0);
-    
+            case State::kMidCone:
+            m_target = m_coneMid;
+            break;
+
+            case State::kMidCubeConePickup:
+            m_target = m_cubeMidconePickup;
+            break;
+
+            case State::kCubePickup:
+            m_target = m_cubePickup;
+            break;
+
+            case State::kMsMaiCar:
+            m_target = m_MsMaiCar;
+            break;
+
+            case State::kRunning:
+            break;
+        }
+
+        if (m_actualState == m_targetState) {
+            StopMotors();
+            return;
+        }
+
+        if (!hb::InRange(m_extensionEncoder.GetPosition(), m_target.extension, EPSILON_EXTENSION)) {
+        m_extensionController.SetReference(m_target.extension, rev::CANSparkMax::ControlType::kPosition);
+        } else m_extension.Set(0);
+
+        if (!hb::InRange(GetAngle(), m_target.angle, EPSILON_ANGLE)) {
+            m_actuator.Set(m_actuatorController.Calculate(GetAngle(), m_target.angle));
+        } else m_actuator.Set(0);
+
+    } else StopMotors();
 }
 
 void ArmSubsystem::StopMotors() {
-    m_extension.Set(0);
-    m_actuator.Set(0);
+    m_extension.SetVoltage(0_V);
+    m_actuator.SetVoltage(0_V);
 }
 
 void ArmSubsystem::SetPosition(ArmPosition position) {
@@ -153,6 +159,10 @@ bool ArmSubsystem::SwitchHigh() const {
     if (m_extensionEncoder.GetPosition() > SWITCH_CHECK && !m_limitSwitch.Get()) 
         return true;
     else return false;
+}
+
+void ArmSubsystem::Homing(bool homing) {
+    m_homing = homing;
 }
 
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
