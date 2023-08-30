@@ -93,6 +93,8 @@ namespace hb {
      */
     double GetCompassHeading() const;
 
+    void Set(units::degree_t heading);
+
   private:
     ctre::phoenix::sensors::PigeonIMU* pigeon;
     mutable double m_angle;

@@ -84,3 +84,10 @@ double PigeonGyro::GetCompassHeading() const {
   return angle;
 
 }
+
+void PigeonGyro::Set(units::degree_t heading) {
+  int err = pigeon->SetFusedHeading(heading.value(), 30);
+  m_angle = heading.value();
+  m_rate = 0;
+  if (err != 0) printf("Set Position Error\n");
+}
