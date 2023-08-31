@@ -24,7 +24,7 @@ double PigeonGyro::GetAngle() const {
     pigeon->GetFusedHeading(stat);
     m_angle = stat.heading;
   } 
-  return m_angle - m_offset;
+  return m_angle + m_offset;
 }
 
 double PigeonGyro::GetRate() const {
@@ -60,7 +60,7 @@ units::radian_t PigeonGyro::GetRad() const {
 }
 
 void PigeonGyro::SetPosition(units::degree_t angle) {
-  m_offset = GetAngle() - angle.value();
+  m_offset = angle.value();
 }
 
 double PigeonGyro::GetCompassHeading() const {
