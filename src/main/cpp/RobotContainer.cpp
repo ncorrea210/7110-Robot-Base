@@ -134,66 +134,16 @@ void RobotContainer::ConfigureDriverButtons() {
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::LimeLight::SetPipeline(hb::LimeLight::GetPipeline() == hb::LimeLight::Pipeline::kAprilTag ? 
       hb::LimeLight::Pipeline::kRetroReflective : hb::LimeLight::Pipeline::kAprilTag);}));
-  
-  /** @section POV Headings **/
 
-  frc2::POVButton(&m_driverController, 0).WhenPressed(DriveWithHeading(
-    &m_drive,
-    X_OUT, 
-    Y_OUT,
-    0_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 45).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    45_deg
-  ));  
-
-  frc2::POVButton(&m_driverController, 90).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    90_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 135).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    135_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 180).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    180_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 225).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    225_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 270).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    270_deg
-  ));
-
-  frc2::POVButton(&m_driverController, 315).WhenPressed(DriveWithHeading(
-    &m_drive, 
-    X_OUT,
-    Y_OUT, 
-    315_deg
-  ));
-  
-  /** @section endsection **/
+  // Just a shorthand for defining all the directions
+  for (int i = 0; i < 360; i += 45) {
+    frc2::POVButton(&m_driverController, i).WhenPressed(DriveWithHeading(
+      &m_drive,
+      X_OUT,
+      Y_OUT,
+      units::degree_t(i)
+    ));
+  }
 
 }
 

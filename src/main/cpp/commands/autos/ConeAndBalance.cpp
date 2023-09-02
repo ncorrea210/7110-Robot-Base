@@ -18,6 +18,7 @@ ConeAndBalance::ConeAndBalance(DriveSubsystem* drive, ArmSubsystem* arm, ClawSub
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
   AddCommands(
+    frc2::InstantCommand([drive] {drive->gyro.SetPosition(180_deg);}),
     frc2::InstantCommand([arm] {arm->MidCone();}),
     frc2::WaitCommand(2_s), 
     frc2::InstantCommand([claw] {claw->Run(0.5);}),
