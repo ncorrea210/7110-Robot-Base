@@ -27,13 +27,13 @@
 
 struct ArmPosition{
 
-  ArmPosition(uint16_t extension, uint16_t angle) {
+  ArmPosition(uint8_t extension, uint8_t angle) {
     this->extension = extension;
     this->angle = angle;
   }
 
-  uint16_t extension;
-  uint16_t angle;
+  uint8_t extension;
+  uint8_t angle;
 
 };
 
@@ -102,12 +102,6 @@ class ArmSubsystem : public frc2::SubsystemBase {
     frc::PIDController m_actuatorController;
 
     frc::DigitalInput m_limitSwitch;
-
-    const ArmPosition m_stow;
-    const ArmPosition m_coneMid;
-    const ArmPosition m_cubeMidconePickup;
-    const ArmPosition m_cubePickup;
-    const ArmPosition m_MsMaiCar;
 
     ArmPosition m_target;
 

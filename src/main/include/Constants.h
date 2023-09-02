@@ -21,6 +21,8 @@
 #include <units/voltage.h>
 #include <units/angular_acceleration.h>
 
+#include "subsystems/ArmSubsystem.h"
+
 #include <numbers>
 
 #pragma once
@@ -111,6 +113,27 @@ namespace ArmConstants {
     inline const int kActuatorEncoderID = 0;
     inline const double kPExtension = 0.03;
     inline const double kPActuator = 1;
+
+        // Arm extension is bound from [0, 160]
+        inline const uint8_t kMaxExtend = 160;
+        inline const uint8_t kMinExtend = 0;
+
+        // Arm angle is bound from [0, 100]
+        // to keep from sticking, [2, 98] is prefered
+        inline const uint8_t kMaxAngle = 98;
+        inline const uint8_t kMinAngle = 2;
+        
+        // Other important extensions
+        inline const uint8_t kCubeScoreConePickupExtension = 100;
+        inline const uint8_t kCubePickupExtension = 50;
+    
+    namespace Positions {
+        inline const ArmPosition kConeMid{kMaxExtend, kMinAngle};
+        inline const ArmPosition kCubeMidConePickup{kCubeScoreConePickupExtension, kMinAngle};
+        inline const ArmPosition kCubePickup{kCubePickupExtension, kMinExtend};
+        inline const ArmPosition kStow{kMinExtend, kMaxAngle};
+        inline const ArmPosition kMsMaiCar{kMinExtend, kMinAngle};
+    }
 }
 
 namespace ClawConstants {

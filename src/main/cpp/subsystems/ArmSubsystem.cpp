@@ -18,13 +18,6 @@
 #define EPSILON_ANGLE 2
 #define SWITCH_CHECK 75
 
-#define MIN_ANGLE 2
-#define MAX_ANGLE 98
-#define MIN_EXTEND 0
-#define MAX_EXTEND 160
-#define CUBE_SCORE_CONE_PICKUP_EXTEND 100
-#define CUBE_PICKUP 50
-
 ArmSubsystem::ArmSubsystem() : 
 m_targetState(State::kStow),
 m_actualState(State::kRunning), 
@@ -35,12 +28,7 @@ m_actuator(ArmConstants::kActuatorID),
 m_actuatorEncoder(ArmConstants::kActuatorEncoderID),
 m_actuatorController(ArmConstants::kPActuator, 0, 0),
 m_limitSwitch(0),
-m_stow(MIN_EXTEND, MAX_ANGLE), 
-m_coneMid(MAX_EXTEND, MIN_ANGLE),
-m_cubeMidconePickup(CUBE_SCORE_CONE_PICKUP_EXTEND, MIN_ANGLE),
-m_cubePickup(CUBE_PICKUP, MIN_ANGLE),
-m_MsMaiCar(MIN_EXTEND, MIN_ANGLE),
-m_target(m_stow), 
+m_target(ArmConstants::Positions::kStow), 
 m_homing(true)
 {
 
@@ -55,11 +43,11 @@ m_homing(true)
 void ArmSubsystem::Periodic() {
 
     if (SwitchHigh()) {
-        m_extensionEncoder.SetPosition(MAX_EXTEND);
+        m_extensionEncoder.SetPosition(ArmConstants::kMaxExtend);
     }
 
     if (SwitchLow()) {
-        m_extensionEncoder.SetPosition(MIN_EXTEND);
+        m_extensionEncoder.SetPosition(ArmConstants::kMinExtend);
     }
 
     CheckState();
@@ -68,23 +56,23 @@ void ArmSubsystem::Periodic() {
 
         switch (m_targetState) {
             case State::kStow:
-            m_target = m_stow;
+            m_target = ArmConstants::Positions::kStow;
             break;
 
             case State::kMidCone:
-            m_target = m_coneMid;
+            m_target = ArmConstants::Positions::kConeMid;
             break;
 
             case State::kMidCubeConePickup:
-            m_target = m_cubeMidconePickup;
+            m_target = ArmConstants::Positions::kCubeMidConePickup;
             break;
 
             case State::kCubePickup:
-            m_target = m_cubePickup;
+            m_target = ArmConstants::Positions::kCubePickup;
             break;
 
             case State::kMsMaiCar:
-            m_target = m_MsMaiCar;
+            m_target = ArmConstants::Positions::kMsMaiCar;
             break;
 
             case State::kRunning:
@@ -180,32 +168,32 @@ void ArmSubsystem::CheckState() {
     int angle = GetAngle();
     
     // Check Stow
-    if (hb::InRange(extension, m_stow.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_stow.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, ArmConstants::Positions::kStow.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kStow.angle, EPSILON_ANGLE)) {
         m_actualState = State::kStow;
         return;
     }
     
     // Check Mid Cone
-    if (hb::InRange(extension, m_coneMid.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_coneMid.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, ArmConstants::Positions::kConeMid.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kConeMid.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMidCone;
         return;
     }
 
     // Check Mid Cube Cone Pickup
-    if (hb::InRange(extension, m_cubeMidconePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_cubeMidconePickup.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, ArmConstants::Positions::kCubeMidConePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kCubeMidConePickup.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMidCubeConePickup;
         return;
     }
 
 
     // Check Cube Pickup
-    if (hb::InRange(extension, m_cubePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_cubePickup.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, ArmConstants::Positions::kCubePickup.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kCubePickup.angle, EPSILON_ANGLE)) {
         m_actualState = State::kCubePickup;
         return;
     }
 
     // Check Ms Mai Car
-    if (hb::InRange(extension, m_MsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(angle, m_MsMaiCar.angle, EPSILON_ANGLE)) {
+    if (hb::InRange(extension, ArmConstants::Positions::kMsMaiCar.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kMsMaiCar.angle, EPSILON_ANGLE)) {
         m_actualState = State::kMsMaiCar;
         return;
     }
