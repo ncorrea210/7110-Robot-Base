@@ -73,7 +73,11 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
     State GetTarget() const;
 
+    int GetExtension() const;
+
     int GetAngle() const;
+
+    ArmPosition GetPosition() const;
 
     bool SwitchLow() const;
 
@@ -87,6 +91,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
     // Function meant to keep the periodic function less cluttered, simply checks the position of the arm and updates this
     void CheckState();
+
+    void UpdateArm();
 
     std::string StateToString(State state);
 
@@ -104,7 +110,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
     frc::DigitalInput m_limitSwitch;
 
     ArmPosition m_target;
+    ArmPosition m_actual;
 
     bool m_homing;
-
+    
 };

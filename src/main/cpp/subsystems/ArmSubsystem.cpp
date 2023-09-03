@@ -29,6 +29,7 @@ m_actuatorEncoder(ArmConstants::kActuatorEncoderID),
 m_actuatorController(ArmConstants::kPActuator, 0, 0),
 m_limitSwitch(0),
 m_target(ArmConstants::Positions::kStow), 
+m_actual(GetExtension(), GetAngle()),
 m_homing(true)
 {
 
@@ -50,6 +51,7 @@ void ArmSubsystem::Periodic() {
         m_extensionEncoder.SetPosition(ArmConstants::kMinExtend);
     }
 
+    UpdateArm();
     CheckState();
     
     if (m_homing) {
@@ -84,12 +86,12 @@ void ArmSubsystem::Periodic() {
             return;
         }
 
-        if (!hb::InRange(m_extensionEncoder.GetPosition(), m_target.extension, EPSILON_EXTENSION)) {
+        if (!hb::InRange(m_actual.extension, m_target.extension, EPSILON_EXTENSION)) {
         m_extensionController.SetReference(m_target.extension, rev::CANSparkMax::ControlType::kPosition);
         } else m_extension.Set(0);
 
-        if (!hb::InRange(GetAngle(), m_target.angle, EPSILON_ANGLE)) {
-            m_actuator.Set(m_actuatorController.Calculate(GetAngle(), m_target.angle));
+        if (!hb::InRange(m_actual.angle, m_target.angle, EPSILON_ANGLE)) {
+            m_actuator.Set(m_actuatorController.Calculate(m_actual.angle, m_target.angle));
         } else m_actuator.Set(0);
 
     } else StopMotors();
@@ -132,9 +134,17 @@ ArmSubsystem::State ArmSubsystem::GetTarget() const {
     return m_targetState;
 }
 
+int ArmSubsystem::GetExtension() const {
+    return std::lround(m_extensionEncoder.GetPosition());
+}
+
 int ArmSubsystem::GetAngle() const {
     // This formula bounds the pot to [0,100] and rounds it to an integer
     return std::lround(100 * (((100 * m_actuatorEncoder.Get().value()) - 3) / 45));
+}
+
+ArmPosition ArmSubsystem::GetPosition() const {
+    return m_actual;
 }
 
 bool ArmSubsystem::SwitchLow() const {
@@ -156,16 +166,16 @@ void ArmSubsystem::Homing(bool homing) {
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Arm");
 
-    builder.AddDoubleProperty("ArmPosition", LAMBDA(m_extensionEncoder.GetPosition()), nullptr);
-    builder.AddIntegerProperty("ArmAngle", LAMBDA(GetAngle()), nullptr);
+    builder.AddIntegerProperty("ArmPosition", LAMBDA(m_actual.extension), nullptr);
+    builder.AddIntegerProperty("ArmAngle", LAMBDA(m_actual.angle), nullptr);
 
     builder.AddStringProperty("Actual State", LAMBDA(StateToString(GetState())), nullptr);
     builder.AddStringProperty("Target State", LAMBDA(StateToString(GetTarget())), nullptr);
 }
 
 void ArmSubsystem::CheckState() {
-    double extension = m_extensionEncoder.GetPosition();
-    int angle = GetAngle();
+    int extension = m_actual.extension;
+    int angle = m_actual.angle;
     
     // Check Stow
     if (hb::InRange(extension, ArmConstants::Positions::kStow.extension, EPSILON_EXTENSION) && hb::InRange(angle, ArmConstants::Positions::kStow.angle, EPSILON_ANGLE)) {
@@ -200,6 +210,11 @@ void ArmSubsystem::CheckState() {
 
     m_actualState = State::kRunning;
     
+}
+
+void ArmSubsystem::UpdateArm() {
+    m_actual.extension = GetExtension();
+    m_actual.angle = GetAngle();
 }
 
 std::string ArmSubsystem::StateToString(State state) {
