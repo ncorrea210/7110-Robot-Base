@@ -26,18 +26,18 @@ using namespace DriveConstants;
 using namespace DriveConstants::CanIds;
 
 DriveSubsystem::DriveSubsystem()
-    : m_frontLeft{kFrontLeftDriveMotorPort,
-                  kFrontLeftTurningMotorPort,
-                  kFrontLeftTurningEncoderPorts,
-                  kFrontLeftOffset},
+    : 
+      m_frontLeft{
+      kFrontLeftDriveMotorPort,           kFrontLeftTurningMotorPort,
+      kFrontLeftTurningEncoderPorts,      kFrontLeftOffset},
 
       m_rearLeft{
-          kRearLeftDriveMotorPort,       kRearLeftTurningMotorPort,
-          kRearLeftTurningEncoderPorts,  kRearLeftOffset},
+          kRearLeftDriveMotorPort,        kRearLeftTurningMotorPort,
+          kRearLeftTurningEncoderPorts,   kRearLeftOffset},
 
       m_frontRight{
-          kFrontRightDriveMotorPort,       kFrontRightTurningMotorPort,
-          kFrontRightTurningEncoderPorts,  kFrontRightOffset},
+          kFrontRightDriveMotorPort,      kFrontRightTurningMotorPort,
+          kFrontRightTurningEncoderPorts, kFrontRightOffset},
 
       m_rearRight{
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
@@ -66,10 +66,10 @@ void DriveSubsystem::Periodic() {
 
 
   if (m_vision) {
-  std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> CamPose = m_visionSystem.GetPose();
-  if (CamPose.first.has_value()) {
-    m_poseEstimator.AddVisionMeasurement(CamPose.second.value(), CamPose.first.value());
-  }
+    std::pair<std::optional<units::second_t>, std::optional<frc::Pose2d>> CamPose = m_visionSystem.GetPose();
+    if (CamPose.first.has_value()) {
+      m_poseEstimator.AddVisionMeasurement(CamPose.second.value(), CamPose.first.value());
+    }
   }
 
   m_field.SetRobotPose(m_poseEstimator.GetEstimatedPosition());
@@ -147,10 +147,10 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 }
 
 void DriveSubsystem::ResetEncoders() {
-  m_frontLeft.ResetEncoders();
-  m_frontRight.ResetEncoders();
-  m_rearLeft.ResetEncoders();
-  m_rearRight.ResetEncoders();
+  m_frontLeft.ZeroTurnEncoder();
+  m_frontRight.ZeroTurnEncoder();
+  m_rearLeft.ZeroTurnEncoder();
+  m_rearRight.ZeroTurnEncoder();
 }
 
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
@@ -172,6 +172,5 @@ void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
   builder.AddDoubleProperty("RR V", LAMBDA(m_rearRight.GetState().speed.value()), nullptr);
   builder.AddDoubleProperty("RR A", LAMBDA(m_rearRight.GetState().angle.Radians().value()), nullptr);
-  builder.AddDoubleProperty("RR AC", LAMBDA(m_rearRight.GetCANCoderAngle()), nullptr);
 
 }

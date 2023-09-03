@@ -26,6 +26,7 @@
 #include <units/length.h>
 #include <units/voltage.h>
 #include <units/velocity.h>
+#include <units/temperature.h>
 
 #include <numbers>
 
@@ -76,9 +77,6 @@ class SwerveModule {
   */
   void StopMotors();
 
-  inline double GetCANCoderAngle() {
-    return m_turningEncoder.Get();
-  }
 
  private:
 

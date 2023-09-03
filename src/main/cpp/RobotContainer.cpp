@@ -80,14 +80,6 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
-  //Default subsystem commands are defined in this section
-  // m_drive.SetDefaultCommand(DefaultDriveCMD(&m_drive, 
-  //       [this] {return (m_speedLimitx.Calculate(frc::ApplyDeadband(m_driverController.GetLeftY() < 0 ? -(m_driverController.GetLeftY() * m_driverController.GetLeftY()) : (m_driverController.GetLeftY() * m_driverController.GetLeftY()), 0.01)));}, 
-  //       [this] {return -m_speedLimity.Calculate(frc::ApplyDeadband(m_driverController.GetLeftX() < 0 ? -(m_driverController.GetLeftX() * m_driverController.GetLeftX()) : (m_driverController.GetLeftX() * m_driverController.GetLeftX()), 0.01));},
-  //       [this] {return -(frc::ApplyDeadband(m_driverController.GetRightX() < 0 ? -(m_driverController.GetRightX() * m_driverController.GetRightX()) : (m_driverController.GetRightX() * m_driverController.GetRightX()), 0.025) * (double)DriveConstants::kMaxAngularSpeed);}, 
-  //       [this] {return true;},
-  //       [this] {return m_drive.GetSpeed().value();}));
-
   // New version with macros to test
   m_drive.SetDefaultCommand(DefaultDriveCMD(
     &m_drive, 
@@ -164,6 +156,8 @@ void RobotContainer::ConfigureOperatorButtons() {
 
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(0.5);})).WhenReleased(
       frc2::InstantCommand([this] {m_claw.Run(0.0);}));
+
+    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([this] {m_drive.ResetEncoders();}));
 
   #endif
 }

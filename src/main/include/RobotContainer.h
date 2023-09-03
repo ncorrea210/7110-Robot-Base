@@ -72,8 +72,6 @@ class RobotContainer {
   ClawSubsystem m_claw{&m_pdp};
   VisionSubsystem& m_vision = VisionSubsystem::GetInstance();
 
-  // The robot's commands
-
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
 
