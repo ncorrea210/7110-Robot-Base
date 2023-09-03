@@ -121,7 +121,7 @@ void RobotContainer::ConfigureDriverButtons() {
 
   // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.ToggleVision();}));
+  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.ToggleVision();}));
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
       ([] {hb::LimeLight::SetPipeline(hb::LimeLight::GetPipeline() == hb::LimeLight::Pipeline::kAprilTag ? 

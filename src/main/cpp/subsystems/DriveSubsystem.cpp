@@ -156,7 +156,7 @@ void DriveSubsystem::ResetEncoders() {
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
   builder.SetSmartDashboardType("Swerve Drive");
 
-  builder.AddBooleanProperty("Vision", LAMBDA(m_vision), nullptr);
+  builder.AddBooleanProperty("Vision", LAMBDA(m_vision), [this](bool set) -> void {m_vision = set;});
 
   builder.AddDoubleProperty("Heading", LAMBDA(gyro.GetCompassHeading()), nullptr);
   builder.AddDoubleProperty("Rot2d", LAMBDA(gyro.GetRot2d().Degrees().value()), nullptr);
