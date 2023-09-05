@@ -75,6 +75,9 @@ class RobotContainer {
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
 
+  // Extra Triggers
+  frc2::Trigger m_targetTrigger{[this]() -> bool {return m_drive.GetTarget() == DriveSubsystem::Target::kCone;}};
+
   void ConfigureButtonBindings();
 
   void ConfigureDriverButtons();

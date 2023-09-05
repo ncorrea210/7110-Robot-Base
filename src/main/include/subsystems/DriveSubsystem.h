@@ -46,6 +46,11 @@
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
 
+  enum class Target {
+    kCone = 0, 
+    kCube
+  };
+
   DriveSubsystem();
 
   /**
@@ -113,6 +118,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void ResetOdometry(frc::Pose2d pose);
 
+  void SetTarget(Target target);
+
+  Target GetTarget();
+
   frc::HolonomicDriveController GetController() {
     return frc::HolonomicDriveController{
       frc2::PIDController{AutoConstants::kPXController, 0, 0},
@@ -132,6 +141,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
     m_vision = enabled;
   }
 
+  void ResetGyro() {
+      gyro.Reset();
+  }
+
   units::meter_t kTrackWidth =
       0.31369_m;  // Distance between centers of right and left wheels on robot
   units::meter_t kWheelBase =
@@ -144,9 +157,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d(-kWheelBase, kTrackWidth),
       frc::Translation2d(-kWheelBase, -kTrackWidth)};
 
-    void ResetGyro() {
-        gyro.Reset();
-    }
 
   hb::PigeonGyro gyro{DriveConstants::CanIds::kPidgeonID};
 
@@ -174,5 +184,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;
 
   bool m_vision;
+
+  Target m_target;
 
 };

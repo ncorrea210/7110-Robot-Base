@@ -90,6 +90,9 @@ RobotContainer::RobotContainer() {
     LAMBDA(DriveConstants::kMaxSpeed.value() * (m_triggerLimit.Calculate(m_driverController.GetRightTriggerAxis()) * 0.625 + 0.375))
   )); 
 
+  m_targetTrigger.OnTrue(frc2::InstantCommand([] {hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kRetroReflective);}).ToPtr())
+    .OnFalse(frc2::InstantCommand([] {hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);}).ToPtr());
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -105,13 +108,17 @@ void RobotContainer::ConfigureButtonBindings() {
 }
 
 void RobotContainer::ConfigureDriverButtons() {
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed([this] {m_arm.MidCone();});
+
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kY).WhenPressed(
+    [this] {m_drive.GetTarget() == DriveSubsystem::Target::kCone ? m_arm.MidCone() : m_arm.MidCubeConePickup();});
   
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kA).WhenPressed([this] {m_arm.Stow();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed([this] {m_arm.MidCubeConePickup();});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kB).WhenPressed(
+    [this] {m_drive.GetTarget() == DriveSubsystem::Target::kCone ? m_arm.MidCubeConePickup() : m_arm.CubePickup();});
 
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed([this] {m_arm.CubePickup();});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhenPressed(
+    [this] {m_drive.SetTarget(m_drive.GetTarget() == DriveSubsystem::Target::kCone ? DriveSubsystem::Target::kCube : DriveSubsystem::Target::kCone);});
 
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftBumper).WhenPressed([this] {m_claw.Run(0.5);})
     .WhenReleased([this] {m_claw.Run(0);});

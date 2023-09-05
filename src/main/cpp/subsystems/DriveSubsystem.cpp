@@ -50,7 +50,8 @@ DriveSubsystem::DriveSubsystem()
       m_poseEstimator(kDriveKinematics, gyro.GetRot2d(), {m_frontLeft.GetPosition(),
                     m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                     m_rearRight.GetPosition()}, frc::Pose2d()),
-                    m_vision(true)
+                    m_vision(true), 
+                    m_target(Target::kCone)
                      {
                       frc::SmartDashboard::PutData("Field", &m_field);
                     }
@@ -151,6 +152,14 @@ void DriveSubsystem::ResetEncoders() {
   m_frontRight.ZeroTurnEncoder();
   m_rearLeft.ZeroTurnEncoder();
   m_rearRight.ZeroTurnEncoder();
+}
+
+void DriveSubsystem::SetTarget(DriveSubsystem::Target target) {
+  m_target = target;
+}
+
+DriveSubsystem::Target DriveSubsystem::GetTarget() {
+  return m_target;
 }
 
 void DriveSubsystem::InitSendable(wpi::SendableBuilder& builder) {
