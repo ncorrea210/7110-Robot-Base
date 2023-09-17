@@ -23,7 +23,7 @@ void DriveWithHeading::Execute() {
   m_drive->Drive(
     units::meters_per_second_t(m_x() * DriveConstants::kMaxSpeed),
     units::meters_per_second_t(m_y() * DriveConstants::kMaxSpeed), 
-    -rot, true
+    rot, true
   );
 
 }

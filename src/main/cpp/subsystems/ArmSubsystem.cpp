@@ -15,7 +15,7 @@
 #include "Constants.h"
 
 #define EPSILON_EXTENSION 1.5
-#define EPSILON_ANGLE 2
+#define EPSILON_ANGLE 3
 #define SWITCH_CHECK 75
 
 ArmSubsystem::ArmSubsystem() : 
@@ -140,7 +140,7 @@ int ArmSubsystem::GetExtension() const {
 
 int ArmSubsystem::GetAngle() const {
     // This formula bounds the pot to [0,100] and rounds it to an integer
-    return std::lround(100 * (((100 * m_actuatorEncoder.Get().value()) - 3) / 45));
+    return std::lround(100 * m_actuatorEncoder.Get().value() / 40 * 100);
 }
 
 ArmPosition ArmSubsystem::GetPosition() const {
@@ -163,6 +163,10 @@ void ArmSubsystem::Homing(bool homing) {
     m_homing = homing;
 }
 
+bool ArmSubsystem::IsHoming() {
+    return m_homing;
+}
+
 void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
     builder.SetSmartDashboardType("Arm");
 
@@ -171,6 +175,10 @@ void ArmSubsystem::InitSendable(wpi::SendableBuilder& builder) {
 
     builder.AddStringProperty("Actual State", LAMBDA(StateToString(GetState())), nullptr);
     builder.AddStringProperty("Target State", LAMBDA(StateToString(GetTarget())), nullptr);
+
+    builder.AddIntegerProperty("Target Angle", LAMBDA(m_target.angle), nullptr);
+    builder.AddIntegerProperty("Target Extension", LAMBDA(m_target.extension), nullptr);
+
 }
 
 void ArmSubsystem::CheckState() {

@@ -38,6 +38,8 @@
 #include "commands/Balance.h"
 #include "commands/DriveWithHeading.h"
 #include "commands/autos/TestCMD.h"
+#include "commands/ConeScore.h"
+
 #include "utils/cams/Limelight.h"
 #include "subsystems/DriveSubsystem.h"
 #include "Constants.h"
@@ -93,6 +95,8 @@ RobotContainer::RobotContainer() {
   m_targetTrigger.OnTrue(frc2::InstantCommand([] {hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kRetroReflective);}).ToPtr())
     .OnFalse(frc2::InstantCommand([] {hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);}).ToPtr());
 
+  m_leftTrigger.OnTrue(ConeScore(&m_drive, X_OUT).ToPtr());
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -126,23 +130,10 @@ void RobotContainer::ConfigureDriverButtons() {
   frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightBumper).WhenPressed([this] {m_claw.Run(-0.5);})
     .WhenReleased([this] {m_claw.Run(0);});
 
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed([this] {m_arm.MsMaiCar();});
 
-  // frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(frc2::InstantCommand([this] {m_drive.ToggleVision();}));
-
-  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kRightStick).WhenPressed(frc2::InstantCommand
-      ([] {hb::LimeLight::SetPipeline(hb::LimeLight::GetPipeline() == hb::LimeLight::Pipeline::kAprilTag ? 
-      hb::LimeLight::Pipeline::kRetroReflective : hb::LimeLight::Pipeline::kAprilTag);}));
-
-  // Just a shorthand for defining all the directions
-  for (int i = 0; i < 360; i += 45) {
-    frc2::POVButton(&m_driverController, i).WhenPressed(DriveWithHeading(
-      &m_drive,
-      X_OUT,
-      Y_OUT,
-      units::degree_t(i)
-    ));
-  }
+  frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kLeftStick).WhenPressed(
+    ConeScore(&m_drive, X_OUT));
 
 }
 
@@ -150,16 +141,16 @@ void RobotContainer::ConfigureOperatorButtons() {
   #ifdef OPERATORCONTROLLER
 
     // Emergency Shutoff
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(frc2::InstantCommand([this] {m_arm.Homing(false);}));
+    // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kB).WhenPressed(frc2::InstantCommand([this] {m_arm.Homing(false);}));
 
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {m_arm.Homing(true);}));
+    // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kA).WhenPressed(frc2::InstantCommand([this] {m_arm.Homing(true);}));
 
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(frc2::InstantCommand([this] {m_claw.Enable(false);}));
+    // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kX).WhenPressed(frc2::InstantCommand([this] {m_claw.Enable(false);}));
 
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(frc2::InstantCommand([this] {m_claw.Enable(true);}));
+    // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kY).WhenPressed(frc2::InstantCommand([this] {m_claw.Enable(true);}));
 
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kRightBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(-0.5);})).WhenReleased(
-      frc2::InstantCommand([this] {m_claw.Run(0.5);}));
+      frc2::InstantCommand([this] {m_claw.Run(0.0);}));
 
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(0.5);})).WhenReleased(
       frc2::InstantCommand([this] {m_claw.Run(0.0);}));

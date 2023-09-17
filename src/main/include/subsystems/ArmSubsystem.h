@@ -55,6 +55,11 @@ class ArmSubsystem : public frc2::SubsystemBase {
     */
     void Periodic() override;
 
+    inline void RunActuator(double speed) {
+      m_homing = false;
+      m_actuator.Set(speed);
+    }
+
     void StopMotors();
 
     void SetPosition(ArmPosition position);
@@ -84,6 +89,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
     bool SwitchHigh() const;
 
     void Homing(bool enabled);
+
+    bool IsHoming();
 
     void InitSendable(wpi::SendableBuilder& builder) override;
 

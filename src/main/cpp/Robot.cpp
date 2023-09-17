@@ -25,9 +25,7 @@ void Robot::RobotInit() {
   // printf("************** LOG STARTED AT %s **************\n", frc::DataLogManager::GetLogDir().c_str());
 
   // // Ensures the LimeLight doesn't burn our eyes out upon startup
-  // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOff);
-
-  hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);
+  hb::LimeLight::SetLED(hb::LimeLight::LEDMode::kOn);
 
 }
 
@@ -80,9 +78,6 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
-
-
-  hb::LimeLight::SetPipeline(hb::LimeLight::Pipeline::kAprilTag);
 
   // hb::limeLight::SetLED(hb::limeLight::LEDMode::kOn);
 }

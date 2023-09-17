@@ -26,7 +26,7 @@ void Balance::Execute() {
   );
   else
   m_drive->Drive(
-    units::meters_per_second_t(std::clamp(-calc, -0.25, 0.25)),
+    units::meters_per_second_t(std::clamp(calc, -0.25, 0.25)),
     0_mps,
     units::radians_per_second_t(0),
     false

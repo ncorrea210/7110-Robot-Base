@@ -25,9 +25,9 @@ ConeAndBalance::ConeAndBalance(DriveSubsystem* drive, ArmSubsystem* arm, ClawSub
     frc2::WaitCommand(0.7_s),
     frc2::InstantCommand([claw] {claw->Run(0);}),
     frc2::InstantCommand([arm] {arm->Stow();}),
-    DriveWithTime(drive, -2_mps, 0_mps, units::radians_per_second_t(0), 4.5_s, false),
-    frc2::WaitCommand(0.1_s),
-    DriveWithTime(drive, 2_mps, 0_mps, units::radians_per_second_t(0), 3_s, false),
+    DriveWithTime(drive, -1_mps, 0_mps, units::radians_per_second_t(0), 2.75_s, false),
+    frc2::WaitCommand(1_s),
+    DriveWithTime(drive, 1_mps, 0_mps, units::radians_per_second_t(0), 2_s, false),
     Balance(drive)
   );
 }
