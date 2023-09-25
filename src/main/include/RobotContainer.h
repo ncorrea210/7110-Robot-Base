@@ -55,8 +55,8 @@ class RobotContainer {
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 
   // The operator's controller
-  // #define OPERATORCONTROLLER
-  // frc::XboxController m_operatorController{OIConstants::kOperatorControllerPort};
+  #define OPERATORCONTROLLER
+  frc::XboxController m_operatorController{OIConstants::kOperatorControllerPort};
 
   // The robot's subsystems and commands are defined here...
 
@@ -78,7 +78,7 @@ class RobotContainer {
   // Extra Triggers
   frc2::Trigger m_targetTrigger{[this]() -> bool {return m_drive.GetTarget() == DriveSubsystem::Target::kCone;}};
 
-  frc2::Trigger m_leftTrigger{[this]() -> bool {return m_driverController.GetLeftTriggerAxis() > 0.5;}};
+  frc2::Trigger m_leftTrigger{[this]() -> bool {return m_driverController.GetLeftTriggerAxis() > 0.6;}};
 
   void ConfigureButtonBindings();
 

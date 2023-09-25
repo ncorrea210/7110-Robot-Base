@@ -25,7 +25,7 @@ void Robot::RobotInit() {
   // printf("************** LOG STARTED AT %s **************\n", frc::DataLogManager::GetLogDir().c_str());
 
   // // Ensures the LimeLight doesn't burn our eyes out upon startup
-  hb::LimeLight::SetLED(hb::LimeLight::LEDMode::kOn);
+  // hb::LimeLight::SetLED(hb::LimeLight::LEDMode::kOn);
 
 }
 

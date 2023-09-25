@@ -155,7 +155,7 @@ void RobotContainer::ConfigureOperatorButtons() {
     frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kLeftBumper).WhenPressed(frc2::InstantCommand([this] {m_claw.Run(0.5);})).WhenReleased(
       frc2::InstantCommand([this] {m_claw.Run(0.0);}));
 
-    frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([this] {m_drive.ResetEncoders();}));
+    // frc2::JoystickButton(&m_operatorController, frc::XboxController::Button::kStart).WhenPressed(frc2::InstantCommand([this] {m_drive.ResetEncoders();}));
 
   #endif
 }
