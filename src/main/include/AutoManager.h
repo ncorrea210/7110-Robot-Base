@@ -23,8 +23,6 @@ class AutoManager {
 
         explicit AutoManager(ArmSubsystem* arm, ClawSubsystem* claw, DriveSubsystem* drive);
 
-        ~AutoManager();
-
         frc2::CommandPtr GetAutonomousCommand();
 
     private:
